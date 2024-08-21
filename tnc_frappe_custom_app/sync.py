@@ -127,3 +127,32 @@ def sync_data():
     frappe.db.commit()
     
     return "success"
+
+#################### Below code is for Deleting the data in the doctype after successfully imported #####################
+
+import frappe
+
+@frappe.whitelist()
+def delete_data():
+    try:
+        # Delete all records in the "Students Master Data" doctype
+        frappe.db.delete('Students Master Data')
+        frappe.db.commit()
+        return "success"
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), 'Delete Students Master Data Error')
+        return "error"
+
+###################################### Below code is check the data present in the doctype or not to show the Intial value of button #####################
+@frappe.whitelist()
+def check_all_imported():
+    total_count = frappe.db.count('Students Master Data')
+    if total_count == 0:
+        return "no_data"
+    
+    not_imported_count = frappe.db.count('Students Master Data', filters={'imported': 0})
+    
+    if not_imported_count == 0:
+        return "all_imported"
+    else:
+        return "not_imported"
