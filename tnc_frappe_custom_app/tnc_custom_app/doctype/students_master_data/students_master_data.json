@@ -13,6 +13,7 @@
   "exam_type",
   "date",
   "exam_code",
+  "exam_title_name",
   "column_break_yxhv",
   "exam_name",
   "rank",
@@ -103,11 +104,16 @@
   {
    "fieldname": "column_break_yxhv",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "exam_title_name",
+   "fieldtype": "Data",
+   "label": "Exam Title Name"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-08-20 13:23:09.721657",
+ "modified": "2024-08-23 11:02:27.906286",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Students Master Data",
