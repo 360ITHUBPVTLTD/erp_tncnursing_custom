@@ -73,7 +73,7 @@ def sync_data():
         'student_name', 'mobile', 'district', 'state', 
         'exam_type', 'date', 'exam_code', 'exam_name', 
         'rank', 'total_marks', 'total_right', 
-        'total_wrong', 'total_skip', 'percentage'
+        'total_wrong', 'total_skip', 'percentage','exam_title_name'
     ])
     
     for student_data in students_master_data:
@@ -117,6 +117,7 @@ def sync_data():
             'total_wrong': student_data['total_wrong'],
             'total_skip': student_data['total_skip'],
             'percentage': student_data['percentage'],
+            'exam_title_name': student_data['exam_title_name'],  # Include the exam title name for better understanding in reports and dashboards  # Add new field 'exam_title_name' in Students Master Data and Student Results doctype to store this information for better understanding in reports and dashboards
             'system_imported': 1
         })
         new_test_series_result.insert()
