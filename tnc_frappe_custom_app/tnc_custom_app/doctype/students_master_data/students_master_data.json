@@ -6,6 +6,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "imported_batch_id",
   "student_name",
   "mobile",
   "district",
@@ -15,6 +16,7 @@
   "exam_code",
   "exam_title_name",
   "column_break_yxhv",
+  "created_by",
   "exam_name",
   "rank",
   "total_marks",
@@ -48,16 +50,19 @@
   {
    "fieldname": "exam_type",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Exam Type"
   },
   {
    "fieldname": "date",
    "fieldtype": "Date",
+   "hidden": 1,
    "label": "Date"
   },
   {
    "fieldname": "exam_code",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Exam Code"
   },
   {
@@ -92,7 +97,7 @@
   },
   {
    "fieldname": "percentage",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "Percentage"
   },
   {
@@ -108,12 +113,27 @@
   {
    "fieldname": "exam_title_name",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Exam Title Name"
+  },
+  {
+   "fieldname": "imported_batch_id",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Imported Batch ID",
+   "options": "Student Exam",
+   "reqd": 1
+  },
+  {
+   "fieldname": "created_by",
+   "fieldtype": "Data",
+   "label": "Created By",
+   "options": "__user"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-08-23 11:02:27.906286",
+ "modified": "2024-08-30 16:49:21.517192",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Students Master Data",

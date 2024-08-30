@@ -242,3 +242,13 @@ app_license = "mit"
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
+# your_app/hooks.py
+doc_events = {
+    "Data Import": {
+        # "on_update": "tnc_frappe_custom_app.data_import_id.handle_data_import_after_save"
+    },
+    # "Data Import Log": {
+    #     # "after_insert": "tnc_frappe_custom_app.data_import_id.handle_data_import_after_save"
+    # }
+}
+

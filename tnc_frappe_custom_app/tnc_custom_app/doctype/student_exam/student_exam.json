@@ -1,0 +1,76 @@
+{
+ "actions": [],
+ "autoname": "format:{exam_name}-{exam_date}-{exam_code}",
+ "creation": "2024-08-29 10:28:05.689467",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "exam_code",
+  "exam_name",
+  "exam_date",
+  "exam_title_name",
+  "exam_id_linked",
+  "data_synced"
+ ],
+ "fields": [
+  {
+   "fieldname": "exam_name",
+   "fieldtype": "Link",
+   "label": "Exam Name",
+   "options": "Test Series Type"
+  },
+  {
+   "fieldname": "exam_title_name",
+   "fieldtype": "Data",
+   "label": "Exam Title Name"
+  },
+  {
+   "fieldname": "exam_date",
+   "fieldtype": "Date",
+   "label": "Exam Date"
+  },
+  {
+   "fieldname": "exam_code",
+   "fieldtype": "Data",
+   "label": "Exam Code"
+  },
+  {
+   "default": "0",
+   "fieldname": "exam_id_linked",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Exam ID Linked"
+  },
+  {
+   "default": "0",
+   "fieldname": "data_synced",
+   "fieldtype": "Check",
+   "label": "Data Synced"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-08-30 17:53:17.432476",
+ "modified_by": "Administrator",
+ "module": "TNC Custom App",
+ "name": "Student Exam",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

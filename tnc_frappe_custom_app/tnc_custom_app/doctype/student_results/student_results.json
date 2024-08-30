@@ -6,7 +6,8 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "test_series_type_id",
+  "batch_id",
+  "student_exam_id",
   "student_id",
   "student_name",
   "student_mobile",
@@ -25,12 +26,6 @@
  ],
  "fields": [
   {
-   "fieldname": "test_series_type_id",
-   "fieldtype": "Data",
-   "label": "Test Series Type ID",
-   "options": "Test Series Type"
-  },
-  {
    "fieldname": "student_id",
    "fieldtype": "Link",
    "label": "Student ID",
@@ -45,6 +40,7 @@
    "reqd": 1
   },
   {
+   "fetch_from": "batch_id.exam_name",
    "fieldname": "exam_name",
    "fieldtype": "Link",
    "label": "Exam Name",
@@ -55,11 +51,13 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "batch_id.exam_date",
    "fieldname": "exam_date",
    "fieldtype": "Date",
    "label": "Exam Date"
   },
   {
+   "fetch_from": "batch_id.exam_code",
    "fieldname": "exam_code",
    "fieldtype": "Data",
    "label": "Exam Code"
@@ -91,7 +89,7 @@
   },
   {
    "fieldname": "percentage",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "Percentage"
   },
   {
@@ -112,12 +110,26 @@
   {
    "fieldname": "exam_title_name",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Exam Title Name"
+  },
+  {
+   "fieldname": "batch_id",
+   "fieldtype": "Link",
+   "label": "Batch ID",
+   "options": "Student Exam"
+  },
+  {
+   "fieldname": "student_exam_id",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Student Exam ID",
+   "options": "Student Exam"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-08-23 10:56:20.481457",
+ "modified": "2024-08-30 16:45:49.445151",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Results",
