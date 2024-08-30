@@ -140,6 +140,7 @@ class StudentResults(Document):
         })
 
         if duplicate_entry:
+            frappe.log_error(f"Bulk Sync fail.{self.exam_name}{self.exam_date}{self.student_mobile}")
             frappe.throw(_("A record with the same Exam Name, Exam Date, and Student Mobile already exists."))
 
     def ensure_student_exists(self):
@@ -167,3 +168,5 @@ class StudentResults(Document):
                 self.student_id = frappe.get_value('Student', {'mobile': self.student_mobile}, 'name')
         else:
             frappe.throw(_("Student Mobile is required to create or link a Student record."))
+
+
