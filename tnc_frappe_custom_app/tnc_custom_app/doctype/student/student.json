@@ -10,6 +10,7 @@
   "mobile",
   "amount",
   "subject",
+  "subjects",
   "column_break_lxec",
   "district",
   "state",
@@ -63,6 +64,7 @@
    "description": "Print Format regarding",
    "fieldname": "subject",
    "fieldtype": "Table MultiSelect",
+   "hidden": 1,
    "label": "Subject",
    "options": "Subject Multiselect"
   },
@@ -71,11 +73,16 @@
    "fieldtype": "Link",
    "label": "Student Batch ID",
    "options": "Student Exam"
+  },
+  {
+   "fieldname": "subjects",
+   "fieldtype": "Data",
+   "label": "Subjects "
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-08-30 09:47:22.363271",
+ "modified": "2024-09-04 14:31:27.935248",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student",

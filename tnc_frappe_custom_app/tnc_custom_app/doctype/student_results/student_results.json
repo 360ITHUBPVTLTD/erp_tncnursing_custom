@@ -36,8 +36,7 @@
    "fieldname": "student_mobile",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Student Mobile",
-   "reqd": 1
+   "label": "Student Mobile"
   },
   {
    "fetch_from": "batch_id.exam_name",
@@ -64,27 +63,27 @@
   },
   {
    "fieldname": "rank",
-   "fieldtype": "Data",
+   "fieldtype": "Int",
    "label": "Rank"
   },
   {
    "fieldname": "total_marks",
-   "fieldtype": "Data",
+   "fieldtype": "Int",
    "label": "Total Marks"
   },
   {
    "fieldname": "total_right",
-   "fieldtype": "Data",
+   "fieldtype": "Int",
    "label": "Total Right"
   },
   {
    "fieldname": "total_wrong",
-   "fieldtype": "Data",
+   "fieldtype": "Int",
    "label": "Total Wrong"
   },
   {
    "fieldname": "total_skip",
-   "fieldtype": "Data",
+   "fieldtype": "Int",
    "label": "Total Skip"
   },
   {
@@ -97,8 +96,7 @@
    "fieldname": "student_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Student Name",
-   "reqd": 1
+   "label": "Student Name"
   },
   {
    "default": "0",
@@ -108,9 +106,9 @@
    "read_only": 1
   },
   {
+   "fetch_from": "batch_id.exam_title_name",
    "fieldname": "exam_title_name",
    "fieldtype": "Data",
-   "hidden": 1,
    "label": "Exam Title Name"
   },
   {
@@ -129,7 +127,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-08-30 16:45:49.445151",
+ "modified": "2024-09-04 11:29:22.296278",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Results",
