@@ -1,6 +1,6 @@
 {
  "actions": [],
- "autoname": "format:{exam_name}-{exam_date}-{exam_code}",
+ "autoname": "format:{exam_name}-{exam_date}",
  "creation": "2024-08-29 10:28:05.689467",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -10,7 +10,15 @@
   "exam_date",
   "exam_title_name",
   "exam_id_linked",
-  "data_synced"
+  "data_synced",
+  "status",
+  "lock_ranks",
+  "column_break_atbx",
+  "start_rank",
+  "initial_regularised_ranks",
+  "last_regularised_ranks",
+  "last_rank",
+  "actual_candidates"
  ],
  "fields": [
   {
@@ -32,6 +40,7 @@
   {
    "fieldname": "exam_code",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Exam Code"
   },
   {
@@ -45,12 +54,59 @@
    "default": "0",
    "fieldname": "data_synced",
    "fieldtype": "Check",
+   "hidden": 1,
    "label": "Data Synced"
+  },
+  {
+   "fieldname": "start_rank",
+   "fieldtype": "Data",
+   "label": "Start Rank",
+   "read_only": 1
+  },
+  {
+   "fieldname": "initial_regularised_ranks",
+   "fieldtype": "Data",
+   "label": "Initial Regularised Ranks",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_regularised_ranks",
+   "fieldtype": "Data",
+   "label": "Last Regularised Ranks",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_rank",
+   "fieldtype": "Data",
+   "label": "Last Rank",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_atbx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "actual_candidates",
+   "fieldtype": "Data",
+   "label": "Actual Candidates",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nData Synced\nRank Generated(step1)\nRank Generated(step2)\nRank Reset"
+  },
+  {
+   "default": "0",
+   "fieldname": "lock_ranks",
+   "fieldtype": "Check",
+   "label": "Lock Ranks"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-08-30 17:53:17.432476",
+ "modified": "2024-09-03 17:52:01.252330",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Exam",
@@ -70,7 +126,10 @@
    "write": 1
   }
  ],
+ "search_fields": "exam_name,exam_date",
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "exam_title_name"
 }
