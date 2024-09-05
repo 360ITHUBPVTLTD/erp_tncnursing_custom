@@ -58,6 +58,7 @@
   {
    "fieldname": "amount",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Amount"
   },
   {
@@ -76,13 +77,13 @@
   },
   {
    "fieldname": "subjects",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
    "label": "Subjects "
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-04 14:31:27.935248",
+ "modified": "2024-09-05 11:04:07.264088",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student",

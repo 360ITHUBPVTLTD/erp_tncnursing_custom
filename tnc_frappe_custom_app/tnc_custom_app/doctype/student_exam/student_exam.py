@@ -11,6 +11,7 @@ class StudentExam(Document):
 
 @frappe.whitelist()
 def sync_data(name):
+    students_exam_doc = frappe.get_doc('Students Exam',name), 
     students_master_data = frappe.get_all('Students Master Data', filters={'imported': 0, 'imported_batch_id': name}, fields=[
         'name', 'student_name', 'mobile', 'state', 'rank', 'total_marks', 'district',
         'total_right', 'total_wrong', 'total_skip', 'percentage', 'imported_batch_id'
@@ -86,6 +87,8 @@ def sync_data(name):
 
         # Log progress to check if it's working
     frappe.log_error(f"Progress Update: {completed_records}/{total_records} | Data: {progress_data}")
+    students_exam_doc.status= 'Data Synced'
+    students_exam_doc.save()
     
     frappe.db.commit()
     return "success"

@@ -28,7 +28,7 @@
 
 
 
-/////////////////////////////////////////////// Below is the FInal code #################################################################
+/////////////////////////////// Below is the FInal code #################################################################
 
 frappe.ui.form.on('Student Exam', {
     refresh: function(frm) {
@@ -42,9 +42,9 @@ frappe.ui.form.on('Student Exam', {
                 callback: function(response) {
                     if (response.message === "success") {
                         frappe.msgprint(__('Data synced successfully!'));
-                        frm.set_value('data_synced', 1);  // Only set to 1 if data was synced
-                        frm.set_value('status', 'Data Synced');
-                        frm.save();
+                        // frm.set_value('data_synced', 1);  // Only set to 1 if data was synced
+                        // frm.set_value('status', 'Data Synced');
+                        // frm.save();
                         frm.refresh();  // Refresh the form view to check the status again
                     } else if (response.message === "no_data") {
                         frappe.msgprint(__('No Data available to sync.'));
@@ -70,7 +70,7 @@ frappe.ui.form.on('Student Exam', {
         }
 
         // Conditionally add "Go to Data Import" button based on field values and status
-            if (frm.doc.exam_name && frm.doc.exam_date && frm.doc.exam_title_name && frm.doc.status !== 'Data Synced'  ) {
+            if (frm.doc.exam_name &&  frm.doc.exam_title_name && frm.doc.status !== 'Data Synced'  ) {
                 frm.add_custom_button(__('Go to Data Import'), function() {
                     window.open('http://192.168.1.128:8010/app/data-import', '_blank');  // Open the URL in a new tab
                 });

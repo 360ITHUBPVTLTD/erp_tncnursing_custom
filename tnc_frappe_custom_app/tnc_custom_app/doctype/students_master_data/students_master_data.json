@@ -68,6 +68,7 @@
   {
    "fieldname": "exam_name",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Exam Name"
   },
   {
@@ -127,13 +128,14 @@
   {
    "fieldname": "created_by",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Created By",
    "options": "__user"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-04 11:16:53.483868",
+ "modified": "2024-09-05 11:05:39.692665",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Students Master Data",

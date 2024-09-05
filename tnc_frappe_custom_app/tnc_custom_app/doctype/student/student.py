@@ -7,7 +7,8 @@ from frappe.model.document import Document
 import frappe
 
 class Student(Document):
-    def validate(self):
+    # def validate(self):
+    def before_insert(self):
         self.check_duplicate_mobile()
 
     def check_duplicate_mobile(self):
