@@ -226,109 +226,109 @@ frappe.query_reports["Custom Student Result report"] = {
     ],
     onload: function(report) {
         // Add the Generate Rank button
-        report.page.add_inner_button(__('Generate Rank'), function() {
-            checkRankLockStatus(function(lockRanks) {
-                if (lockRanks) {
-                    frappe.msgprint(__('Ranks are locked for this exam'));
-                } else {
-                    var actualCandidates = report.data.length > 1 ? report.data.length - 1 : 0;
-                    frappe.prompt([
-                        {'fieldname': 'start_rank', 'fieldtype': 'Int', 'label': 'Start Rank', 'default': 1, 'reqd': 1},
-                        {'fieldname': 'last_rank', 'fieldtype': 'Int', 'label': 'Last Rank', 'reqd': 1},
-                        {'fieldname': 'initial_regularised_ranks', 'fieldtype': 'Int', 'label': 'Initial Regularised Ranks', 'reqd': 1},
-                        {'fieldname': 'actual_candidates', 'fieldtype': 'Int', 'label': 'Actual Candidates', 'read_only': 1, 'default': actualCandidates}
-                    ], function(values) {
-                        frappe.call({
-                            method: "tnc_frappe_custom_app.report_rank_generation.generate_ranks",
-                            args: {
-                                docname: frappe.query_report.get_filter_value("exam_title_name"),
-                                start_rank: values.start_rank,
-                                initial_regularised_ranks: values.initial_regularised_ranks,
-                                last_regularised_ranks: 0,
-                                last_rank: values.last_rank,
-                                actual_candidates: values.actual_candidates
-                            },
-                            callback: function(r) {
-                                if (r.message) {
-                                    frappe.msgprint(r.message);
-                                    report.refresh();  // Refresh the report data if ranks were generated successfully
-                                }
-                            }
-                        });
-                    }, __('Generate Ranks'), __('Generate'));
-                }
-            });
-        });
+        // report.page.add_inner_button(__('Generate Rank'), function() {
+        //     checkRankLockStatus(function(lockRanks) {
+        //         if (lockRanks) {
+        //             frappe.msgprint(__('Ranks are locked for this exam'));
+        //         } else {
+        //             var actualCandidates = report.data.length > 1 ? report.data.length - 1 : 0;
+        //             frappe.prompt([
+        //                 {'fieldname': 'start_rank', 'fieldtype': 'Int', 'label': 'Start Rank', 'default': 1, 'reqd': 1},
+        //                 {'fieldname': 'last_rank', 'fieldtype': 'Int', 'label': 'Last Rank', 'reqd': 1},
+        //                 {'fieldname': 'initial_regularised_ranks', 'fieldtype': 'Int', 'label': 'Initial Regularised Ranks', 'reqd': 1},
+        //                 {'fieldname': 'actual_candidates', 'fieldtype': 'Int', 'label': 'Actual Candidates', 'read_only': 1, 'default': actualCandidates}
+        //             ], function(values) {
+        //                 frappe.call({
+        //                     method: "tnc_frappe_custom_app.report_rank_generation.generate_ranks",
+        //                     args: {
+        //                         docname: frappe.query_report.get_filter_value("exam_title_name"),
+        //                         start_rank: values.start_rank,
+        //                         initial_regularised_ranks: values.initial_regularised_ranks,
+        //                         last_regularised_ranks: 0,
+        //                         last_rank: values.last_rank,
+        //                         actual_candidates: values.actual_candidates
+        //                     },
+        //                     callback: function(r) {
+        //                         if (r.message) {
+        //                             frappe.msgprint(r.message);
+        //                             report.refresh();  // Refresh the report data if ranks were generated successfully
+        //                         }
+        //                     }
+        //                 });
+        //             }, __('Generate Ranks'), __('Generate'));
+        //         }
+        //     });
+        // });
 
         // Add the Readjust Rank button
-        report.page.add_inner_button(__('Readjust Rank'), function() {
-            checkRankLockStatus(function(lockRanks) {
-                if (lockRanks) {
-                    frappe.msgprint(__('Ranks are locked for this exam'));
-                } else {
-                    frappe.call({
-                        method: "tnc_frappe_custom_app.report_rank_generation.get_rank_details",
-                        args: {
-                            exam_title_name: frappe.query_report.get_filter_value("exam_title_name")
-                        },
-                        callback: function(response) {
-                            var data = response.message;
-                            if (data) {
-                                frappe.prompt([
-                                    {'fieldname': 'start_rank', 'fieldtype': 'Int', 'label': 'Start Rank', 'default': data.start_rank, 'read_only': 1},
-                                    {'fieldname': 'last_rank', 'fieldtype': 'Int', 'label': 'Last Rank', 'default': data.last_rank, 'read_only': 1},
-                                    {'fieldname': 'initial_regularised_ranks', 'fieldtype': 'Int', 'label': 'Initial Regularised Ranks', 'default': data.initial_regularised_ranks, 'read_only': 1},
-                                    {'fieldname': 'actual_candidates', 'fieldtype': 'Int', 'label': 'Actual Candidates', 'default': data.actual_candidates, 'read_only': 1},
-                                    {'fieldname': 'last_regularised_ranks', 'fieldtype': 'Int', 'label': 'Last Regularised Ranks', 'reqd': 1} // This field is editable
-                                ], function(values) {
-                                    frappe.call({
-                                        method: "tnc_frappe_custom_app.report_rank_generation.readjust_ranks",
-                                        args: {
-                                            docname: frappe.query_report.get_filter_value("exam_title_name"),
-                                            start_rank: values.start_rank,
-                                            initial_regularised_ranks: values.initial_regularised_ranks,
-                                            last_regularised_ranks: values.last_regularised_ranks,
-                                            last_rank: values.last_rank,
-                                            actual_candidates: values.actual_candidates
-                                        },
-                                        callback: function(r) {
-                                            if (r.message) {
-                                                frappe.msgprint(r.message);
-                                                report.refresh();  // Refresh the report data if ranks were readjusted successfully
-                                            }
-                                        }
-                                    });
-                                }, __('Readjust Ranks'), __('Readjust'));
-                            }
-                        }
-                    });
-                }
-            });
-        });
+        // report.page.add_inner_button(__('Readjust Rank'), function() {
+        //     checkRankLockStatus(function(lockRanks) {
+        //         if (lockRanks) {
+        //             frappe.msgprint(__('Ranks are locked for this exam'));
+        //         } else {
+        //             frappe.call({
+        //                 method: "tnc_frappe_custom_app.report_rank_generation.get_rank_details",
+        //                 args: {
+        //                     exam_title_name: frappe.query_report.get_filter_value("exam_title_name")
+        //                 },
+        //                 callback: function(response) {
+        //                     var data = response.message;
+        //                     if (data) {
+        //                         frappe.prompt([
+        //                             {'fieldname': 'start_rank', 'fieldtype': 'Int', 'label': 'Start Rank', 'default': data.start_rank, 'read_only': 1},
+        //                             {'fieldname': 'last_rank', 'fieldtype': 'Int', 'label': 'Last Rank', 'default': data.last_rank, 'read_only': 1},
+        //                             {'fieldname': 'initial_regularised_ranks', 'fieldtype': 'Int', 'label': 'Initial Regularised Ranks', 'default': data.initial_regularised_ranks, 'read_only': 1},
+        //                             {'fieldname': 'actual_candidates', 'fieldtype': 'Int', 'label': 'Actual Candidates', 'default': data.actual_candidates, 'read_only': 1},
+        //                             {'fieldname': 'last_regularised_ranks', 'fieldtype': 'Int', 'label': 'Last Regularised Ranks', 'reqd': 1} // This field is editable
+        //                         ], function(values) {
+        //                             frappe.call({
+        //                                 method: "tnc_frappe_custom_app.report_rank_generation.readjust_ranks",
+        //                                 args: {
+        //                                     docname: frappe.query_report.get_filter_value("exam_title_name"),
+        //                                     start_rank: values.start_rank,
+        //                                     initial_regularised_ranks: values.initial_regularised_ranks,
+        //                                     last_regularised_ranks: values.last_regularised_ranks,
+        //                                     last_rank: values.last_rank,
+        //                                     actual_candidates: values.actual_candidates
+        //                                 },
+        //                                 callback: function(r) {
+        //                                     if (r.message) {
+        //                                         frappe.msgprint(r.message);
+        //                                         report.refresh();  // Refresh the report data if ranks were readjusted successfully
+        //                                     }
+        //                                 }
+        //                             });
+        //                         }, __('Readjust Ranks'), __('Readjust'));
+        //                     }
+        //                 }
+        //             });
+        //         }
+        //     });
+        // });
 
         // Add the Reset Rank button
-        report.page.add_inner_button(__('Reset Rank'), function() {
-            checkRankLockStatus(function(lockRanks) {
-                if (lockRanks) {
-                    frappe.msgprint(__('Ranks are locked for this exam'));
-                } else {
-                    frappe.confirm(__('Are you sure you want to reset the ranks?'), function() {
-                        frappe.call({
-                            method: "tnc_frappe_custom_app.report_rank_generation.reset_ranks",
-                            args: {
-                                exam_title_name: frappe.query_report.get_filter_value("exam_title_name")
-                            },
-                            callback: function(r) {
-                                if (r.message) {
-                                    frappe.msgprint(__('Ranks have been reset successfully'));
-                                    report.refresh();  // Refresh the report data if ranks were reset successfully
-                                }
-                            }
-                        });
-                    });
-                }
-            });
-        });
+        // report.page.add_inner_button(__('Reset Rank'), function() {
+        //     checkRankLockStatus(function(lockRanks) {
+        //         if (lockRanks) {
+        //             frappe.msgprint(__('Ranks are locked for this exam'));
+        //         } else {
+        //             frappe.confirm(__('Are you sure you want to reset the ranks?'), function() {
+        //                 frappe.call({
+        //                     method: "tnc_frappe_custom_app.report_rank_generation.reset_ranks",
+        //                     args: {
+        //                         exam_title_name: frappe.query_report.get_filter_value("exam_title_name")
+        //                     },
+        //                     callback: function(r) {
+        //                         if (r.message) {
+        //                             frappe.msgprint(__('Ranks have been reset successfully'));
+        //                             report.refresh();  // Refresh the report data if ranks were reset successfully
+        //                         }
+        //                     }
+        //                 });
+        //             });
+        //         }
+        //     });
+        // });
     }
 };
 

@@ -110,16 +110,18 @@ function show_print_prompt(frm) {
     frappe.call({
         method: 'frappe.client.get_list',
         args: {
-            doctype: 'Student Results',
+            doctype: 'Test Series Type',
             filters: {
-                student_id: frm.doc.name
+                // student_id: frm.doc.name
             },
-            fields: ['exam_title_name']
+            fields: ['name1']
         },
         callback: function(r) {
             if (r.message) {
                 // Extract exam_name values
-                let exam_names = r.message.map(result => result.exam_title_name);
+                let exam_names = r.message.map(result => result.name1);
+                // console.log(exam_title_name); // (2) ['NORCET 7.0', 'NORCET 7.0']
+                // console.log(exam_names);
 
                 // Show the prompt
                 frappe.prompt([
@@ -153,7 +155,9 @@ function show_print_prompt(frm) {
                     frm.save().then(function() {
                         // Redirect to the print page after saving
                         // window.location.href = `http://192.168.1.128:8010/app/print/Student/${frm.doc.name}`;
-                        window.location.href = `http://3.111.226.95/api/method/frappe.utils.print_format.download_pdf?doctype=Student&name=${frm.doc.name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en`;
+                        const baseUrl = window.location.origin
+                        window.open(`${baseUrl}/api/method/frappe.utils.print_format.download_pdf?doctype=Student&name=${frm.doc.name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en`);
+                        // window.location.href = `api/method/frappe.utils.print_format.download_pdf?doctype=Student&name=${frm.doc.name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en`;
                     });
                 },
                 __('Print Student Information'),

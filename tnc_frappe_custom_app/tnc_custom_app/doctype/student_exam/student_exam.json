@@ -1,18 +1,18 @@
 {
  "actions": [],
- "autoname": "format:{exam_title_name}",
+ "autoname": "format:TNC-EXM-{#####}",
  "creation": "2024-08-29 10:28:05.689467",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "exam_code",
   "exam_name",
-  "exam_date",
   "exam_title_name",
+  "exam_date",
+  "status",
   "exam_id_linked",
   "data_synced",
-  "status",
   "lock_ranks",
+  "exam_code",
   "column_break_atbx",
   "start_rank",
   "initial_regularised_ranks",
@@ -36,12 +36,6 @@
    "fieldname": "exam_date",
    "fieldtype": "Date",
    "label": "Exam Date"
-  },
-  {
-   "fieldname": "exam_code",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Exam Code"
   },
   {
    "default": "0",
@@ -95,18 +89,25 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "\nData Synced\nRank Generated(step1)\nRank Generated(step2)\nRank Reset"
+   "options": "Pending to Process Data\nData Synced\nRank Generated(step1)\nRank Generated(step2)\nRank Reset",
+   "read_only": 1
   },
   {
    "default": "0",
    "fieldname": "lock_ranks",
    "fieldtype": "Check",
    "label": "Lock Ranks"
+  },
+  {
+   "fieldname": "exam_code",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Exam Code"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-05 13:00:41.199707",
+ "modified": "2024-09-05 17:47:43.380251",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Exam",
