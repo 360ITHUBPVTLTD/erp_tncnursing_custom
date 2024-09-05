@@ -45,7 +45,7 @@ frm.add_custom_button(__('Process Data'), function() {
             }
         },
         error: function(err) {
-            frappe.msgprint(__('Syncing the data is not possible.'));
+            frappe.msgprint(__('Syncing data is not possible.'));
         }
     });
 });
@@ -55,16 +55,21 @@ if (frm.doc.status === 'Data Synced' || frm.doc.status === 'Rank Generated(step1
     frm.add_custom_button(__('Redirect to Reports'), function() {
         const examName = frm.doc.exam_name;
         const examTitleName = frm.doc.exam_title_name;
+        const baseUrl = window.location.origin
 
-        const reportUrl = `/app/query-report/Custom%20Student%20Result%20report?exam_name=${encodeURIComponent(examName)}&exam_title_name=${encodeURIComponent(examTitleName)}`;
-        window.open(reportUrl, '_blank');  // Open the URL in a new tab
+        // const reportUrl = `frappe.utils.get_url('app/query-report/Custom%20Student%20Result%20report?exam_name=${encodeURIComponent(examName)}&exam_title_name=${encodeURIComponent(examTitleName)}')`;
+        // window.open(reportUrl, '_blank');  // Open the URL in a new tab
+        window.open(`${baseUrl}/app/query-report/Custom%20Student%20Result%20report?exam_name=${encodeURIComponent(examName)}&exam_title_name=${encodeURIComponent(examTitleName)}`); 
     });
 }
 
 // Conditionally add "Go to Data Import" button based on field values and status
 if (frm.doc.exam_name &&  frm.doc.exam_title_name && frm.doc.status !== 'Data Synced'  ) {
     frm.add_custom_button(__('Go to Data Import'), function() {
-        window.open('http://3.111.226.95//app/data-import', '_blank');  // Open the URL in a new tab
+        const baseUrl = window.location.origin
+ 
+        window.open(`${baseUrl}/app/data-import`);  // Open the URL in a new tab
+        //http://3.111.226.95/app/data-import
     });
 }
 
