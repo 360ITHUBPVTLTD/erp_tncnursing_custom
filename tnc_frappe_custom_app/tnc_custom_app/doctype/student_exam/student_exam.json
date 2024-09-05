@@ -1,6 +1,6 @@
 {
  "actions": [],
- "autoname": "format:{exam_name}-{exam_date}",
+ "autoname": "format:{exam_title_name}",
  "creation": "2024-08-29 10:28:05.689467",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -106,7 +106,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-03 17:52:01.252330",
+ "modified": "2024-09-05 13:00:41.199707",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Exam",

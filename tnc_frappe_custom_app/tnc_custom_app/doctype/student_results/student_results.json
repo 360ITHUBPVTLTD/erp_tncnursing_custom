@@ -59,6 +59,7 @@
    "fetch_from": "batch_id.exam_code",
    "fieldname": "exam_code",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Exam Code"
   },
   {
@@ -127,7 +128,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-04 11:29:22.296278",
+ "modified": "2024-09-05 11:06:08.501227",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Results",

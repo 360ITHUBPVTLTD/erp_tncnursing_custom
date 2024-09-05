@@ -126,17 +126,21 @@ from frappe.model.document import Document
 from frappe import _
 
 class StudentResults(Document):
-    def before_save(self):
+    def before_insert(self):
         self.check_duplicate_entry()
         self.ensure_student_exists()
 
     def check_duplicate_entry(self):
         # Check if a record with the same exam_name, exam_date, and student_mobile already exists
         duplicate_entry = frappe.db.exists('Student Results', {
-            'exam_name': self.exam_name,
-            'exam_date': self.exam_date,
-            'student_mobile': self.student_mobile,
-            'name': ['!=', self.name]  # Exclude the current document from the check
+            # 'exam_name': self.exam_name,
+            # 'exam_date': self.exam_date,
+            # 'batch_id': self.batch_id,
+            'student_id': self.student_id,
+            'batch_id': self.batch_id,
+            # 'exam_title_name': self.exam_title_name,
+            # 'student_mobile': self.student_mobile,
+            # 'name': ['!=', self.name]  # Exclude the current document from the check
         })
 
         if duplicate_entry:

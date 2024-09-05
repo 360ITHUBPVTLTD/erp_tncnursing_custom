@@ -34,6 +34,7 @@
 #         return "Failed"
 
 ############################### Below code is sending the whatsapp message with particular subject only ###################################
+
 import frappe
 import requests
 
@@ -48,9 +49,9 @@ def send_whatsapp_message(name, mobile_number, student_name):
         mobile_number = "91" + mobile_number
 
     # API details
+    # file_url = f"http://192.168.1.128:8010/api/method/frappe.utils.print_format.download_pdf?doctype=Student&name={name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en/{student_name}.pdf"
     file_url = f"http://3.111.226.95/api/method/frappe.utils.print_format.download_pdf?doctype=Student&name={name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en/{student_name}.pdf"
-    # http://3.111.226.95/api/method/frappe.utils.print_format.download_pdf?doctype=Student&name={name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en/{student_name}.pdf
-    text_message = f"Dear {student_name},This is your results"
+    text_message = f"Dear {student_name},Check your results"
 
     # Construct API URL
     api_url = f"https://wts.vision360solutions.co.in/api/sendFileWithCaption?token={instance_id}&phone={mobile_number}&link={file_url}&message={text_message}"    

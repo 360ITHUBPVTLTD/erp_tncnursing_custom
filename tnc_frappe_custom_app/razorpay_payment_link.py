@@ -141,6 +141,7 @@ def generate_payment_link(student_id, amount, description):
     except Exception as e:
         frappe.throw(_("An error occurred: {0}".format(str(e))))
 
+
 def send_whatsapp_message(mobile_number, payment_link):
     # Fetch instance ID from Admin Settings
     admin_settings = frappe.get_doc('Admin Settings')
