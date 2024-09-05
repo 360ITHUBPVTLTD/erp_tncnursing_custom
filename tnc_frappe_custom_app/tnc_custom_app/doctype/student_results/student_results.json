@@ -65,7 +65,8 @@
   {
    "fieldname": "rank",
    "fieldtype": "Int",
-   "label": "Rank"
+   "label": "Rank",
+   "read_only": 1
   },
   {
    "fieldname": "total_marks",
@@ -128,7 +129,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-05 11:06:08.501227",
+ "modified": "2024-09-05 18:33:07.817094",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Results",
