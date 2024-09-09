@@ -169,7 +169,8 @@
 // }
 
 
-// /////////////////////// Below code is Row Selection //////////////////////
+///////////////////////////////// Below code is Row Selection ///////////////////////////////////////////
+
 
 var previousSelectedRow = null;
  
@@ -200,7 +201,7 @@ document.addEventListener('click', function(event) {
     }
 });
 
-
+////////////////////////// Below is the Custom Report //////////////////////////
 
 frappe.query_reports["Custom Student Result report"] = {
     "filters": [

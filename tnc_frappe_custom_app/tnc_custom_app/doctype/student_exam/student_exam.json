@@ -18,7 +18,9 @@
   "initial_regularised_ranks",
   "last_regularised_ranks",
   "last_rank",
-  "actual_candidates"
+  "actual_candidates",
+  "section_break_bqly",
+  "color_generation"
  ],
  "fields": [
   {
@@ -89,25 +91,35 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Pending to Process Data\nData Synced\nRank Generated(step1)\nRank Generated(step2)\nRank Reset",
-   "read_only": 1
+   "options": "Pending to Process Data\nIn Queue\nFailed Queue\nData Synced\nRank Generated(step1)\nRank Generated(step2)\nRank Reset"
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "lock_ranks",
    "fieldtype": "Check",
-   "label": "Lock Ranks"
+   "label": "Lock Ranks",
+   "permlevel": 1
   },
   {
    "fieldname": "exam_code",
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Exam Code"
+  },
+  {
+   "fieldname": "section_break_bqly",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "color_generation",
+   "fieldtype": "Table",
+   "label": "Color Generation",
+   "options": "Color Generation"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-05 17:47:43.380251",
+ "modified": "2024-09-09 13:02:54.518547",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Exam",
