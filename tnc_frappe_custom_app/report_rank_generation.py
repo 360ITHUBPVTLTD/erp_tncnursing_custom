@@ -14,6 +14,10 @@ def generate_ranks(docname, start_rank, initial_regularised_ranks, last_regulari
     if not exam_title_name:
         # If no exam_title_name found, return an error message
         return {"status": "no_exam_title_name"}
+    
+    student_exam_doc = frappe.get_doc('Student Exam', exam_title_name)
+    if student_exam_doc.lock_ranks:
+        return{"status": "The ranks for the Exam are locked, please contact admin to unlock them"}
 
     try:
         start_rank = int(start_rank)
@@ -210,6 +214,12 @@ def reset_ranks(exam_title_name):
         filters={"exam_title_name": exam_title_name},
         fields=["name"]
     )
+    exam_title_name = frappe.get_value('Student Exam', {'exam_title_name': exam_title_name}, 'name')
+
+    student_exam_doc = frappe.get_doc('Student Exam', exam_title_name)
+    if student_exam_doc.lock_ranks:
+        return{"status": "The ranks for the Exam are locked, please contact admin to unlock them"}
+
     
     # Loop through each record and set the rank to a default value, e.g., 0
     for result in student_results:
@@ -401,18 +411,20 @@ import frappe
 
 @frappe.whitelist()
 def readjust_ranks(docname, start_rank, initial_regularised_ranks, last_regularised_ranks, last_rank, actual_candidates):
-    print(f"Docname: {docname}")
-    print(f"Start Rank: {start_rank}")
-    print(f"Initial Regularised Ranks: {initial_regularised_ranks}")
-    print(f"Last Regularised Ranks: {last_regularised_ranks}")
-    print(f"Last Rank: {last_rank}")
-    print(f"Actual Candidates: {actual_candidates}")
+    # print(f"Docname: {docname}")
+    # print(f"Start Rank: {start_rank}")
+    # print(f"Initial Regularised Ranks: {initial_regularised_ranks}")
+    # print(f"Last Regularised Ranks: {last_regularised_ranks}")
+    # print(f"Last Rank: {last_rank}")
+    # print(f"Actual Candidates: {actual_candidates}")
+
+    exam_title_name = frappe.get_value('Student Exam', {'exam_title_name': docname}, 'name')
+
+    student_exam_doc = frappe.get_doc('Student Exam', exam_title_name)
+    if student_exam_doc.lock_ranks:
+        return{"status": "The ranks for the Exam are locked, please contact admin to unlock them"}
 
     from_regularization = int(actual_candidates) - int(last_regularised_ranks) + 1 
-
-
-    
-
 
     # Validate and convert input values
     try:

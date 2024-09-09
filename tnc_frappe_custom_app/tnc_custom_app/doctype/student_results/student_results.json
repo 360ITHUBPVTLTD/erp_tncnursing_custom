@@ -17,6 +17,7 @@
   "exam_date",
   "exam_code",
   "rank",
+  "rank_color",
   "total_marks",
   "total_right",
   "total_wrong",
@@ -125,11 +126,16 @@
    "hidden": 1,
    "label": "Student Exam ID",
    "options": "Student Exam"
+  },
+  {
+   "fieldname": "rank_color",
+   "fieldtype": "Data",
+   "label": "Rank Color"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-05 18:33:07.817094",
+ "modified": "2024-09-06 14:14:09.938695",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Results",

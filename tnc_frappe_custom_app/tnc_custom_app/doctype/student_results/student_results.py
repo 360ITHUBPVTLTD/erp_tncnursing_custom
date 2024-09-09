@@ -173,4 +173,12 @@ class StudentResults(Document):
         else:
             frappe.throw(_("Student Mobile is required to create or link a Student record."))
 
+    # def after_delete(doc):
+    #     student_id = doc.student_id
+    #     student_doc = frappe.get_doc('Student', student_id )
+    #     old_test_series_results = frappe.get_doc('Student Results',filters={"student_id":student_id})
+    #     student_doc=len(old_test_series_results)+1
+    #     student_doc.save()
+
+
 
