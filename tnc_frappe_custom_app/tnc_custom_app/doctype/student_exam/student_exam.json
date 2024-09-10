@@ -19,7 +19,20 @@
   "initial_regularised_ranks",
   "last_regularised_ranks",
   "last_rank",
-  "actual_candidates"
+  "actual_candidates",
+  "section_break_lftw",
+  "green",
+  "yellow",
+  "red",
+  "column_break_dkqc",
+  "green_starts_from",
+  "yellow_starts_from",
+  "red_starts_from",
+  "column_break_qqep",
+  "green_ends_to",
+  "yellow_ends_to",
+  "red_ends_to",
+  "column_break_vsec"
  ],
  "fields": [
   {
@@ -101,8 +114,7 @@
    "default": "1",
    "fieldname": "lock_ranks",
    "fieldtype": "Check",
-   "label": "Lock Ranks",
-   "permlevel": 1
+   "label": "Lock Ranks"
   },
   {
    "fieldname": "exam_code",
@@ -113,12 +125,74 @@
   {
    "fieldname": "actual_count",
    "fieldtype": "Data",
-   "label": "Actual Count"
+   "label": "Actual Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_lftw",
+   "fieldtype": "Section Break",
+   "label": "Rank Color Generation"
+  },
+  {
+   "fieldname": "column_break_dkqc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_qqep",
+   "fieldtype": "Column Break"
+  },
+  {
+   "bold": 1,
+   "default": "Green",
+   "fieldname": "green",
+   "fieldtype": "Data",
+   "read_only": 1
+  },
+  {
+   "fieldname": "green_starts_from",
+   "fieldtype": "Percent"
+  },
+  {
+   "fieldname": "green_ends_to",
+   "fieldtype": "Percent"
+  },
+  {
+   "bold": 1,
+   "default": "Yellow",
+   "fieldname": "yellow",
+   "fieldtype": "Data",
+   "read_only": 1
+  },
+  {
+   "fieldname": "yellow_starts_from",
+   "fieldtype": "Percent"
+  },
+  {
+   "fieldname": "yellow_ends_to",
+   "fieldtype": "Percent"
+  },
+  {
+   "fieldname": "red_starts_from",
+   "fieldtype": "Percent"
+  },
+  {
+   "fieldname": "red_ends_to",
+   "fieldtype": "Percent"
+  },
+  {
+   "fieldname": "column_break_vsec",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Red",
+   "fieldname": "red",
+   "fieldtype": "Data",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-10 15:26:04.322667",
+ "modified": "2024-09-10 16:12:23.440546",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Exam",
