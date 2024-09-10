@@ -154,25 +154,25 @@ frappe.ui.form.on('Student Exam', {
 ///////////////////////////////  Assign color Button ///////////////////////////
 
 
-frappe.ui.form.on('Student Exam', {
-    refresh: function(frm) {
-        // Add the "Assign Colors" button to the form
-        frm.add_custom_button(__('Assign Colors'), function() {
-            // Call the server-side method and pass the current document name
-            frappe.call({
-                method: 'tnc_frappe_custom_app.color_ranks.assign_colors',
-                args: {
-                    exam_name: frm.doc.name
-                },
-                callback: function(response) {
-                    if (response.message) {
-                        frappe.msgprint(__('Colors assigned successfully!'));
-                    }
-                }
-            });
-        });
-    }
-});
+// frappe.ui.form.on('Student Exam', {
+//     refresh: function(frm) {
+//         // Add the "Assign Colors" button to the form
+//         frm.add_custom_button(__('Assign Colors'), function() {
+//             // Call the server-side method and pass the current document name
+//             frappe.call({
+//                 method: 'tnc_frappe_custom_app.color_ranks.assign_colors',
+//                 args: {
+//                     exam_name: frm.doc.name
+//                 },
+//                 callback: function(response) {
+//                     if (response.message) {
+//                         frappe.msgprint(__('Colors assigned successfully!'));
+//                     }
+//                 }
+//             });
+//         });
+//     }
+// });
 
 
 ////////////////////////// Delete the Particulat Exam Student results doctype based on the ID ///////////////////////////
