@@ -130,12 +130,13 @@
   {
    "fieldname": "rank_color",
    "fieldtype": "Data",
-   "label": "Rank Color"
+   "label": "Rank Color",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-06 14:14:09.938695",
+ "modified": "2024-09-09 18:19:51.107081",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Results",

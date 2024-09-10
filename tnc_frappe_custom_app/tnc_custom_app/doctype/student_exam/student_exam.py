@@ -120,9 +120,11 @@ def student_process_data(name, limit=1500):
         
         if students_exam_doc.status=="In Queue":
             return {"status":False, "msg":"Data processing is already in Queue. . . the operation will be finished in 10 minutes, Please wait for the operation to complete"}
-        students_exam_doc = frappe.get_doc('Student Exam', name)
+
         students_exam_doc.status="In Queue"
         students_exam_doc.save()
+        frappe.db.commit()
+        
         total_records = frappe.db.count('Students Master Data', filters={'imported': 0, 'imported_batch_id': name})
         if total_records > limit:
             # Enqueue the background job
