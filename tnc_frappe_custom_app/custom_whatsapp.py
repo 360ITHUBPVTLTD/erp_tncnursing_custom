@@ -51,6 +51,7 @@ def send_whatsapp_message(name, mobile_number, student_name):
 
     # API details
     file_url = f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Student&name={name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en/{student_name}.pdf"
+
     
     # file_url = f"http://3.111.226.95/api/method/frappe.utils.print_format.download_pdf?doctype=Student&name={name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en/{student_name}.pdf"
     text_message = f"Dear {student_name},Check your results"
