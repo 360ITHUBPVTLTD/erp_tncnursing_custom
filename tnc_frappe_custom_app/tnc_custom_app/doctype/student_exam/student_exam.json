@@ -108,7 +108,7 @@
    "in_standard_filter": 1,
    "label": "Status",
    "options": "Pending to Process Data\nIn Queue\nFailed Queue\nData Synced\nRank Generated(step1)\nRank Generated(step2)\nRank Reset",
-   "read_only": 1
+   "permlevel": 1
   },
   {
    "default": "1",
@@ -192,7 +192,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-10 16:09:12.449760",
+ "modified": "2024-09-10 16:12:23.440546",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Exam",
