@@ -8,25 +8,26 @@ from frappe.model.document import Document
 class StudentsMasterData(Document):
     pass
 
+# class StudentsMasterData(Document):
+#     def on_update(self):
+#         # Get the imported_batch_id from the current Student Master document
+#         imported_batch_id = self.imported_batch_id
 
+#         if imported_batch_id:
+#             # Count the number of students in Student Master with the same imported_batch_id
+#             count = frappe.db.count('Students Master Data', {'imported_batch_id': imported_batch_id})
 
+#             try:
+#                 # Fetch the corresponding Student Exam document using imported_batch_id (matching the name)
+#                 student_exam_doc = frappe.get_doc('Student Exam', imported_batch_id)
+                
+#                 # Update the actual_count field in Student Exam with the count of matching students
+#                 student_exam_doc.actual_count = count
+#                 student_exam_doc.save()
 
-######## It is creating a BatchID with the same record #########
-
-# import frappe
-# from datetime import datetime
-
-# # Global variable to hold the current batch timestamp
-# current_batch_timestamp = None
-
-# def before_insert(doc, method):
-#     global current_batch_timestamp
-
-#     # Check if it's the first record in the batch (i.e., timestamp is not set)
-#     if not current_batch_timestamp:
-#         # Assign the current date and time (including milliseconds)
-#         current_batch_timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-
-#     # Set the imported_batch_id field to the batch timestamp
-#     doc.imported_batch_id = current_batch_timestamp
+#             except frappe.DoesNotExistError:
+#                 # If no Student Exam is found with the matching imported_batch_id
+#                 frappe.throw(f"No Student Exam found with name {imported_batch_id}")
+#         else:
+#             frappe.throw("imported_batch_id is missing in the Student Master record")
 

@@ -13,7 +13,7 @@
 
 frappe.ui.form.on('Student Exam', {
     refresh: function(frm) {
-
+    if (!frm.doc.lock_ranks) {
         frm.add_custom_button(__('Process Data'), function() {
             frappe.call({
                 method: "frappe.client.get_count",
@@ -81,14 +81,14 @@ frappe.ui.form.on('Student Exam', {
                         frappe.msgprint(__(response.message.msg));
                     }
                 },
-                error: function(err) {
-                    frappe.msgprint(__('Error in Syncing data.'));
-                    console.error(err)
-                }
+                // error: function(err) {
+                //     frappe.msgprint(__('Error in Syncing data.'));
+                //     console.error(err)
+                // }
             });
         });
+    }
         
-
         ///////////////////////// Previous working Data Processing with progress bar and real time processing /////////////////////
         // frm.add_custom_button(__('Process Data'), function() {
         //     frappe.realtime.on('sync_progress', function(data) {
@@ -146,21 +146,12 @@ frappe.ui.form.on('Student Exam', {
                 
             });
         }
-
-    }
-});
-
-
-///////////////////////////////  Assign color Button ///////////////////////////
-
-
-frappe.ui.form.on('Student Exam', {
-    refresh: function(frm) {
+        
         // Add the "Assign Colors" button to the form
         frm.add_custom_button(__('Assign Colors'), function() {
             // Call the server-side method and pass the current document name
             frappe.call({
-                method: 'tnc_frappe_custom_app.color_ranks.assign_colors',
+                method: 'tnc_frappe_custom_app.tnc_custom_app.doctype.color_generation.color_generation.assign_colors',
                 args: {
                     exam_name: frm.doc.name
                 },
@@ -171,8 +162,44 @@ frappe.ui.form.on('Student Exam', {
                 }
             });
         });
+
+
+        
+        // Hide the "Add Row" and "Add Multiple Rows" buttons
+        frm.fields_dict['color_generation'].grid.wrapper.find('.grid-add-row').hide();
+        frm.fields_dict['color_generation'].grid.wrapper.find('.grid-add-multiple-rows').hide();
+        // Hide the "Delete Rows" and "Delete All Rows" buttons
+        frm.fields_dict['color_generation'].grid.wrapper.find('.grid-remove-rows').hide();
+        frm.fields_dict['color_generation'].grid.wrapper.find('.grid-remove-all-rows').hide();
+        // Hide the "Edit" button
+        frm.fields_dict['color_generation'].grid.wrapper.find('.btn-open-row').hide();
+
     }
 });
+
+
+///////////////////////////////  Assign color Button ///////////////////////////
+
+
+// frappe.ui.form.on('Student Exam', {
+//     refresh: function(frm) {
+//         // Add the "Assign Colors" button to the form
+//         frm.add_custom_button(__('Assign Colors'), function() {
+//             // Call the server-side method and pass the current document name
+//             frappe.call({
+//                 method: 'tnc_frappe_custom_app.color_ranks.assign_colors',
+//                 args: {
+//                     exam_name: frm.doc.name
+//                 },
+//                 callback: function(response) {
+//                     if (response.message) {
+//                         frappe.msgprint(__('Colors assigned successfully!'));
+//                     }
+//                 }
+//             });
+//         });
+//     }
+// });
 
 
 ////////////////////////// Delete the Particulat Exam Student results doctype based on the ID ///////////////////////////
@@ -201,7 +228,7 @@ frappe.ui.form.on('Student Exam', {
                 },
                 function() {
                     // If cancelled, do nothing
-                    frappe.msgprint(__('Operation cancelled.'));
+                    // frappe.msgprint(__('Operation cancelled.'));
                 }
             );
         });

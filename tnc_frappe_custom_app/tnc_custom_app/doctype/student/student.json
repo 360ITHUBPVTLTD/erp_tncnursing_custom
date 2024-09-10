@@ -8,17 +8,15 @@
  "field_order": [
   "student_name",
   "mobile",
-  "amount",
-  "subject",
+  "student_batch_id",
+  "total_exams",
   "subjects",
-  "mobile_number",
   "column_break_lxec",
   "district",
   "state",
   "system_imported",
-  "payment_link",
-  "student_batch_id",
-  "total_exams"
+  "amount",
+  "payment_link"
  ],
  "fields": [
   {
@@ -30,7 +28,8 @@
    "fieldname": "mobile",
    "fieldtype": "Data",
    "in_standard_filter": 1,
-   "label": "Mobile"
+   "label": "Mobile",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_lxec",
@@ -56,21 +55,14 @@
   {
    "fieldname": "payment_link",
    "fieldtype": "Data",
-   "label": "Payment Link"
+   "label": "Payment Link",
+   "read_only": 1
   },
   {
    "fieldname": "amount",
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Amount"
-  },
-  {
-   "description": "Print Format regarding",
-   "fieldname": "subject",
-   "fieldtype": "Table MultiSelect",
-   "hidden": 1,
-   "label": "Subject",
-   "options": "Subject Multiselect"
   },
   {
    "fieldname": "student_batch_id",
@@ -85,21 +77,15 @@
    "label": "Subjects "
   },
   {
-   "fieldname": "mobile_number",
-   "fieldtype": "Link",
-   "hidden": 1,
-   "label": "Mobile Number",
-   "options": "Student"
-  },
-  {
    "fieldname": "total_exams",
    "fieldtype": "Int",
-   "label": "Total Exams"
+   "label": "Total Exams",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-06 18:11:40.750133",
+ "modified": "2024-09-10 11:45:17.584086",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student",
