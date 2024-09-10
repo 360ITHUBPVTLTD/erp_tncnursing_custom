@@ -85,7 +85,7 @@
 //             function(values){
 //                 // User confirmed the prompt, proceed with WhatsApp message sending
 //                 frappe.call({
-//                     method: 'tnc_frappe_custom_app.custom_whatsapp.send_whatsapp_message',  // Change to your Python file path
+//                     method: 'tnc_frappe_custom_app.custom_whatsapp.send_whatsapp_pdf_message',  // Change to your Python file path
 //                     args: {
 //                         name: name,
 //                         mobile_number: values.mobile_number,  // Use the value from the prompt

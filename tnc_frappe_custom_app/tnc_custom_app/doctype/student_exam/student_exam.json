@@ -24,6 +24,7 @@
   "green",
   "yellow",
   "red",
+  "colors_assigned",
   "column_break_dkqc",
   "green_starts_from",
   "yellow_starts_from",
@@ -32,7 +33,8 @@
   "green_ends_to",
   "yellow_ends_to",
   "red_ends_to",
-  "column_break_vsec"
+  "column_break_vsec",
+  "column_break_yusa"
  ],
  "fields": [
   {
@@ -149,10 +151,12 @@
    "read_only": 1
   },
   {
+   "default": "0",
    "fieldname": "green_starts_from",
    "fieldtype": "Percent"
   },
   {
+   "default": "10",
    "fieldname": "green_ends_to",
    "fieldtype": "Percent"
   },
@@ -164,18 +168,22 @@
    "read_only": 1
   },
   {
+   "default": "11",
    "fieldname": "yellow_starts_from",
    "fieldtype": "Percent"
   },
   {
+   "default": "30",
    "fieldname": "yellow_ends_to",
    "fieldtype": "Percent"
   },
   {
+   "default": "31",
    "fieldname": "red_starts_from",
    "fieldtype": "Percent"
   },
   {
+   "default": "100",
    "fieldname": "red_ends_to",
    "fieldtype": "Percent"
   },
@@ -184,15 +192,26 @@
    "fieldtype": "Column Break"
   },
   {
+   "bold": 1,
    "default": "Red",
    "fieldname": "red",
    "fieldtype": "Data",
    "read_only": 1
+  },
+  {
+   "fieldname": "column_break_yusa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "colors_assigned",
+   "fieldtype": "Check",
+   "label": "Colors Assigned"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-10 16:12:23.440546",
+ "modified": "2024-09-10 16:49:18.035153",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Exam",

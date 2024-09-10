@@ -67,9 +67,9 @@
   {
    "fieldname": "student_batch_id",
    "fieldtype": "Link",
-   "hidden": 1,
    "label": "Student Batch ID",
-   "options": "Student Exam"
+   "options": "Student Exam",
+   "read_only": 1
   },
   {
    "fieldname": "subjects",
@@ -85,7 +85,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-10 11:45:17.584086",
+ "modified": "2024-09-10 18:18:34.015196",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student",

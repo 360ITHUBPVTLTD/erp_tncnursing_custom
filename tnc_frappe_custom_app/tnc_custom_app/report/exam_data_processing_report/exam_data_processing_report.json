@@ -1,0 +1,27 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2024-09-10 17:03:31.555884",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "TNC Logo",
+ "letterhead": null,
+ "modified": "2024-09-10 17:03:31.555884",
+ "modified_by": "Administrator",
+ "module": "TNC Custom App",
+ "name": "Exam Data Processing Report",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Student Exam",
+ "report_name": "Exam Data Processing Report",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}
