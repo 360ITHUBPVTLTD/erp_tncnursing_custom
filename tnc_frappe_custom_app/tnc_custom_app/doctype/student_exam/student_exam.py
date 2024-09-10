@@ -80,7 +80,7 @@ class StudentExam(Document):
         #     frappe.msgprint(f"Exam date is not set for Batch ID: {self.name}. Please add the exam date.")
 
 
-import frappe
+
 ####################################Vatsal's Working Modified code for conditional live and enqueing bulk operations start ######
 
 
@@ -454,4 +454,51 @@ def delete_student_results(exam_id):
 
 
 
+
+
+
+
+
+
+
+################# assigning Ranks color to the Student Results #################
+@frappe.whitelist()
+def assign_colors(exam_name):
+    # Fetch the Student Exam document
+    exam_doc = frappe.get_doc('Student Exam', exam_name)
+    
+    # Fetch total number of students
+    total_students = len(frappe.get_all('Student Results', filters={'batch_id': exam_name}, fields=['name']))
+
+    # Calculate the actual counts for each color range based on the percentage
+    green_end = int(total_students * (exam_doc.green_ends_to / 100))
+    yellow_start = int(total_students * (exam_doc.yellow_starts_from / 100))
+    yellow_end = int(total_students * (exam_doc.yellow_ends_to / 100))
+    red_start = int(total_students * (exam_doc.red_starts_from / 100))
+    
+    # Fetch the Student Results for the current exam, ordered by rank
+    student_results = frappe.get_all('Student Results', filters={'batch_id': exam_name}, fields=['name', 'rank'], order_by='rank asc')
+
+    # Initialize a counter to track the current student's position
+    counter = 1
+
+    # Iterate over the student results and assign colors based on rank
+    for student_result in student_results:
+        if counter <= green_end:
+            # Assign green color
+            frappe.db.set_value('Student Results', student_result.name, 'rank_color', 'G')
+        elif yellow_start <= counter <= yellow_end:
+            # Assign yellow color
+            frappe.db.set_value('Student Results', student_result.name, 'rank_color', 'Y')
+        elif counter >= red_start:
+            # Assign red color
+            frappe.db.set_value('Student Results', student_result.name, 'rank_color', 'R')
+        
+        counter += 1
+
+    # After assigning colors, set the "colors_assigned" field to checked
+    exam_doc.colors_assigned = 1  # Set it to checked (True)
+    exam_doc.save()
+
+    return {'message': 'Colors assigned successfully'}
 

@@ -63,52 +63,52 @@
 /////////////////////////// Below is the whatsapp button Functionality //////////////////////////
 
 
-// frappe.ui.form.on('Student', {
-//     refresh: function(frm) {
-//         // Add a custom button
-//         frm.add_custom_button(__('Send WhatsApp Message'), function() {
-//             // Get student details
-//             let name = frm.doc.name;
-//             let mobile_number = frm.doc.mobile;
-//             let student_name = frm.doc.student_name;
+frappe.ui.form.on('Student', {
+    refresh: function(frm) {
+        // Add a custom button
+        frm.add_custom_button(__('Send WhatsApp Message'), function() {
+            // Get student details
+            let name = frm.doc.name;
+            let mobile_number = frm.doc.mobile;
+            let student_name = frm.doc.student_name;
 
-//             // Prompt the user for confirmation with pre-filled mobile number
-//             frappe.prompt([
-//                 {
-//                     label: 'Mobile Number',
-//                     fieldname: 'mobile_number',
-//                     fieldtype: 'Data',
-//                     default: mobile_number,  // Pre-fill the mobile number
-//                     reqd: 1  // Make the field mandatory
-//                 }
-//             ],
-//             function(values){
-//                 // User confirmed the prompt, proceed with WhatsApp message sending
-//                 frappe.call({
-//                     method: 'tnc_frappe_custom_app.custom_whatsapp.send_whatsapp_message',  // Change to your Python file path
-//                     args: {
-//                         name: name,
-//                         mobile_number: values.mobile_number,  // Use the value from the prompt
-//                         student_name: student_name
-//                     },
-//                     callback: function(response) {
-//                         if (response.message === 'Success') {
-//                             frappe.msgprint(__('WhatsApp message sent successfully!'));
-//                         } else {
-//                             frappe.msgprint(__('Failed to send WhatsApp message.'));
-//                         }
-//                     },
-//                     error: function(err) {
-//                         frappe.msgprint(__('Error occurred while sending the WhatsApp message.'));
-//                     }
-//                 });
-//             },
-//             __('Are you sure want to send the whatsapp to this Mobile Number?'),  // Dialog title
-//             __('Send')  // Button text
-//             );
-//         });
-//     }
-// });
+            // Prompt the user for confirmation with pre-filled mobile number
+            frappe.prompt([
+                {
+                    label: 'Mobile Number',
+                    fieldname: 'mobile_number',
+                    fieldtype: 'Data',
+                    default: mobile_number,  // Pre-fill the mobile number
+                    reqd: 1  // Make the field mandatory
+                }
+            ],
+            function(values){
+                // User confirmed the prompt, proceed with WhatsApp message sending
+                frappe.call({
+                    method: 'tnc_frappe_custom_app.custom_whatsapp.send_whatsapp_pdf_message',  // Change to your Python file path
+                    args: {
+                        name: name,
+                        mobile_number: values.mobile_number,  // Use the value from the prompt
+                        student_name: student_name
+                    },
+                    callback: function(response) {
+                        if (response.message === 'Success') {
+                            frappe.msgprint(__('WhatsApp message sent successfully!'));
+                        } else {
+                            frappe.msgprint(__('Failed to send WhatsApp message.'));
+                        }
+                    },
+                    error: function(err) {
+                        frappe.msgprint(__('Error occurred while sending the WhatsApp message.'));
+                    }
+                });
+            },
+            __('Are you sure want to send the whatsapp to this Mobile Number?'),  // Dialog title
+            __('Send')  // Button text
+            );
+        });
+    }
+});
 
 
 

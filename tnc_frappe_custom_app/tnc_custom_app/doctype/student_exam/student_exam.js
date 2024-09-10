@@ -148,31 +148,31 @@ frappe.ui.form.on('Student Exam', {
         }
         
         // Add the "Assign Colors" button to the form
-        frm.add_custom_button(__('Assign Colors'), function() {
-            // Call the server-side method and pass the current document name
-            frappe.call({
-                method: 'tnc_frappe_custom_app.tnc_custom_app.doctype.color_generation.color_generation.assign_colors',
-                args: {
-                    exam_name: frm.doc.name
-                },
-                callback: function(response) {
-                    if (response.message) {
-                        frappe.msgprint(__('Colors assigned successfully!'));
-                    }
-                }
-            });
-        });
+        // frm.add_custom_button(__('Assign Colors'), function() {
+        //     // Call the server-side method and pass the current document name
+        //     frappe.call({
+        //         method: 'tnc_frappe_custom_app.tnc_custom_app.doctype.student_exam.student_exam.assign_colors',
+        //         args: {
+        //             exam_name: frm.doc.name
+        //         },
+        //         callback: function(response) {
+        //             if (response.message) {
+        //                 frappe.msgprint(__('Colors assigned successfully!'));
+        //             }
+        //         }
+        //     });
+        // });
 
 
         
         // Hide the "Add Row" and "Add Multiple Rows" buttons
-        frm.fields_dict['color_generation'].grid.wrapper.find('.grid-add-row').hide();
-        frm.fields_dict['color_generation'].grid.wrapper.find('.grid-add-multiple-rows').hide();
-        // Hide the "Delete Rows" and "Delete All Rows" buttons
-        frm.fields_dict['color_generation'].grid.wrapper.find('.grid-remove-rows').hide();
-        frm.fields_dict['color_generation'].grid.wrapper.find('.grid-remove-all-rows').hide();
-        // Hide the "Edit" button
-        frm.fields_dict['color_generation'].grid.wrapper.find('.btn-open-row').hide();
+        // frm.fields_dict['color_generation'].grid.wrapper.find('.grid-add-row').hide();
+        // frm.fields_dict['color_generation'].grid.wrapper.find('.grid-add-multiple-rows').hide();
+        // // Hide the "Delete Rows" and "Delete All Rows" buttons
+        // frm.fields_dict['color_generation'].grid.wrapper.find('.grid-remove-rows').hide();
+        // frm.fields_dict['color_generation'].grid.wrapper.find('.grid-remove-all-rows').hide();
+        // // Hide the "Edit" button
+        // frm.fields_dict['color_generation'].grid.wrapper.find('.btn-open-row').hide();
 
     }
 });
@@ -181,28 +181,33 @@ frappe.ui.form.on('Student Exam', {
 ///////////////////////////////  Assign color Button ///////////////////////////
 
 
-// frappe.ui.form.on('Student Exam', {
-//     refresh: function(frm) {
-//         // Add the "Assign Colors" button to the form
-//         frm.add_custom_button(__('Assign Colors'), function() {
-//             // Call the server-side method and pass the current document name
-//             frappe.call({
-//                 method: 'tnc_frappe_custom_app.color_ranks.assign_colors',
-//                 args: {
-//                     exam_name: frm.doc.name
-//                 },
-//                 callback: function(response) {
-//                     if (response.message) {
-//                         frappe.msgprint(__('Colors assigned successfully!'));
-//                     }
-//                 }
-//             });
-//         });
-//     }
-// });
+frappe.ui.form.on('Student Exam', {
+    refresh: function(frm) {
+        // Add the "Assign Colors" button to the form
+        frm.add_custom_button(__('Assign Colors'), function() {
+            // Show a confirmation prompt before proceeding
+            frappe.confirm(
+                __('Are you sure you want to assign colors to the students for this exam?'),
+                function() {
+                    // If confirmed, call the server-side method
+                    frappe.call({
+                        method: 'tnc_frappe_custom_app.tnc_custom_app.doctype.student_exam.student_exam.assign_colors',
+                        args: {
+                            exam_name: frm.doc.name
+                        },
+                        callback: function(response) {
+                            if (response.message) {
+                                frappe.msgprint(__('Colors assigned successfully!'));
+                            }
+                        }
+                    });
+                },
+            );
+        });
+    }
+});
 
-
-////////////////////////// Delete the Particulat Exam Student results doctype based on the ID ///////////////////////////
+////////////////////////// Delete the Particular Exam Student results doctype based on the ID ///////////////////////////
 
 
 frappe.ui.form.on('Student Exam', {
