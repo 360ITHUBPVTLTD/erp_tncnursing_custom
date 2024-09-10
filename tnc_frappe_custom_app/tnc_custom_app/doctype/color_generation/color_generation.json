@@ -1,0 +1,42 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-09-06 14:11:15.076323",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "color",
+  "starts_from",
+  "end_to"
+ ],
+ "fields": [
+  {
+   "fieldname": "color",
+   "fieldtype": "Data",
+   "label": "Color"
+  },
+  {
+   "fieldname": "starts_from",
+   "fieldtype": "Int",
+   "label": "Starts From"
+  },
+  {
+   "fieldname": "end_to",
+   "fieldtype": "Int",
+   "label": "End To"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-09-06 17:43:54.953382",
+ "modified_by": "Administrator",
+ "module": "TNC Custom App",
+ "name": "Color Generation",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
