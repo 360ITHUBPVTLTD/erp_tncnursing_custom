@@ -91,11 +91,15 @@ import frappe
 def student_process_data(name, limit=1):
     try:
         students_exam_doc = frappe.get_doc('Student Exam', name)
-        rq_job_for_student_exam = frappe.get_all("RQ Job",filters={"arguments":("like",students_exam_doc.name),"status":("in",["started","queued"])})
+
+        rq_job_for_student_exam = frappe.get_all("RQ Job",filters={"status":("in",["started","queued"])},fields=["arguments","name"])
         
-        # if students_exam_doc.status=="In Queue":
-        if rq_job_for_student_exam:
-            return {"status":False, "msg":f"Data processing is already in Queue {rq_job_for_student_exam[0].name}. . . the operation will be finished in 10 minutes, Please wait for the operation to complete"}
+        for job in rq_job_for_student_exam:
+            if students_exam_doc.name in job.arguments:
+                base_url = frappe.utils.get_url()
+                job_url = f"{base_url}/app/rq-job/{job.name}"
+                job_anchor_tag=f'<a href="{ base_url }/app/rq-job/{ job.name }">{ job.name }</a>'
+                return {"status":False, "msg":f"Data processing is already in Queue {job_anchor_tag}. . . the operation will be finished in 10 minutes, Please wait for the operation to complete"}
         
         total_records = frappe.db.count('Students Master Data', filters={'imported': 0, 'imported_batch_id': name})
         if total_records > limit:
@@ -448,8 +452,6 @@ def delete_student_results(exam_id):
         pass
         # return f"No student results found for Exam {exam_id}"
 
-
-############################################################################################
 
 
 
