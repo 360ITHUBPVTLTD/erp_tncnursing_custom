@@ -13,19 +13,20 @@
   "data_synced",
   "lock_ranks",
   "exam_code",
+  "actual_count",
   "column_break_atbx",
   "start_rank",
   "initial_regularised_ranks",
   "last_regularised_ranks",
   "last_rank",
-  "actual_candidates",
-  "section_break_bqly",
-  "color_generation"
+  "actual_candidates"
  ],
  "fields": [
   {
    "fieldname": "exam_name",
    "fieldtype": "Link",
+   "in_filter": 1,
+   "in_standard_filter": 1,
    "label": "Exam Name",
    "options": "Test Series Type"
   },
@@ -90,8 +91,11 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_filter": 1,
+   "in_standard_filter": 1,
    "label": "Status",
-   "options": "Pending to Process Data\nIn Queue\nFailed Queue\nData Synced\nRank Generated(step1)\nRank Generated(step2)\nRank Reset"
+   "options": "Pending to Process Data\nIn Queue\nFailed Queue\nData Synced\nRank Generated(step1)\nRank Generated(step2)\nRank Reset",
+   "permlevel": 1
   },
   {
    "default": "1",
@@ -107,19 +111,14 @@
    "label": "Exam Code"
   },
   {
-   "fieldname": "section_break_bqly",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "color_generation",
-   "fieldtype": "Table",
-   "label": "Color Generation",
-   "options": "Color Generation"
+   "fieldname": "actual_count",
+   "fieldtype": "Data",
+   "label": "Actual Count"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-09 13:02:54.518547",
+ "modified": "2024-09-10 15:26:04.322667",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Exam",
