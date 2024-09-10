@@ -230,7 +230,8 @@ frappe.query_reports["Custom Student Result report"] = {
         // report.page.add_inner_button(__('Generate Rank'), function() {
         //     checkRankLockStatus(function(lockRanks) {
         //         if (lockRanks) {
-        //             frappe.msgprint(__('Ranks are locked for this exam'));
+        //             report.page.get_inner_button(__('Generate Rank')).hide();
+        //             // frappe.msgprint(__('Ranks are locked for this exam'));
         //         } else {
         //             var actualCandidates = report.data.length > 1 ? report.data.length - 1 : 0;
         //             frappe.prompt([
@@ -390,3 +391,8 @@ function checkRankLockStatus(callback) {
     }
 }
 
+
+
+
+
+//////////////////////////Below code hide the buttons if the ranks are locked//////////////////////////////////////////////////////////////////////

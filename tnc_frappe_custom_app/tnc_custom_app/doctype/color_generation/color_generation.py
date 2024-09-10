@@ -35,15 +35,16 @@ def assign_colors(exam_name):
     #     }
     
     # Fetch the Student Results for the current exam
-    student_results = frappe.get_all('Student Results', filters={'batch_id': exam_name}, fields=['name'],order_by='rank desc')
+    student_results = frappe.get_all('Student Results', filters={'batch_id': exam_name}, fields=['name','rank'],order_by='rank asc')
     counter=1
-    for student_results in student_results:
+    for student_result in student_results:
+        print(student_result.rank)
         if counter<color_ranges["Green"]:
-            frappe.db.set_value('Student Results', student_results.name, 'rank_color', 'G')
+            frappe.db.set_value('Student Results', student_result.name, 'rank_color', 'G')
         elif counter<color_ranges["Yellow"]:
-            frappe.db.set_value('Student Results', student_results.name, 'rank_color', 'Y')
+            frappe.db.set_value('Student Results', student_result.name, 'rank_color', 'Y')
         else:
-            frappe.db.set_value('Student Results', student_results.name, 'rank_color', 'R')
+            frappe.db.set_value('Student Results', student_result.name, 'rank_color', 'R')
         counter+=1
 
     
