@@ -464,41 +464,76 @@ def delete_student_results(exam_id):
 ################# assigning Ranks color to the Student Results #################
 @frappe.whitelist()
 def assign_colors(exam_name):
-    # Fetch the Student Exam document
-    exam_doc = frappe.get_doc('Student Exam', exam_name)
-    
-    # Fetch total number of students
-    total_students = len(frappe.get_all('Student Results', filters={'batch_id': exam_name}, fields=['name']))
-
-    # Calculate the actual counts for each color range based on the percentage
-    green_end = int(total_students * (exam_doc.green_ends_to / 100))
-    yellow_start = int(total_students * (exam_doc.yellow_starts_from / 100))
-    yellow_end = int(total_students * (exam_doc.yellow_ends_to / 100))
-    red_start = int(total_students * (exam_doc.red_starts_from / 100))
-    
-    # Fetch the Student Results for the current exam, ordered by rank
-    student_results = frappe.get_all('Student Results', filters={'batch_id': exam_name}, fields=['name', 'rank'], order_by='rank asc')
-
-    # Initialize a counter to track the current student's position
-    counter = 1
-
-    # Iterate over the student results and assign colors based on rank
-    for student_result in student_results:
-        if counter <= green_end:
-            # Assign green color
-            frappe.db.set_value('Student Results', student_result.name, 'rank_color', 'G')
-        elif yellow_start <= counter <= yellow_end:
-            # Assign yellow color
-            frappe.db.set_value('Student Results', student_result.name, 'rank_color', 'Y')
-        elif counter >= red_start:
-            # Assign red color
-            frappe.db.set_value('Student Results', student_result.name, 'rank_color', 'R')
+    try:
+        # Fetch the Student Exam document
+        exam_doc = frappe.get_doc('Student Exam', exam_name)
+        print("Exam opened for color assigment",exam_name)
         
-        counter += 1
+        # Fetch total number of students
+        total_students = len(frappe.get_all('Student Results', filters={'batch_id': exam_name}, fields=['name']))
 
-    # After assigning colors, set the "colors_assigned" field to checked
-    exam_doc.colors_assigned = 1  # Set it to checked (True)
-    exam_doc.save()
+        # Calculate the actual counts for each color range based on the percentage
+        green_end = int(total_students * (exam_doc.green_ends_to / 100))
+        yellow_start = int(total_students * (exam_doc.yellow_starts_from / 100))
+        yellow_end = int(total_students * (exam_doc.yellow_ends_to / 100))
+        red_start = int(total_students * (exam_doc.red_starts_from / 100))
+        
+        # Fetch the Student Results for the current exam, ordered by rank
+        student_results = frappe.get_all('Student Results', filters={'batch_id': exam_name}, fields=['name', 'rank'], order_by='rank asc')
+        print(student_results)
+        # Initialize a counter to track the current student's position
+        counter = 1
 
-    return {'message': 'Colors assigned successfully'}
+        # Iterate over the student results and assign colors based on rank
+        for student_result in student_results:
+            if counter <= green_end:
+                # Assign green color
+                frappe.db.set_value('Student Results', student_result.name, 'rank_color', 'G')
+            elif counter <= yellow_end:
+                # Assign yellow color
+                frappe.db.set_value('Student Results', student_result.name, 'rank_color', 'Y')
+            else:
+                # Assign red color
+                frappe.db.set_value('Student Results', student_result.name, 'rank_color', 'R')
+            
+            counter += 1
+
+        # After assigning colors, set the "colors_assigned" field to checked
+        exam_doc.colors_assigned = 1  # Set it to checked (True)
+        exam_doc.save()
+
+        return {'message': 'Colors assigned successfully'}
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), f"Error in Color assignement for Exam: {exam_name}")
+        return {"status": False, "msg": f"Error in Color assignement for Exam {exam_name}"}
+
+
+
+@frappe.whitelist()
+def bulk_assign_colors(green_end,yellow_end):
+    try:
+        student_exams = frappe.get_all('Student Exam', filters={'status': ("not in",["Pending to Process Data","In Queue","Failed Queue"])})
+        print(student_exams)
+        for exam in student_exams:
+            try:
+                student_exam_doc = frappe.get_doc('Student Exam',exam.name)
+                student_exam_doc.green_starts_from = 0
+                student_exam_doc.yellow_starts_from = int(green_end)+1
+                student_exam_doc.red_starts_from = int(yellow_end)+1
+                student_exam_doc.green_ends_to = int(green_end)
+                student_exam_doc.yellow_ends_to = int(yellow_end)
+                student_exam_doc.red_ends_to = 100
+                student_exam_doc.save()
+                response1=assign_colors(student_exam_doc.name)
+                print(response1)
+            except Exception as e:
+                print(e)
+                frappe.log_error(frappe.get_traceback(), f"Error in Color assignement for Exam {exam.name}")
+
+        return {"status": True, "msg": f"Bulk Color assignement for all Exam done Successfully"}
+    except Exception as e:
+
+        frappe.log_error(frappe.get_traceback(), "Error in Bulk Color assignement for All Exam")
+        return {"status": False, "msg": f"Error in Bulk Color assignement for All Exam"}
+
 
