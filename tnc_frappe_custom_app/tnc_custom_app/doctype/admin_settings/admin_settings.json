@@ -10,7 +10,9 @@
   "razorpay_api_key",
   "razorpay_secret",
   "whatsapp_instance_section",
-  "instance_id"
+  "instance_id",
+  "who_are_having_access_to_whatsapp_section",
+  "whatsapp_access"
  ],
  "fields": [
   {
@@ -42,12 +44,23 @@
    "fieldname": "instance_id",
    "fieldtype": "Data",
    "label": "Instance ID"
+  },
+  {
+   "fieldname": "who_are_having_access_to_whatsapp_section",
+   "fieldtype": "Section Break",
+   "label": "Who are Having Access to WhatsApp "
+  },
+  {
+   "fieldname": "whatsapp_access",
+   "fieldtype": "Table MultiSelect",
+   "label": "WhatsApp Access",
+   "options": "WhatsApp Child Table"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-08-26 11:30:32.980421",
+ "modified": "2024-09-11 17:45:48.020187",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Admin Settings",
