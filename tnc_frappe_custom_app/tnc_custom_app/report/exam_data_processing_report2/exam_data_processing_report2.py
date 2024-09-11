@@ -15,6 +15,8 @@ def execute(filters=None):
         {"label": "Imported Master Data", "fieldname": "student_master_imported_count", "fieldtype": "Int", "width": 200},
         {"label": "Student Created", "fieldname": "student_created_count", "fieldtype": "Int", "width": 200},
         {"label": "Student Results Created", "fieldname": "student_results_count", "fieldtype": "Int", "width": 200},
+        {"label": "Color Assigned", "fieldname": "student_color_assigned", "fieldtype": "Int", "width": 200},
+        
     ]
 
     # Fetch data for the report
@@ -46,6 +48,8 @@ def get_exam_performance_data(filters):
         # Count records for student results from 'Student Results' where batch ID matches
         student_results_count = frappe.db.count('Student Results', {'batch_id': exam.name})
 
+        student_color_assigned = frappe.db.count('Student Results', {'rank_color': ("in",["R","G","Y"]),'batch_id': exam.name})
+
         # Add data to the report
         data.append({
             "exam_id": exam.name,
@@ -53,6 +57,7 @@ def get_exam_performance_data(filters):
             "student_master_imported_count": student_master_data_imported_count,
             "student_created_count": student_created_count,
             "student_results_count": student_results_count,
+            "student_color_assigned":student_color_assigned,
         })
 
     return data

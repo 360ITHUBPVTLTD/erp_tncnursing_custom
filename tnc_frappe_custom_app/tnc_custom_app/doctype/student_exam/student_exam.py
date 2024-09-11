@@ -146,7 +146,7 @@ def process_students_in_background(name):
         for student_data in students_master_data:
             student_and_result_validation_and_creation(student_data)
             
-            completed_records += 1
+            # completed_records += 1
     
         students_exam_doc.status = 'Data Synced'
         students_exam_doc.save()
@@ -156,7 +156,7 @@ def process_students_in_background(name):
     
         return {"status": True, "msg": f"Data Processed Successfully"}
     except Exception as e:
-        # students_exam_doc = frappe.get_doc('Student Exam', name)
+        students_exam_doc = frappe.get_doc('Student Exam', name)
         students_exam_doc.status="Failed Queue"
         students_exam_doc.save()
         frappe.log_error(frappe.get_traceback(), "Error in background sync")
@@ -513,7 +513,7 @@ def assign_colors(exam_name):
 def bulk_assign_colors(green_end,yellow_end):
     try:
         student_exams = frappe.get_all('Student Exam', filters={'status': ("not in",["Pending to Process Data","In Queue","Failed Queue"])})
-        print(student_exams)
+        # print(student_exams)
         for exam in student_exams:
             try:
                 student_exam_doc = frappe.get_doc('Student Exam',exam.name)
