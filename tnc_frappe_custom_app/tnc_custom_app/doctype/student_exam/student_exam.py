@@ -512,7 +512,7 @@ def assign_colors(exam_name):
 @frappe.whitelist()
 def bulk_assign_colors(green_end,yellow_end):
     try:
-        student_exams = frappe.get_all('Student Exam', filters={'status': ("not in",["Pending to Process Data","In Queue","Failed Queue"])})
+        student_exams = frappe.get_all('Student Exam', filters={"colors_assigned":0,'status': ("not in",["Pending to Process Data","In Queue","Failed Queue"])})
         # print(student_exams)
         for exam in student_exams:
             try:
@@ -526,6 +526,7 @@ def bulk_assign_colors(green_end,yellow_end):
                 student_exam_doc.save()
                 response1=assign_colors(student_exam_doc.name)
                 # print(response1)
+                frappe.log_error(frappe.get_traceback(), f"Color assignement for Exam {exam.name} done Successfully")
             except Exception as e:
                 # print(e)
                 frappe.log_error(frappe.get_traceback(), f"Error in Color assignement for Exam {exam.name}")
