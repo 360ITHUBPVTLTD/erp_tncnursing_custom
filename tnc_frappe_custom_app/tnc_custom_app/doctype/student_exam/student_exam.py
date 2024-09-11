@@ -103,16 +103,16 @@ def student_process_data(name, limit=1):
         
         total_records = frappe.db.count('Students Master Data', filters={'imported': 0, 'imported_batch_id': name})
         if total_records > limit:
-            students_exam_doc.status="In Queue"
-            students_exam_doc.save()
-            frappe.db.commit()
             # Enqueue the background job
             frappe.enqueue('tnc_frappe_custom_app.tnc_custom_app.doctype.student_exam.student_exam.process_students_in_background', 
-                        queue='long', 
-                        timeout=6000, 
+                        queue='short', 
+                        timeout=3000, 
                         name=name, 
                         # limit=limit
                         )
+            students_exam_doc.status="In Queue"
+            students_exam_doc.save()
+            frappe.db.commit()
             return {"status":True,"enqueued":True,"msg":"Data syncing is Enqueued Successfully!"}
         else:
             response_realtime_data_processing=process_data_realtime(name)
@@ -135,14 +135,13 @@ def process_students_in_background(name):
             # start=start,
             # limit=limit,
                      )
-        # print(students_master_data)
-    
-        total_records = frappe.db.count('Students Master Data', filters={'imported': 0, 'imported_batch_id': name})
+                     
     
         if not students_master_data:
-            return {"status": "no_data"}
+            frappe.log_error(frappe.get_traceback(), f"No Student Master Data To process for Exam {name}")
+            return {"status": False, "msg": f"No Student Master Data To process"}
     
-        completed_records = 0
+        # completed_records = 0
     
         for student_data in students_master_data:
             student_and_result_validation_and_creation(student_data)
@@ -467,7 +466,7 @@ def assign_colors(exam_name):
     try:
         # Fetch the Student Exam document
         exam_doc = frappe.get_doc('Student Exam', exam_name)
-        print("Exam opened for color assigment",exam_name)
+        # print("Exam opened for color assigment",exam_name)
         
         # Fetch total number of students
         total_students = len(frappe.get_all('Student Results', filters={'batch_id': exam_name}, fields=['name']))
@@ -480,7 +479,7 @@ def assign_colors(exam_name):
         
         # Fetch the Student Results for the current exam, ordered by rank
         student_results = frappe.get_all('Student Results', filters={'batch_id': exam_name}, fields=['name', 'rank'], order_by='rank asc')
-        print(student_results)
+        # print(student_results)
         # Initialize a counter to track the current student's position
         counter = 1
 
@@ -501,6 +500,7 @@ def assign_colors(exam_name):
         # After assigning colors, set the "colors_assigned" field to checked
         exam_doc.colors_assigned = 1  # Set it to checked (True)
         exam_doc.save()
+        frappe.db.commit()
 
         return {'message': 'Colors assigned successfully'}
     except Exception as e:
@@ -525,9 +525,9 @@ def bulk_assign_colors(green_end,yellow_end):
                 student_exam_doc.red_ends_to = 100
                 student_exam_doc.save()
                 response1=assign_colors(student_exam_doc.name)
-                print(response1)
+                # print(response1)
             except Exception as e:
-                print(e)
+                # print(e)
                 frappe.log_error(frappe.get_traceback(), f"Error in Color assignement for Exam {exam.name}")
 
         return {"status": True, "msg": f"Bulk Color assignement for all Exam done Successfully"}
