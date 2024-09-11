@@ -65,20 +65,20 @@ def send_whatsapp_pdf_message(name, mobile_number, student_name, message):
     return {"status": 'success', "msg": "WhatsApp message sent successfully!"}
 
 
-@frappe.whitelist()
-def valiadting_user_for_bulk_wa_msg():
-    user = frappe.session.user
-    if user=="Administrator":
-        return {"status": True, "msg": "User has the required role."}
+# @frappe.whitelist()
+# def valiadting_user_for_bulk_wa_msg():
+#     user = frappe.session.user
+#     if user=="Administrator":
+#         return {"status": True, "msg": "User has the required role."}
     
-    admin_setting_doc = frappe.get_doc("Admin Settings")
-    auhenticated_users=[]
-    for i in admin_setting_doc.whatsapp_access:
-        auhenticated_users.append(i.user)
+#     admin_setting_doc = frappe.get_doc("Admin Settings")
+#     auhenticated_users=[]
+#     for i in admin_setting_doc.whatsapp_access:
+#         auhenticated_users.append(i.user)
     
-    if user not in auhenticated_users :
-        return {"status": False, "msg": "User does not have the required role to send Bulk WhatsApp messages."}
-    return {"status": True, "msg": "User has the required role."}
+#     if user not in auhenticated_users :
+#         return {"status": False, "msg": "User does not have the required role to send Bulk WhatsApp messages."}
+#     return {"status": True, "msg": "User has the required role."}
 
 
 
