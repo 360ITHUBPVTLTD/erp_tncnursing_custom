@@ -28,8 +28,7 @@
    "fieldname": "mobile",
    "fieldtype": "Data",
    "in_standard_filter": 1,
-   "label": "Mobile",
-   "read_only": 1
+   "label": "Mobile"
   },
   {
    "fieldname": "column_break_lxec",
@@ -85,7 +84,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-10 19:49:10.940140",
+ "modified": "2024-09-11 16:04:10.135985",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student",

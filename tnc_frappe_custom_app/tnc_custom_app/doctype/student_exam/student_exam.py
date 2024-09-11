@@ -102,7 +102,10 @@ def student_process_data(name, limit=1):
                 return {"status":False, "msg":f"Data processing is already in Queue {job_anchor_tag}. . . the operation will be finished in 10 minutes, Please wait for the operation to complete"}
         
         total_records = frappe.db.count('Students Master Data', filters={'imported': 0, 'imported_batch_id': name})
-        if total_records > limit:
+        if not total_records:
+            return {"status": False, "msg": f"No Student Master Data to process for this Exam {name}"}
+            
+        elif total_records > limit:
             # Enqueue the background job
             frappe.enqueue('tnc_frappe_custom_app.tnc_custom_app.doctype.student_exam.student_exam.process_students_in_background', 
                         queue='short', 
@@ -237,11 +240,16 @@ def student_and_result_validation_and_creation(student_data):
                 'district': student_data['district'],
                 'system_imported': 1,
                 'student_batch_id': student_data['imported_batch_id'],
+                'total_exams':1,
             })
             new_student.insert()
             student_id = new_student.name
         else:
-            student_id = frappe.get_value('Student', {'mobile': student_data['mobile']}, 'name')
+            student_doc = frappe.get_doc('Student', existing_student )
+            old_test_series_results = frappe.get_all('Student Results',filters={"student_id":existing_student})
+            student_doc.total_exams=len(old_test_series_results)+1
+            student_doc.save()
+            student_id = student_doc.name
 
         new_test_series_result = frappe.get_doc({
             'doctype': 'Student Results',
@@ -314,12 +322,12 @@ def student_and_result_validation_and_creation(student_data):
 #             new_student.insert()
 #             student_id = new_student.name
 #         else:
-#             # Fetch the existing student's ID
-#             student_id = frappe.get_value('Student', {'mobile': student_data['mobile']}, 'name')
-#             student_doc = frappe.get_doc('Student', student_id )
-#             old_test_series_results = frappe.get_doc('Student Results',filters={"student_id":student_id})
-#             student_doc=len(old_test_series_results)+1
-#             student_doc.save()
+            # Fetch the existing student's ID
+            # student_id = frappe.get_value('Student', {'mobile': student_data['mobile']}, 'name')
+            # student_doc = frappe.get_doc('Student', student_id )
+            # old_test_series_results = frappe.get_doc('Student Results',filters={"student_id":student_id})
+            # student_doc=len(old_test_series_results)+1
+            # student_doc.save()
  
 #         # Check if the result already exists to avoid duplication
 #         # existing_result = frappe.db.exists('Student Results', {
@@ -469,33 +477,33 @@ def assign_colors(exam_name):
         # print("Exam opened for color assigment",exam_name)
         
         # Fetch total number of students
-        total_students = len(frappe.get_all('Student Results', filters={'batch_id': exam_name}, fields=['name']))
+        total_students = float(exam_doc.last_rank)
 
         # Calculate the actual counts for each color range based on the percentage
         green_end = int(total_students * (exam_doc.green_ends_to / 100))
-        yellow_start = int(total_students * (exam_doc.yellow_starts_from / 100))
+
         yellow_end = int(total_students * (exam_doc.yellow_ends_to / 100))
-        red_start = int(total_students * (exam_doc.red_starts_from / 100))
         
+        print(green_end,yellow_end)
         # Fetch the Student Results for the current exam, ordered by rank
         student_results = frappe.get_all('Student Results', filters={'batch_id': exam_name}, fields=['name', 'rank'], order_by='rank asc')
         # print(student_results)
         # Initialize a counter to track the current student's position
-        counter = 1
+        # counter = 1
 
         # Iterate over the student results and assign colors based on rank
         for student_result in student_results:
-            if counter <= green_end:
+            if student_result.rank <= green_end:
                 # Assign green color
                 frappe.db.set_value('Student Results', student_result.name, 'rank_color', 'G')
-            elif counter <= yellow_end:
+            elif student_result.rank <= yellow_end:
                 # Assign yellow color
                 frappe.db.set_value('Student Results', student_result.name, 'rank_color', 'Y')
             else:
                 # Assign red color
                 frappe.db.set_value('Student Results', student_result.name, 'rank_color', 'R')
             
-            counter += 1
+            # counter += 1
 
         # After assigning colors, set the "colors_assigned" field to checked
         exam_doc.colors_assigned = 1  # Set it to checked (True)
@@ -516,6 +524,7 @@ def bulk_assign_colors(green_end,yellow_end):
         # print(student_exams)
         for exam in student_exams:
             try:
+                student_exam_result_last_rank = frappe.get_all('Student Results', filters={"batch_id":exam.name},fields=["rank"],order_by="rank desc",limit=1)
                 student_exam_doc = frappe.get_doc('Student Exam',exam.name)
                 student_exam_doc.green_starts_from = 0
                 student_exam_doc.yellow_starts_from = int(green_end)+1
@@ -523,7 +532,13 @@ def bulk_assign_colors(green_end,yellow_end):
                 student_exam_doc.green_ends_to = int(green_end)
                 student_exam_doc.yellow_ends_to = int(yellow_end)
                 student_exam_doc.red_ends_to = 100
+
+                student_exam_doc.start_rank = 1
+                student_exam_doc.last_rank = student_exam_result_last_rank[0].rank
+                student_exam_doc.actual_candidates = student_exam_doc.actual_count
+
                 student_exam_doc.save()
+                
                 response1=assign_colors(student_exam_doc.name)
                 # print(response1)
                 frappe.log_error(frappe.get_traceback(), f"Color assignement for Exam {exam.name} done Successfully")
