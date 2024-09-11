@@ -31,27 +31,45 @@
 // };
 
 ///////////////////Below is the BUlk message button whatsapp ///////////////////////////////////////////////
+
 // frappe.listview_settings['Student'] = {
 //     onload: function (listview) {
-//         listview.page.add_inner_button(__('Bulk WA'), function () {
+//         listview.page.add_inner_button(__('Bulk WhatsApp'), function () {
+//             // Prompt user to enter a custom message
 //             frappe.prompt({
 //                 fieldtype: 'Small Text',
 //                 fieldname: 'message_text',
-//                 label: __('Enter message text'),
-//                 reqd: false,
+//                 label: __('Enter the message text to send to all students'),
+//                 reqd: true  // Make the field mandatory
 //             }, function (values) {
+//                 // Confirm sending messages
 //                 frappe.confirm(
 //                     __('Are you sure you want to send bulk WhatsApp messages to all students?'),
 //                     function () {
+//                         // Show a notification that the messages are being sent
+//                         frappe.show_alert({
+//                             message: __('Sending WhatsApp messages...'),
+//                             indicator: 'blue'
+//                         });
+
+//                         // Call the server-side method to send bulk messages
 //                         frappe.call({
 //                             method: 'tnc_frappe_custom_app.custom_whatsapp.send_bulk_whatsapp_messages',
 //                             args: {
-//                                 // message: values.
+//                                 message_text: values.message_text  // Pass the message entered in the prompt
+//                                 // name: frm.doc.name,
+
 //                             },
 //                             callback: function (response) {
 //                                 if (response.message) {
 //                                     frappe.msgprint(__('Bulk WhatsApp messages sent successfully!'));
+//                                 } else {
+//                                     frappe.msgprint(__('Failed to send bulk WhatsApp messages.'));
 //                                 }
+//                             },
+//                             error: function (err) {
+//                                 frappe.msgprint(__('There was an error sending the messages. Please try again.'));
+//                                 console.error(err);  // Log error for debugging
 //                             }
 //                         });
 //                     }
@@ -60,4 +78,6 @@
 //         });
 //     }
 // };
+
+
 

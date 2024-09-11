@@ -72,7 +72,7 @@
 //             let mobile_number = frm.doc.mobile;
 //             let student_name = frm.doc.student_name;
 
-//             // Prompt the user for confirmation with pre-filled mobile number
+//             // Prompt the user for the mobile number and custom message
 //             frappe.prompt([
 //                 {
 //                     label: 'Mobile Number',
@@ -80,35 +80,49 @@
 //                     fieldtype: 'Data',
 //                     default: mobile_number,  // Pre-fill the mobile number
 //                     reqd: 1  // Make the field mandatory
+//                 },
+//                 {
+//                     label: 'Message',
+//                     fieldname: 'message',
+//                     fieldtype: 'Small Text',
+//                     reqd: 1  // Make the field mandatory
 //                 }
 //             ],
 //             function(values){
-//                 // User confirmed the prompt, proceed with WhatsApp message sending
-//                 frappe.call({
-//                     method: 'tnc_frappe_custom_app.custom_whatsapp.send_whatsapp_pdf_message',  // Change to your Python file path
-//                     args: {
-//                         name: name,
-//                         mobile_number: values.mobile_number,  // Use the value from the prompt
-//                         student_name: student_name
-//                     },
-//                     callback: function(response) {
-//                         if (response.message === 'Success') {
-//                             frappe.msgprint(__('WhatsApp message sent successfully!'));
-//                         } else {
-//                             frappe.msgprint(__('Failed to send WhatsApp message.'));
-//                         }
-//                     },
-//                     error: function(err) {
-//                         frappe.msgprint(__('Error occurred while sending the WhatsApp message.'));
+//                 // Confirm the action before sending
+//                 frappe.confirm(
+//                     __('Are you sure you want to send this message?'),
+//                     function() {
+//                         // If confirmed, proceed with WhatsApp message sending
+//                         frappe.call({
+//                             method: 'tnc_frappe_custom_app.custom_whatsapp.send_whatsapp_pdf_message',  // Your server script method path
+//                             args: {
+//                                 name: name,
+//                                 mobile_number: values.mobile_number,  // Use the value from the prompt
+//                                 student_name: student_name,
+//                                 message: values.message  // Custom message entered by the user
+//                             },
+//                             callback: function(response) {
+//                                 if (response.message === 'success') {
+//                                     frappe.msgprint(__('WhatsApp message sent successfully!'));
+//                                 } else {
+//                                     frappe.msgprint(__('Failed to send WhatsApp message.'));
+//                                 }
+//                             },
+//                             error: function(err) {
+//                                 frappe.msgprint(__('Error occurred while sending the WhatsApp message.'));
+//                             }
+//                         });
 //                     }
-//                 });
+//                 );
 //             },
-//             __('Are you sure want to send the whatsapp to this Mobile Number?'),  // Dialog title
-//             __('Send')  // Button text
+//             __('Enter Mobile Number and Message'),  // Dialog title
+//             __('Send WhatsApp')  // Button text
 //             );
 //         });
 //     }
 // });
+
 
 
 
