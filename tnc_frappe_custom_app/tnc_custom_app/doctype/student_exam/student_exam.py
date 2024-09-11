@@ -157,7 +157,7 @@ def process_students_in_background(name):
         return {"status": True, "msg": f"Data Processed Successfully"}
     except Exception as e:
         # students_exam_doc = frappe.get_doc('Student Exam', name)
-        students_exam_doc.status="Failed In Queue"
+        students_exam_doc.status="Failed Queue"
         students_exam_doc.save()
         frappe.log_error(frappe.get_traceback(), "Error in background sync")
         return {"status": False, "msg": f"Error in Background Processing Data: {str(e)}"}
@@ -217,7 +217,7 @@ def process_data_realtime(name):
         return {"status": True, "msg": f"Data Processed Successfully"}
     except Exception as e:
         print(e)
-        students_exam_doc.status="Failed In Queue"
+        students_exam_doc.status="Failed Queue"
         students_exam_doc.save()
         frappe.db.commit()
         return {"status": False, "msg": f"Error in Processing Data: {str(e)}"}
