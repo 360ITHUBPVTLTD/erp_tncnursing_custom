@@ -1,6 +1,6 @@
 {
  "actions": [],
- "allow_rename": 1,
+ "autoname": "autoincrement",
  "creation": "2024-09-10 19:51:43.540175",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -12,7 +12,9 @@
   "column_break_oiyu",
   "student_id",
   "mobile",
-  "student_name"
+  "student_name",
+  "status",
+  "message_id"
  ],
  "fields": [
   {
@@ -28,7 +30,8 @@
   {
    "fieldname": "message_type",
    "fieldtype": "Select",
-   "label": "Message Type"
+   "label": "Message Type",
+   "options": "Custom\nBulk"
   },
   {
    "fieldname": "message",
@@ -56,14 +59,26 @@
    "fieldname": "student_name",
    "fieldtype": "Data",
    "label": "Student Name"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nsuccess"
+  },
+  {
+   "fieldname": "message_id",
+   "fieldtype": "Data",
+   "label": "Message ID"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-10 19:54:34.708757",
+ "modified": "2024-09-11 10:43:19.552019",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "WhatsApp Message Log",
+ "naming_rule": "Autoincrement",
  "owner": "Administrator",
  "permissions": [
   {
