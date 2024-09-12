@@ -30,7 +30,7 @@ def send_whatsapp_pdf_message(name, mobile_number, student_name):
         base_url = frappe.utils.get_url()
         # response = requests.get(api_url)
        # link = f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Student&name={name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en/TNC_REPORT_CARD.pdf"
-        link = f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Student&name={name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en/TncResult.pdf"
+        link = f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Student&name={name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en/TNC_REPORT_CARD.pdf"
         # link = 'https://tourism.gov.in/sites/default/files/2019-04/dummy-pdf_2.pdf'
         # print(link)
         url = "https://wts.vision360solutions.co.in/api/sendFileWithCaption"
