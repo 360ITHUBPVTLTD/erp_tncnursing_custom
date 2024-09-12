@@ -1,0 +1,107 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-09-12 10:08:56.777590",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "imported_batch_id",
+  "student_name",
+  "mobile",
+  "district",
+  "state",
+  "column_break_ktmk",
+  "rank",
+  "total_marks",
+  "total_right",
+  "total_wrong",
+  "total_skip",
+  "percentage"
+ ],
+ "fields": [
+  {
+   "fieldname": "imported_batch_id",
+   "fieldtype": "Link",
+   "label": "Imported Batch ID",
+   "options": "Student Exam"
+  },
+  {
+   "fieldname": "student_name",
+   "fieldtype": "Data",
+   "label": "Student Name"
+  },
+  {
+   "fieldname": "mobile",
+   "fieldtype": "Data",
+   "label": "Mobile"
+  },
+  {
+   "fieldname": "district",
+   "fieldtype": "Data",
+   "label": "District"
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Data",
+   "label": "State"
+  },
+  {
+   "fieldname": "column_break_ktmk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rank",
+   "fieldtype": "Int",
+   "label": "Rank"
+  },
+  {
+   "fieldname": "total_marks",
+   "fieldtype": "Int",
+   "label": "Total Marks"
+  },
+  {
+   "fieldname": "total_right",
+   "fieldtype": "Int",
+   "label": "Total Right"
+  },
+  {
+   "fieldname": "total_wrong",
+   "fieldtype": "Int",
+   "label": "Total Wrong"
+  },
+  {
+   "fieldname": "total_skip",
+   "fieldtype": "Int",
+   "label": "Total Skip"
+  },
+  {
+   "fieldname": "percentage",
+   "fieldtype": "Float",
+   "label": "Percentage"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-09-12 11:47:29.334566",
+ "modified_by": "Administrator",
+ "module": "TNC Custom App",
+ "name": "Not Imported Logs",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

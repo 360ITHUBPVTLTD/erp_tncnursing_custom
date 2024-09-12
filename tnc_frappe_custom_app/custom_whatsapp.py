@@ -5,21 +5,35 @@ import requests
 from frappe.utils import now
 
 @frappe.whitelist()
-def send_whatsapp_pdf_message(name, mobile_number, student_name, message):
+def send_whatsapp_pdf_message(name, mobile_number, student_name):
     # Fetch the instance_id from the "Admin Settings" doctype
     base_url = frappe.utils.get_url()
     admin_settings = frappe.get_doc('Admin Settings')
     instance_id = admin_settings.instance_id
-
+    message = (
+        'Assessment Report by TNC Experts\n'
+        'You are doing very good 👍\n\n'
+        'Your score is very fantastic. According to TNC experts, you will achieve a good rank in NORCET Exam.\n\n'
+        '🎯📚 Just continue your hard work and study, maximum question practice, and try to control minus marking.\n\n'
+        '🎖️ We hope strongly that you are our next interviewer on our TNC YouTube channel.\n\n'
+        '👍 Be confident and be consistent.\n\n'
+        '💐 All the Best and Best wishes.\n\n'
+        'आपकी सफलता वाली कॉल का इंतजार रहेगा।\n\n'
+        'Thanks\n\n'
+        'AIIMS 20+ Expert TNC TEAM\n\n'
+        'If you need any help and assistance, please message us on the official number:\n'
+        '7484999051\n'
+        'TNC Nursing'
+    )
     # Construct the API URL
     try:
         # Make the API request
         base_url = frappe.utils.get_url()
         # response = requests.get(api_url)
-        # link = f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Student&name={name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en/{student_name}pdf"
-        link = f"{base_url}method/frappe.utils.print_format.download_pdf?doctype=Student&name={name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en/TNC REPORT CARD.pdf"
-        # link = "https://online.lsaoffice.com/api/method/frappe.utils.print_format.download_pdf?doctype=Sales%20Order&name=SAL-ORD-2023-00262&format=Sales%20Order%20Format&no_letterhead=0&letterhead=LSA&settings=%7B%7D&_lang=en/Invoice.pdf"
-
+       # link = f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Student&name={name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en/TNC_REPORT_CARD.pdf"
+        link = f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Student&name={name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en/TncResult.pdf"
+        # link = 'https://tourism.gov.in/sites/default/files/2019-04/dummy-pdf_2.pdf'
+        # print(link)
         url = "https://wts.vision360solutions.co.in/api/sendFileWithCaption"
         params_1 = {
             "token": instance_id,
@@ -162,24 +176,26 @@ def send_whatsapp_pdf_message(name, mobile_number, student_name, message):
     except Exception as log_error:
         frappe.log_error(frappe.get_traceback(), "Failed to create WhatsApp Message Log")
 
-    # return {'status': message_status}
-    return {"status": 'success', "msg": "WhatsApp message sent successfully!"}
+    return {'status': message_status}
+    # return {"status": 'success', "msg": "WhatsApp message sent successfully!"}
 
 
-@frappe.whitelist()
-def valiadting_user_for_bulk_wa_msg():
-    user = frappe.session.user
-    if user=="Administrator":
-        return {"status": True, "msg": "User has the required role."}
+######### Validating the button based on the 
+
+# @frappe.whitelist()
+# def valiadting_user_for_bulk_wa_msg():
+#     user = frappe.session.user
+#     if user=="Administrator":
+#         return {"status": True, "msg": "User has the required role."}
     
-    admin_setting_doc = frappe.get_doc("Admin Settings")
-    auhenticated_users=[]
-    for i in admin_setting_doc.whatsapp_access:
-        auhenticated_users.append(i.user)
+#     admin_setting_doc = frappe.get_doc("Admin Settings")
+#     auhenticated_users=[]
+#     for i in admin_setting_doc.whatsapp_access:
+#         auhenticated_users.append(i.user)
     
-    if user not in auhenticated_users :
-        return {"status": False, "msg": "User does not have the required role to send Bulk WhatsApp messages."}
-    return {"status": True, "msg": "User has the required role."}
+#     if user not in auhenticated_users :
+#         return {"status": False, "msg": "User does not have the required role to send Bulk WhatsApp messages."}
+#     return {"status": True, "msg": "User has the required role."}
 
 
 

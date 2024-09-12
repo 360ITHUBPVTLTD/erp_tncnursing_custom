@@ -31,3 +31,46 @@ class StudentsMasterData(Document):
         else:
             frappe.throw("imported_batch_id is missing in the Student Master record")
 
+
+
+
+
+
+# ################ Below code is to fetch the unchecked(unimported Records and store it into the DOctype #################)
+# import frappe
+
+# @frappe.whitelist()
+# def sync_uninported_data():
+#     # Fetch all records from 'Student Masters Data' where 'imported' is unchecked
+#     student_records = frappe.get_all('Students Master Data', 
+#                                      filters={'imported': 0}, 
+#                                      fields=['imported_batch_id', 'student_name', 'mobile', 'district', 'state', 
+#                                              'rank', 'total_marks', 'total_right', 'total_wrong', 'total_skip', 'percentage'])
+    
+#     if not student_records:
+#         return {'status': 'no_records', 'message': 'No records to sync'}
+    
+#     # Insert the records into 'Not Imported Logs' doctype
+#     for record in student_records:
+#         new_log = frappe.get_doc({
+#             'doctype': 'Not Imported Logs',
+#             'imported_batch_id': record['imported_batch_id'],
+#             'student_name': record['student_name'],
+#             'mobile': record['mobile'],
+#             'district': record['district'],
+#             'state': record['state'],
+#             'rank': record['rank'],
+#             'total_marks': record['total_marks'],
+#             'total_right': record['total_right'],
+#             'total_wrong': record['total_wrong'],
+#             'total_skip': record['total_skip'],
+#             'percentage': record['percentage'],
+#         })
+#         new_log.insert(ignore_permissions=True)
+    
+#     # Update the 'imported' field to checked (1) for the records that have been synced
+#     # frappe.db.set_value('Students Master Data', 
+#     #                     [record['name'] for record in student_records], 
+#     #                     'imported', 1)
+
+#     return {'status': 'success', 'message': 'Data synced successfully!'}
