@@ -4,26 +4,26 @@ import requests
 from frappe.utils import now
 
 @frappe.whitelist()
-def send_whatsapp_pdf_message(name, mobile_number, student_name):
+def send_whatsapp_pdf_message(name, mobile_number, student_name, message):
     # Fetch the instance_id from the "Admin Settings" doctype
     base_url = frappe.utils.get_url()
     admin_settings = frappe.get_doc('Admin Settings')
     instance_id = admin_settings.instance_id
-    message = (
-        'Assessment Report by TNC Experts\n'
-        'You are doing very good 👍\n\n'
-        'Your score is very fantastic. According to TNC experts, you will achieve a good rank in NORCET Exam.\n\n'
-        '🎯📚 Just continue your hard work and study, maximum question practice, and try to control minus marking.\n\n'
-        '🎖️ We hope strongly that you are our next interviewer on our TNC YouTube channel.\n\n'
-        '👍 Be confident and be consistent.\n\n'
-        '💐 All the Best and Best wishes.\n\n'
-        'आपकी सफलता वाली कॉल का इंतजार रहेगा।\n\n'
-        'Thanks\n\n'
-        'AIIMS 20+ Expert TNC TEAM\n\n'
-        'If you need any help and assistance, please message us on the official number:\n'
-        '7484999051\n'
-        'TNC Nursing'
-    )
+    # message = (
+    #     'Assessment Report by TNC Experts\n'
+    #     'You are doing very good 👍\n\n'
+    #     'Your score is very fantastic. According to TNC experts, you will achieve a good rank in NORCET Exam.\n\n'
+    #     '🎯📚 Just continue your hard work and study, maximum question practice, and try to control minus marking.\n\n'
+    #     '🎖️ We hope strongly that you are our next interviewer on our TNC YouTube channel.\n\n'
+    #     '👍 Be confident and be consistent.\n\n'
+    #     '💐 All the Best and Best wishes.\n\n'
+    #     'आपकी सफलता वाली कॉल का इंतजार रहेगा।\n\n'
+    #     'Thanks\n\n'
+    #     'AIIMS 20+ Expert TNC TEAM\n\n'
+    #     'If you need any help and assistance, please message us on the official number:\n'
+    #     '7484999051\n'
+    #     'TNC Nursing'
+    # )
     # Construct the API URL
     try:
         # Make the API request

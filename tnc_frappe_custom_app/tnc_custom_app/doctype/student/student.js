@@ -88,12 +88,38 @@ frappe.ui.form.on('Student', {
                                 default: mobile_number,  // Pre-fill the mobile number
                                 reqd: 1  // Make the field mandatory
                             },
-                            // {
-                            //     label: 'Message',
-                            //     fieldname: 'message',
-                            //     fieldtype: 'Small Text',
-                            //     reqd: 1  // Make the field mandatory
-                            // }
+                            {
+                                label: 'Message',
+                                fieldname: 'message',
+                                fieldtype: 'Small Text',
+                                reqd: 1,
+                                default: `Assessment Report by TNC Experts
+                        
+You are doing very good 👍    
+
+Your score is very fantastic. According to TNC experts, you will achieve a good rank in NORCET Exam.  
+
+🎯📚 Just continue your hard work and study, maximum question practice, 
+and try to control minus marking.
+
+🎖️ We hope strongly that you are our next interviewer on our TNC YouTube channel.
+
+👍 Be confident and be consistent.
+
+💐 All the Best and Best wishes.
+
+आपकी सफलता वाली कॉल का इंतजार रहेगा।
+                        
+Thanks
+
+AIIMS 20+ Expert TNC TEAM
+                        
+If you need any help and assistance, please message us on the official number:
+
+7484999051
+TNC Nursing`,
+                                reqd: 1  // Make the field mandatory
+                            }
                         ],
                         function(values){
                             // Confirm the action before sending
@@ -107,7 +133,7 @@ frappe.ui.form.on('Student', {
                                             name: name,
                                             mobile_number: values.mobile_number,  // Use the value from the prompt
                                             student_name: student_name,
-                                            // message: values.message  // Custom message entered by the user
+                                            message: values.message  // Custom message entered by the user
                                         },
                                         callback: function(response) {
                                             // console.log(response.message);
