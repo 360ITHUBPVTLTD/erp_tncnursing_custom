@@ -71,25 +71,25 @@
   },
   {
    "fieldname": "start_rank",
-   "fieldtype": "Int",
+   "fieldtype": "Data",
    "label": "Start Rank",
    "read_only": 1
   },
   {
    "fieldname": "initial_regularised_ranks",
-   "fieldtype": "Int",
+   "fieldtype": "Data",
    "label": "Initial Regularised Ranks",
    "read_only": 1
   },
   {
    "fieldname": "last_regularised_ranks",
-   "fieldtype": "Int",
+   "fieldtype": "Data",
    "label": "Last Regularised Ranks",
    "read_only": 1
   },
   {
    "fieldname": "last_rank",
-   "fieldtype": "Int",
+   "fieldtype": "Data",
    "label": "Last Rank",
    "read_only": 1
   },
@@ -99,7 +99,7 @@
   },
   {
    "fieldname": "actual_candidates",
-   "fieldtype": "Int",
+   "fieldtype": "Data",
    "label": "Actual Candidates",
    "read_only": 1
   },
@@ -126,7 +126,7 @@
   },
   {
    "fieldname": "actual_count",
-   "fieldtype": "Int",
+   "fieldtype": "Data",
    "hidden": 1,
    "label": "Actual Count",
    "read_only": 1
@@ -212,7 +212,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-12 12:40:35.882449",
+ "modified": "2024-09-12 12:54:40.085355",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Exam",
