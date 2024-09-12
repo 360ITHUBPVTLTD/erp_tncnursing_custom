@@ -63,6 +63,7 @@
 /////////////////////////// Below is the whatsapp button Functionality //////////////////////////
 
 
+
 frappe.ui.form.on('Student', {
     refresh: function(frm) {
         // Add a custom button
@@ -87,12 +88,12 @@ frappe.ui.form.on('Student', {
                                 default: mobile_number,  // Pre-fill the mobile number
                                 reqd: 1  // Make the field mandatory
                             },
-                            {
-                                label: 'Message',
-                                fieldname: 'message',
-                                fieldtype: 'Small Text',
-                                reqd: 1  // Make the field mandatory
-                            }
+                            // {
+                            //     label: 'Message',
+                            //     fieldname: 'message',
+                            //     fieldtype: 'Small Text',
+                            //     reqd: 1  // Make the field mandatory
+                            // }
                         ],
                         function(values){
                             // Confirm the action before sending
@@ -106,11 +107,12 @@ frappe.ui.form.on('Student', {
                                             name: name,
                                             mobile_number: values.mobile_number,  // Use the value from the prompt
                                             student_name: student_name,
-                                            message: values.message  // Custom message entered by the user
+                                            // message: values.message  // Custom message entered by the user
                                         },
                                         callback: function(response) {
-                                            console.log(response.message);
-                                            if (response.message.status === 'success') {
+                                            // console.log(response.message);
+                                            // console.log(response.message.status);
+                                            if (response.message.status === 'Success') {
                                                 frappe.msgprint(__('WhatsApp message sent successfully!'));
                                             } else {
                                                 frappe.msgprint(__('Failed to send WhatsApp message.'));
@@ -135,7 +137,6 @@ frappe.ui.form.on('Student', {
         // });
     }
 });
-
 
 
 
