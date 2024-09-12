@@ -97,7 +97,10 @@ frappe.ui.form.on('Student', {
                         
 You are doing very good 👍    
 
-Your score is very fantastic. According to TNC experts, you will achieve a good rank in NORCET Exam.  
+Your score is very fantastic. According to TNC experts, you will achieve a good rank in NORCET Exam.
+
+Video link :
+https://drive.google.com/file/d/1ewpJJMgrZOa6n0eOipKK9RyZftGzPW4t/view?usp=sharing
 
 🎯📚 Just continue your hard work and study, maximum question practice, 
 and try to control minus marking.
