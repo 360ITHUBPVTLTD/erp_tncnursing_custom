@@ -1,6 +1,6 @@
 {
  "actions": [],
- "autoname": "autoincrement",
+ "autoname": "format:WA-{MM}-{####}",
  "creation": "2024-09-10 19:51:43.540175",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -74,11 +74,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-11 16:49:38.066650",
+ "modified": "2024-09-11 19:37:12.108223",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "WhatsApp Message Log",
- "naming_rule": "Autoincrement",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
