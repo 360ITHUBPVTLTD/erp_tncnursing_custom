@@ -15,6 +15,7 @@ frappe.listview_settings['Student Exam'] = {
     //         });
     //     });
     // }
+    
     refresh: function(listview) {
         listview.page.add_inner_button(__('Assign Colours'), function() {
             // Create a new dialog

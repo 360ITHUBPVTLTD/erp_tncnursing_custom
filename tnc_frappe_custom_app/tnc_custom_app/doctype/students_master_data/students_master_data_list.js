@@ -69,7 +69,30 @@ frappe.listview_settings['Students Master Data'] = {
     }
 };
 
+///////////////////////// Below is the button for Sync unimported records //////////////////////////
 
+// // File: student_masters_data_list.js
+// frappe.listview_settings['Students Master Data'] = {
+//     onload: function(listview) {
+//         listview.page.add_inner_button(__('Sync Unimported Data'), function() {
+//             frappe.confirm(
+//                 'Are you sure you want to fetch the unimported Records?',
+//             function() {
+//             frappe.call({
+//                 method: "tnc_frappe_custom_app.tnc_custom_app.doctype.students_master_data.students_master_data.sync_uninported_data",
+//                 callback: function(r) {
+//                     // console.log(r.message.status)
+//                     if (r.message.status === 'success') {
+//                         frappe.msgprint(__('Data synced successfully!'));
+//                     } else {
+//                         frappe.msgprint(__('Failed to sync data.'));
+//                     }
+//                 }
+//             });
+//           });
+//         });
+//     }
+// };
 
 
 

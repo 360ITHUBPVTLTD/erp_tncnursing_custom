@@ -22,14 +22,18 @@
   {
    "fieldname": "student_name",
    "fieldtype": "Data",
-   "label": "Student Name"
+   "in_list_view": 1,
+   "label": "Student Name",
+   "reqd": 1
   },
   {
    "fieldname": "mobile",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Mobile",
-   "read_only": 1
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "column_break_lxec",
@@ -74,6 +78,7 @@
   {
    "fieldname": "subjects",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Subjects "
   },
   {
@@ -85,7 +90,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-12 16:03:56.781499",
+ "modified": "2024-09-16 17:56:59.661723",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student",

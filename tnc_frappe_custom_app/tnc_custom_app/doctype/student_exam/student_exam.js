@@ -13,7 +13,7 @@
 
 frappe.ui.form.on('Student Exam', {
     refresh: function(frm) {
-    if (!frm.doc.lock_ranks) {
+    if (!frm.doc.lock_ranks && (frm.doc.status === 'Pending to Process Data' || frm.doc.status === 'Failed Queue')) {
         frm.add_custom_button(__('Process Data'), function() {
             frappe.call({
                 method: "frappe.client.get_count",
@@ -28,7 +28,7 @@ frappe.ui.form.on('Student Exam', {
                 callback: function(r) {
                     if (r.message) {
                         let record_count = r.message; // This directly gives you the count of records
-                        console.log("Number of records: " + record_count);
+                        // console.log("Number of records: " + record_count);
             
                         if(record_count<=1500){
                             frappe.realtime.on('sync_progress', function(data) {
@@ -133,12 +133,12 @@ frappe.ui.form.on('Student Exam', {
 
                 // const reportUrl = `frappe.utils.get_url('app/query-report/Custom%20Student%20Result%20report?exam_name=${encodeURIComponent(examName)}&exam_title_name=${encodeURIComponent(examTitleName)}')`;
                 // window.open(reportUrl, '_blank');  // Open the URL in a new tab
-                window.open(`${baseUrl}/app/query-report/Custom%20Student%20Result%20report?exam_name=${encodeURIComponent(examName)}&exam_title_name=${encodeURIComponent(examTitleName)}`); 
+                window.open(`${baseUrl}/app/query-report/Custom%20Student%20Result%20report?exam_name=${encodeURIComponent(examName)}&exam_title_name=${encodeURIComponent(frm.doc.name)}`); 
             });
         }
 
         // Conditionally add "Go to Data Import" button based on field values and status
-        if (frm.doc.exam_name &&  frm.doc.exam_title_name && frm.doc.status !== 'Data Synced'  ) {
+        if (frm.doc.exam_name &&  !['Data Synced', 'Rank Generated(step1)','Rank Generated(step2)','Rank Reset'].includes(frm.doc.status)) {
             frm.add_custom_button(__('Go to Data Import'), function() {
                 const baseUrl = window.location.origin
         
@@ -184,6 +184,7 @@ frappe.ui.form.on('Student Exam', {
 frappe.ui.form.on('Student Exam', {
     refresh: function(frm) {
         // Add the "Assign Colors" button to the form
+        if(frm.doc.status == 'Data Synced' || 'Rank Generated(step1)' || 'Rank Generated(step2)') {
         frm.add_custom_button(__('Assign Colors'), function() {
             // Show a confirmation prompt before proceeding
             frappe.confirm(
@@ -204,8 +205,15 @@ frappe.ui.form.on('Student Exam', {
                 },
             );
         });
+     }
+         else {
+        frm.clear_custom_buttons();
     }
+    }
+
 });
+
+
 
 ////////////////////////// Delete the Particular Exam Student results doctype based on the ID ///////////////////////////
 
@@ -237,6 +245,80 @@ frappe.ui.form.on('Student Exam', {
                 }
             );
         });
+    }
+});
+
+
+
+
+//////////////////////// Below code is to show the HTML table in the Student Exam (Not Imported Logs) ////////
+
+frappe.ui.form.on('Student Exam', {
+    refresh: function(frm) {
+        if (frm.doc.name) {
+            frappe.call({
+                method: 'tnc_frappe_custom_app.tnc_custom_app.doctype.student_exam.student_exam.fetch_unimported_logs',
+                args: {
+                    imported_batch_id: frm.doc.name
+                },
+                callback: function(r) {
+                    if (r.message) {
+                        let base_url = window.location.origin;
+                        let html_table = '';
+                        
+                        if (r.message.length > 0) {
+                            html_table = `
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr style="background-color:#3498DB;color:white;text-align: left;">
+                                            <th style="vertical-align: middle;border: solid 2px #bcb9b4;">Not Imported Log ID</th>
+                                            <th style="vertical-align: middle;border: solid 2px #bcb9b4;">Student Name</th>
+                                            <th style="vertical-align: middle;border: solid 2px #bcb9b4;">Mobile</th>
+                                            <th style="vertical-align: middle;border: solid 2px #bcb9b4;">District</th>
+                                            <th style="vertical-align: middle;border: solid 2px #bcb9b4;">State</th>
+                                            <th style="vertical-align: middle;border: solid 2px #bcb9b4;">Rank</th>
+                                            <th style="vertical-align: middle;border: solid 2px #bcb9b4;">Total Marks</th>
+                                            <th style="vertical-align: middle;border: solid 2px #bcb9b4;">Total Right</th>
+                                            <th style="vertical-align: middle;border: solid 2px #bcb9b4;">Total Wrong</th>
+                                            <th style="vertical-align: middle;border: solid 2px #bcb9b4;">Total Skip</th>
+                                            <th style="vertical-align: middle;border: solid 2px #bcb9b4;">Percentage</th>
+                                            <th style="vertical-align: middle;border: solid 2px #bcb9b4;">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>`;
+
+                            r.message.forEach(function(log) {
+                                let student_link = `${base_url}/app/not-imported-logs/${log.name}`;
+                                html_table += `
+                                    <tr>
+                                        <td style="border: solid 2px #bcb9b4;"><a href="${student_link}" target="_blank">${log.name}</a></td>
+                                        <td style="border: solid 1px #bcb9b4;">${log.student_name}</td>
+                                        <td style="border: solid 1px #bcb9b4;">${log.mobile}</td>
+                                        <td style="border: solid 1px #bcb9b4;">${log.district}</td>
+                                        <td style="border: solid 1px #bcb9b4;">${log.state}</td>
+                                        <td style="border: solid 1px #bcb9b4;">${log.rank}</td>
+                                        <td style="border: solid 1px #bcb9b4;">${log.total_marks}</td>
+                                        <td style="border: solid 1px #bcb9b4;">${log.total_right}</td>
+                                        <td style="border: solid 1px #bcb9b4;">${log.total_wrong}</td>
+                                        <td style="border: solid 1px #bcb9b4;">${log.total_skip}</td>
+                                        <td style="border: solid 1px #bcb9b4;">${log.percentage}</td>
+                                        <td style="border: solid 1px #bcb9b4;">${log.status}</td>
+                                    </tr>`;
+                            });
+
+                            html_table += `
+                                    </tbody>
+                                </table>`;
+                        } else {
+                            html_table = `<h3>All Students are imported for this exam</h3>`;
+                        }
+
+                        // Set HTML content in the 'unimported_logs' field
+                        frm.set_df_property('unimported_logs', 'options', html_table);
+                    }
+                }
+            });
+        }
     }
 });
 
