@@ -9,11 +9,7 @@
   "exam_title_name",
   "exam_date",
   "status",
-  "exam_id_linked",
-  "data_synced",
   "lock_ranks",
-  "exam_code",
-  "actual_count",
   "column_break_atbx",
   "start_rank",
   "initial_regularised_ranks",
@@ -34,21 +30,28 @@
   "yellow_ends_to",
   "red_ends_to",
   "column_break_vsec",
-  "column_break_yusa"
+  "column_break_yusa",
+  "unimported_logs_section",
+  "unimported_logs",
+  "unimported_records_tab"
  ],
  "fields": [
   {
    "fieldname": "exam_name",
    "fieldtype": "Link",
    "in_filter": 1,
+   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Exam Name",
-   "options": "Test Series Type"
+   "options": "Test Series Type",
+   "reqd": 1
   },
   {
    "fieldname": "exam_title_name",
    "fieldtype": "Data",
-   "label": "Exam Title Name"
+   "in_list_view": 1,
+   "label": "Exam Title Name",
+   "reqd": 1
   },
   {
    "fieldname": "exam_date",
@@ -56,42 +59,19 @@
    "label": "Exam Date"
   },
   {
-   "default": "0",
-   "fieldname": "exam_id_linked",
-   "fieldtype": "Check",
-   "hidden": 1,
-   "label": "Exam ID Linked"
-  },
-  {
-   "default": "0",
-   "fieldname": "data_synced",
-   "fieldtype": "Check",
-   "hidden": 1,
-   "label": "Data Synced"
-  },
-  {
-   "fieldname": "start_rank",
-   "fieldtype": "Data",
-   "label": "Start Rank",
-   "read_only": 1
-  },
-  {
    "fieldname": "initial_regularised_ranks",
-   "fieldtype": "Data",
-   "label": "Initial Regularised Ranks",
-   "read_only": 1
+   "fieldtype": "Int",
+   "label": "Initial Regularised Ranks"
   },
   {
    "fieldname": "last_regularised_ranks",
-   "fieldtype": "Data",
-   "label": "Last Regularised Ranks",
-   "read_only": 1
+   "fieldtype": "Int",
+   "label": "Last Regularised Ranks"
   },
   {
    "fieldname": "last_rank",
-   "fieldtype": "Data",
-   "label": "Last Rank",
-   "read_only": 1
+   "fieldtype": "Int",
+   "label": "Last Rank"
   },
   {
    "fieldname": "column_break_atbx",
@@ -99,9 +79,8 @@
   },
   {
    "fieldname": "actual_candidates",
-   "fieldtype": "Data",
-   "label": "Actual Candidates",
-   "read_only": 1
+   "fieldtype": "Int",
+   "label": "Actual Candidates"
   },
   {
    "fieldname": "status",
@@ -117,19 +96,6 @@
    "fieldname": "lock_ranks",
    "fieldtype": "Check",
    "label": "Lock Ranks"
-  },
-  {
-   "fieldname": "exam_code",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Exam Code"
-  },
-  {
-   "fieldname": "actual_count",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Actual Count",
-   "read_only": 1
   },
   {
    "fieldname": "section_break_lftw",
@@ -208,11 +174,31 @@
    "fieldname": "colors_assigned",
    "fieldtype": "Check",
    "label": "Colors Assigned"
+  },
+  {
+   "fieldname": "unimported_records_tab",
+   "fieldtype": "Tab Break",
+   "label": "Unimported Records"
+  },
+  {
+   "fieldname": "unimported_logs",
+   "fieldtype": "HTML",
+   "label": "Unimported Logs"
+  },
+  {
+   "fieldname": "start_rank",
+   "fieldtype": "Int",
+   "label": "Start Rank"
+  },
+  {
+   "fieldname": "unimported_logs_section",
+   "fieldtype": "Section Break",
+   "label": "UnImported Logs"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-12 12:54:40.085355",
+ "modified": "2024-09-18 11:30:01.468834",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Exam",

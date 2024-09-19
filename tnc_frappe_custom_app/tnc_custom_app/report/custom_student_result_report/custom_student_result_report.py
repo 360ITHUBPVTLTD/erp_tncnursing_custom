@@ -100,19 +100,17 @@
 
 #     return frappe.db.sql(query, filters, as_dict=True)
 
-
-
-
 import frappe
 
 def execute(filters=None):
+    # Define the columns for the report
     columns = [
         {"label": "Batch ID", "fieldname": "batch_id", "fieldtype": "Data", "width": 120},
         {"label": "Student ID", "fieldname": "student_id", "fieldtype": "Link", "options": "Student", "width": 120},
         {"label": "Student Name", "fieldname": "student_name", "fieldtype": "Data", "width": 150},
         {"label": "Student Mobile", "fieldname": "student_mobile", "fieldtype": "Data", "width": 120},
-        {"label": "Exam Name", "fieldname": "exam_name", "fieldtype": "Link", "options": "Student Exam", "width": 150},
-        {"label": "Exam Title Name", "fieldname": "exam_title_name", "fieldtype": "Data", "width": 150},
+        {"label": "Exam Name", "fieldname": "exam_name", "fieldtype": "Link", "options": "Test Series Type", "width": 150},
+        {"label": "Exam Title Name", "fieldname": "exam_title_name", "fieldtype": "Link", "options": "Student Exam", "width": 150},
         {"label": "Exam Date", "fieldname": "exam_date", "fieldtype": "Date", "width": 120},
         {"label": "Rank", "fieldname": "rank", "fieldtype": "Int", "width": 100},
         {"label": "Total Marks", "fieldname": "total_marks", "fieldtype": "Float", "width": 120},
@@ -122,32 +120,33 @@ def execute(filters=None):
         {"label": "Percentage", "fieldname": "percentage", "fieldtype": "Percent", "width": 100},
     ]
 
-    # Get data and total count for the report
-    data, total_count = get_data(filters)
-
-    # Generate HTML with total count
+    # Get data based on filters
+    data,total_count = get_data(filters)
+        # Create an HTML snippet to display the total count
     html_card = f"""
-    <div style="padding: 10px;">
-        <h4>Total Count: {total_count}</h4>
+    <div style="padding: 10px; font-weight: bold;">
+        <h4>Actual Count: {total_count}</h4>
     </div>
     """
 
     return columns, data, html_card
 
-def get_data(filters):
-    conditions = []
 
+def get_data(filters):
+    # Define the conditions based on the filters
+    conditions = []
     if filters.get("exam_name"):
         conditions.append("exam_name = %(exam_name)s")
+    if filters.get("exam_title_name"):  # exam_title_name filter corresponds to batch_id in Student Results
+        conditions.append("batch_id = %(exam_title_name)s")
 
-    if filters.get("exam_title_name"):
-        conditions.append("exam_title_name = %(exam_title_name)s")
-
+    # Build the WHERE clause
     conditions_str = " AND ".join(conditions)
-    
-    if conditions_str:
-        conditions_str = "WHERE " + conditions_str
 
+    if conditions_str:
+        conditions_str = f"WHERE {conditions_str}"
+
+    # SQL query to fetch data from the Student Results doctype
     query = f"""
         SELECT
             batch_id, student_id, student_name, student_mobile,
@@ -157,13 +156,12 @@ def get_data(filters):
             `tabStudent Results`
         {conditions_str}
         ORDER BY
-            rank 
+            rank
     """
 
-    # Execute the query and get the data
+    # Fetch the filtered data
     data = frappe.db.sql(query, filters, as_dict=True)
 
-    # Calculate the total count
     total_count = len(data)
 
     return data, total_count

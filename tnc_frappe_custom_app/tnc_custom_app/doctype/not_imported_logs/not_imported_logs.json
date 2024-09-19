@@ -1,0 +1,166 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2024-09-13 10:31:42.044523",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "imported_batch_id",
+  "student_name",
+  "mobile",
+  "district",
+  "state",
+  "student_master_data_id",
+  "student_id",
+  "student_result_id",
+  "column_break_kehk",
+  "exam_date",
+  "rank",
+  "total_marks",
+  "total_right",
+  "total_wrong",
+  "total_skip",
+  "percentage",
+  "status",
+  "section_break_ehgx",
+  "error_message"
+ ],
+ "fields": [
+  {
+   "fieldname": "imported_batch_id",
+   "fieldtype": "Link",
+   "label": "Imported Batch ID",
+   "options": "Student Exam"
+  },
+  {
+   "fetch_from": "student_id.student_name",
+   "fieldname": "student_name",
+   "fieldtype": "Data",
+   "label": "Student Name"
+  },
+  {
+   "fetch_from": "student_id.mobile",
+   "fieldname": "mobile",
+   "fieldtype": "Data",
+   "label": "Mobile"
+  },
+  {
+   "fieldname": "district",
+   "fieldtype": "Data",
+   "label": "District"
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Data",
+   "label": "State"
+  },
+  {
+   "fieldname": "column_break_kehk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rank",
+   "fieldtype": "Int",
+   "label": "Rank",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_marks",
+   "fieldtype": "Int",
+   "label": "Total Marks",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_right",
+   "fieldtype": "Int",
+   "label": "Total Right",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_wrong",
+   "fieldtype": "Int",
+   "label": "Total Wrong",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_skip",
+   "fieldtype": "Int",
+   "label": "Total Skip",
+   "read_only": 1
+  },
+  {
+   "fieldname": "percentage",
+   "fieldtype": "Float",
+   "label": "Percentage",
+   "read_only": 1
+  },
+  {
+   "fieldname": "student_master_data_id",
+   "fieldtype": "Link",
+   "label": "Student Master Data ID",
+   "options": "Students Master Data"
+  },
+  {
+   "fieldname": "error_message",
+   "fieldtype": "Small Text",
+   "label": "Error Message",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_ehgx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "student_id",
+   "fieldtype": "Link",
+   "label": "Student ID",
+   "options": "Student",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Unresolved\nResolved",
+   "read_only": 1
+  },
+  {
+   "fieldname": "exam_date",
+   "fieldtype": "Date",
+   "hidden": 1,
+   "label": "Exam Date"
+  },
+  {
+   "fieldname": "student_result_id",
+   "fieldtype": "Link",
+   "label": "Student Result ID",
+   "options": "Student Results",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-09-18 11:41:50.134842",
+ "modified_by": "Administrator",
+ "module": "TNC Custom App",
+ "name": "Not Imported Logs",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

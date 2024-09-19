@@ -263,3 +263,99 @@ frappe.ui.form.on('Student', {
 });
 
 
+/////////////////////////////////////////
+
+frappe.ui.form.on('Student', {
+    refresh: function(frm) {
+        // Add a custom button
+        // frappe.call({
+        //     method: 'tnc_frappe_custom_app.custom_whatsapp.valiadting_user_for_bulk_wa_msg',  // Your server script method path
+        //     args: {
+        //     },
+        //     callback: function(respWAValid) {
+        //         if(respWAValid.message && respWAValid.message.status){
+                    frm.add_custom_button(__('Send WhatsApp'), function() {
+                        // Get student details
+                        let name = frm.doc.name;
+                        let mobile_number = frm.doc.mobile;
+                        let student_name = frm.doc.student_name;
+
+                        // Prompt the user for the mobile number and custom message
+                        frappe.prompt([
+                            {
+                                label: 'Mobile Number',
+                                fieldname: 'mobile_number',
+                                fieldtype: 'Data',
+                                default: mobile_number,  // Pre-fill the mobile number
+                                reqd: 1  // Make the field mandatory
+                            },
+                            {
+                                label: 'Message',
+                                fieldname: 'message',
+                                fieldtype: 'Small Text',
+                                reqd: 1,
+                                default: `Dear Students ,
+ 
+Many Many Congratulations
+                                 
+I hope this message finds you well!
+                                 
+The results for NORCET 7.0 prelims have been announced .
+                                 
+Kindly check your result and inform us whether you have qualified or not.
+                                 
+If you have qualified, please fill out the Google Form linked below to submit your details:
+                                 
+https://docs.google.com/forms/d/e/1FAIpQLSelyNyqBGaU0AKkZrfrQaIjAEdlxHsX5Y1GYR0ALtUfjMkuRQ/viewform
+                                 
+Congratulations to all the qualifiers! Your hard work and dedication have paid off, and we are truly proud of you.
+                                 
+For those who didn’t qualify this time, remember this is just a step in the journey. Keep putting in the effort, and success will surely come your way!
+                                 
+Warm regards,
+TNC Nursing classes`,
+                                reqd: 1  // Make the field mandatory
+                            }
+                        ],
+                        function(values){
+                            // Confirm the action before sending
+                            frappe.confirm(
+                                __('Are you sure you want to send this message?'),
+                                function() {
+                                    // If confirmed, proceed with WhatsApp message sending
+                                    frappe.call({
+                                        method: 'tnc_frappe_custom_app.custom_whatsapp.send_whatsapp_custom_message',  // Your server script method path
+                                        args: {
+                                            name: name,
+                                            mobile_number: values.mobile_number,  // Use the value from the prompt
+                                            student_name: student_name,
+                                            message: values.message  // Custom message entered by the user
+                                        },
+                                        callback: function(response) {
+                                            // console.log(response.message);
+                                            // console.log(response.message.status);
+                                            if (response.message.status === 'Success') {
+                                                frappe.msgprint(__('WhatsApp message sent successfully!'));
+                                            } else {
+                                                frappe.msgprint(__('Failed to send WhatsApp message.'));
+                                            }
+                                        },
+                                        error: function(err) {
+                                            frappe.msgprint(__('Error occurred while sending the WhatsApp message.'));
+                                        }
+                                    });
+                                }
+                            );
+                        },
+                        __('Enter Mobile Number and Message'),  // Dialog title
+                        __('Send WhatsApp')  // Button text
+                        );
+                    });
+        //         }
+        //     },
+        //     error: function(err) {
+        //         // frappe.msgprint(__('Not Authenticated user to send WA'));
+        //     }
+        // });
+    }
+});

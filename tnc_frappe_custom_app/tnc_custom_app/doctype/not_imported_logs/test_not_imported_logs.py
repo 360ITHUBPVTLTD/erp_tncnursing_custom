@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestTestdoctype(FrappeTestCase):
+class TestNotImportedLogs(FrappeTestCase):
 	pass

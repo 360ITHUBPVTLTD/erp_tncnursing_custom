@@ -8,8 +8,8 @@ from frappe.model.document import Document
 
 class Student(Document):
     # def validate(self):
-    def before_insert(self):
-        self.check_duplicate_mobile()
+    # def before_insert(self):
+    #     self.check_duplicate_mobile()
 
     def check_duplicate_mobile(self):
         if self.mobile:
