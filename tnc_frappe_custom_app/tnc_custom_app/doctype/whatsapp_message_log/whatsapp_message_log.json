@@ -31,7 +31,7 @@
    "fieldname": "message_type",
    "fieldtype": "Select",
    "label": "Message Type",
-   "options": "Custom\nBulk"
+   "options": "Custom\nBulk\nTemplate"
   },
   {
    "fieldname": "message",
@@ -74,7 +74,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-12 13:00:35.709188",
+ "modified": "2024-09-20 12:42:45.388473",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "WhatsApp Message Log",
