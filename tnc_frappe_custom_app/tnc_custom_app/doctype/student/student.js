@@ -60,7 +60,7 @@
 //     }
 // });
 
-/////////////////////////// Below is the whatsapp button Functionality //////////////////////////
+//////////////////////////// Below is the whatsapp button Functionality( WITH PDF ) //////////////////////////////////////////////////////////////
 
 
 
@@ -170,7 +170,7 @@ TNC Nursing`,
 
 
 
-//////////////////////////////// Print Button in the Form View //////////////////////////////////
+//////////////////////////////////// Print Button in the Form View //////////////////////////////////
 
 frappe.ui.form.on('Student', {
     refresh: function(frm) {
@@ -262,100 +262,220 @@ frappe.ui.form.on('Student', {
     }
 });
 
-
 /////////////////////////////////////////
+
+// frappe.ui.form.on('Student', {
+//     refresh: function(frm) {
+//         // Add a custom button
+//         // frappe.call({
+//         //     method: 'tnc_frappe_custom_app.custom_whatsapp.valiadting_user_for_bulk_wa_msg',  // Your server script method path
+//         //     args: {
+//         //     },
+//         //     callback: function(respWAValid) {
+//         //         if(respWAValid.message && respWAValid.message.status){
+//                     frm.add_custom_button(__('Send WhatsApp'), function() {
+//                         // Get student details
+//                         let name = frm.doc.name;
+//                         let mobile_number = frm.doc.mobile;
+//                         let student_name = frm.doc.student_name;
+
+//                         // Prompt the user for the mobile number and custom message
+//                         frappe.prompt([
+//                             {
+//                                 label: 'Mobile Number',
+//                                 fieldname: 'mobile_number',
+//                                 fieldtype: 'Data',
+//                                 default: mobile_number,  // Pre-fill the mobile number
+//                                 reqd: 1  // Make the field mandatory
+//                             },
+//                             {
+//                                 label: 'Message',
+//                                 fieldname: 'message',
+//                                 fieldtype: 'Small Text',
+//                                 reqd: 1,
+//                                 default: `Dear Students ,
+ 
+// Many Many Congratulations
+                                 
+// I hope this message finds you well!
+                                 
+// The results for NORCET 7.0 prelims have been announced .
+                                 
+// Kindly check your result and inform us whether you have qualified or not.
+                                 
+// If you have qualified, please fill out the Google Form linked below to submit your details:
+                                 
+// https://docs.google.com/forms/d/e/1FAIpQLSelyNyqBGaU0AKkZrfrQaIjAEdlxHsX5Y1GYR0ALtUfjMkuRQ/viewform
+                                 
+// Congratulations to all the qualifiers! Your hard work and dedication have paid off, and we are truly proud of you.
+                                 
+// For those who didn’t qualify this time, remember this is just a step in the journey. Keep putting in the effort, and success will surely come your way!
+                                 
+// Warm regards,
+// TNC Nursing classes`,
+//                                 reqd: 1  // Make the field mandatory
+//                             }
+//                         ],
+//                         function(values){
+//                             // Confirm the action before sending
+//                             frappe.confirm(
+//                                 __('Are you sure you want to send this message?'),
+//                                 function() {
+//                                     // If confirmed, proceed with WhatsApp message sending
+//                                     frappe.call({
+//                                         method: 'tnc_frappe_custom_app.custom_whatsapp.send_whatsapp_custom_message',  // Your server script method path
+//                                         args: {
+//                                             name: name,
+//                                             mobile_number: values.mobile_number,  // Use the value from the prompt
+//                                             student_name: student_name,
+//                                             message: values.message  // Custom message entered by the user
+//                                         },
+//                                         callback: function(response) {
+//                                             // console.log(response.message);
+//                                             // console.log(response.message.status);
+//                                             if (response.message.status === 'Success') {
+//                                                 frappe.msgprint(__('WhatsApp message sent successfully!'));
+//                                             } else {
+//                                                 frappe.msgprint(__('Failed to send WhatsApp message.'));
+//                                             }
+//                                         },
+//                                         error: function(err) {
+//                                             frappe.msgprint(__('Error occurred while sending the WhatsApp message.'));
+//                                         }
+//                                     });
+//                                 }
+//                             );
+//                         },
+//                         __('Enter Mobile Number and Message'),  // Dialog title
+//                         __('Send WhatsApp')  // Button text
+//                         );
+//                     });
+//         //         }
+//         //     },
+//         //     error: function(err) {
+//         //         // frappe.msgprint(__('Not Authenticated user to send WA'));
+//         //     }
+//         // });
+//     }
+// });
+
+
+
+
+
+
+
+
+///////////////////////////////// Below is the Template selector sending message to the Students( WITHOUT PDF )//////////////////////////
 
 frappe.ui.form.on('Student', {
     refresh: function(frm) {
-        // Add a custom button
-        // frappe.call({
-        //     method: 'tnc_frappe_custom_app.custom_whatsapp.valiadting_user_for_bulk_wa_msg',  // Your server script method path
-        //     args: {
-        //     },
-        //     callback: function(respWAValid) {
-        //         if(respWAValid.message && respWAValid.message.status){
-                    frm.add_custom_button(__('Send WhatsApp'), function() {
-                        // Get student details
-                        let name = frm.doc.name;
-                        let mobile_number = frm.doc.mobile;
-                        let student_name = frm.doc.student_name;
+        frm.add_custom_button(__('WhatsApp Template Message'), function() {
+            // Create the prompt dialog
+            let mobile_number = frm.doc.mobile;
+            let dialog = new frappe.ui.Dialog({
+                title: 'Send WhatsApp Message',
+                fields: [
+                    {
+                        'fieldname': 'mobile_number', 
+                        'fieldtype': 'Data', 
+                        'label': 'Mobile Number', 
+                        'default': mobile_number,
+                        'reqd': 1
+                    },
+                    {
+                        'fieldname': 'template', 
+                        'fieldtype': 'Link', 
+                        'label': 'Choose Template', 
+                        'options': 'WhatsApp Templates', 
+                        'reqd': 1
+                    },
+                    {
+                        'fieldname': 'message', 
+                        'fieldtype': 'Small Text', 
+                        'label': 'Message', 
+                        'read_only': 0,
+                    }
+                ],
+                primary_action: function(values) {
+                    // Hide the current dialog
+                    dialog.hide();
 
-                        // Prompt the user for the mobile number and custom message
-                        frappe.prompt([
-                            {
-                                label: 'Mobile Number',
-                                fieldname: 'mobile_number',
-                                fieldtype: 'Data',
-                                default: mobile_number,  // Pre-fill the mobile number
-                                reqd: 1  // Make the field mandatory
-                            },
-                            {
-                                label: 'Message',
-                                fieldname: 'message',
-                                fieldtype: 'Small Text',
-                                reqd: 1,
-                                default: `Dear Students ,
- 
-Many Many Congratulations
-                                 
-I hope this message finds you well!
-                                 
-The results for NORCET 7.0 prelims have been announced .
-                                 
-Kindly check your result and inform us whether you have qualified or not.
-                                 
-If you have qualified, please fill out the Google Form linked below to submit your details:
-                                 
-https://docs.google.com/forms/d/e/1FAIpQLSelyNyqBGaU0AKkZrfrQaIjAEdlxHsX5Y1GYR0ALtUfjMkuRQ/viewform
-                                 
-Congratulations to all the qualifiers! Your hard work and dedication have paid off, and we are truly proud of you.
-                                 
-For those who didn’t qualify this time, remember this is just a step in the journey. Keep putting in the effort, and success will surely come your way!
-                                 
-Warm regards,
-TNC Nursing classes`,
-                                reqd: 1  // Make the field mandatory
-                            }
-                        ],
-                        function(values){
-                            // Confirm the action before sending
-                            frappe.confirm(
-                                __('Are you sure you want to send this message?'),
-                                function() {
-                                    // If confirmed, proceed with WhatsApp message sending
-                                    frappe.call({
-                                        method: 'tnc_frappe_custom_app.custom_whatsapp.send_whatsapp_custom_message',  // Your server script method path
-                                        args: {
-                                            name: name,
-                                            mobile_number: values.mobile_number,  // Use the value from the prompt
-                                            student_name: student_name,
-                                            message: values.message  // Custom message entered by the user
-                                        },
-                                        callback: function(response) {
-                                            // console.log(response.message);
-                                            // console.log(response.message.status);
-                                            if (response.message.status === 'Success') {
-                                                frappe.msgprint(__('WhatsApp message sent successfully!'));
-                                            } else {
-                                                frappe.msgprint(__('Failed to send WhatsApp message.'));
-                                            }
-                                        },
-                                        error: function(err) {
-                                            frappe.msgprint(__('Error occurred while sending the WhatsApp message.'));
-                                        }
-                                    });
+                    // Show confirmation dialog
+                    frappe.confirm(
+                        __('Are you sure you want to send this message?'),
+                        () => {
+                            // Send the WhatsApp message
+                            frappe.call({
+                                method: 'tnc_frappe_custom_app.custom_whatsapp.send_whatsapp_Template_message',
+                                args: {
+                                    name: frm.doc.name,
+                                    mobile_number: values.mobile_number,
+                                    student_name: frm.doc.student_name,
+                                    template: values.template,
+                                    message: values.message
+                                },
+                                callback: function(response) {
+                                    if (response.message) {
+                                        frappe.show_alert({
+                                            message: __('Message sent successfully!'),
+                                            indicator: 'green'
+                                        });
+                                    } else {
+                                        frappe.show_alert({
+                                            message: __('Failed to send message.'),
+                                            indicator: 'red'
+                                        });
+                                    }
                                 }
-                            );
+                            });
                         },
-                        __('Enter Mobile Number and Message'),  // Dialog title
-                        __('Send WhatsApp')  // Button text
-                        );
+                        () => {
+                            // User clicked "No"
+                            console.log('Message sending canceled.');
+                        }
+                    );
+                },
+                primary_action_label: 'Send'
+            });
+
+            // Show the dialog
+            dialog.show();
+
+            // Function to fetch and set message based on template selection
+            function fetchAndSetMessage(templateId) {
+                if (templateId) {
+                    console.log(templateId)
+                    frappe.call({
+                        method: 'tnc_frappe_custom_app.custom_whatsapp.get_template_message',
+                        args: {
+                            template_id: templateId
+                        },
+                        callback: function(r) {
+                            if (r.message) {
+                                dialog.set_value('message', r.message);
+                            } else {
+                                console.error('No message returned from server.');
+                            }
+                        }
                     });
-        //         }
-        //     },
-        //     error: function(err) {
-        //         // frappe.msgprint(__('Not Authenticated user to send WA'));
-        //     }
-        // });
+                }
+            }
+
+            // Listen for the value being set in the template field
+            dialog.fields_dict.template.get_query = function() {
+                return {
+                    query: 'tnc_frappe_custom_app.custom_whatsapp.get_template_options', // Custom query to get template options
+                };
+            };
+
+            // Listen to template selection and fetch the corresponding message
+            dialog.fields_dict.template.$input.on('awesomplete-selectcomplete', function(e) {
+                let selectedTemplateValue = dialog.get_value('template'); // Get the selected value
+                if (selectedTemplateValue) {
+                    fetchAndSetMessage(selectedTemplateValue); // Fetch and set message
+                }
+            });
+        });
     }
 });
