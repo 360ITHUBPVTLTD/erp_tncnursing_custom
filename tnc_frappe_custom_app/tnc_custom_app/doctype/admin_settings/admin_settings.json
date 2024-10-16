@@ -16,7 +16,9 @@
   "email_settings_section",
   "cc",
   "admin_email",
-  "email_app_password"
+  "email_app_password",
+  "send_mail_to_user",
+  "send_mail_to_admin"
  ],
  "fields": [
   {
@@ -79,12 +81,24 @@
    "fieldname": "email_app_password",
    "fieldtype": "Data",
    "label": "Email App Password"
+  },
+  {
+   "default": "0",
+   "fieldname": "send_mail_to_user",
+   "fieldtype": "Check",
+   "label": "Send mail to user"
+  },
+  {
+   "default": "0",
+   "fieldname": "send_mail_to_admin",
+   "fieldtype": "Check",
+   "label": "Send mail to admin"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-10-16 14:36:19.844566",
+ "modified": "2024-10-16 17:32:30.288010",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Admin Settings",

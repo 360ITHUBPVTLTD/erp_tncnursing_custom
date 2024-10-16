@@ -48,6 +48,8 @@ def build_email(sender_email, recipient_email, subject, body, cc_emails_str=""):
     return msg
 
 
+import smtplib
+
 def send_email(name, email, message, url):
     doc = get_admin_settings()
 
@@ -55,6 +57,8 @@ def send_email(name, email, message, url):
     sender_password = doc.email_app_password
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
+    send_mail_to_user = doc.send_mail_to_user
+    send_mail_to_admin = doc.send_mail_to_admin
 
     submitter_body = f"""
     <!DOCTYPE html>
@@ -122,18 +126,26 @@ def send_email(name, email, message, url):
             server.starttls()  
             server.login(sender_email, sender_password)
 
-            msg_submitter = build_email(sender_email, email, "Thank You for Contacting Us", submitter_body)
-            server.sendmail(sender_email, email, msg_submitter.as_string())
+            if send_mail_to_user == 1:
+                
+                msg_submitter = build_email(sender_email, email, "Thank You for Contacting Us", submitter_body)
+                server.sendmail(sender_email, email, msg_submitter.as_string())
+            else:
+                print("Emails are not sent to user")
 
-            receiver_email = doc.cc.split(",")[0] if doc.cc else None
-            cc_emails_str = ', '.join(doc.cc.split(",")[1:]) if doc.cc else ""
-            msg_receiver = build_email(sender_email, receiver_email, "New Contact Form Submission", receiver_body, cc_emails_str)
-            server.sendmail(sender_email, receiver_email, msg_receiver.as_string())
+            if send_mail_to_admin == 1:
+                
+                receiver_email = doc.cc.split(",")[0] if doc.cc else None
+                cc_emails_str = ', '.join(doc.cc.split(",")[1:]) if doc.cc else ""
+                msg_receiver = build_email(sender_email, receiver_email, "New Contact Form Submission", receiver_body, cc_emails_str)
+                server.sendmail(sender_email, receiver_email, msg_receiver.as_string())
+            else:
+                print("Emails are not sent to admin")
 
-        print("Emails sent successfully!")
+            print("Emails sent successfully!")
 
     except Exception as e:
-        print(f"Failed to send email. Error: {str(e)}")
+        print(f"An error occurred: {e}")
 
 
 @frappe.whitelist(allow_guest=True)
