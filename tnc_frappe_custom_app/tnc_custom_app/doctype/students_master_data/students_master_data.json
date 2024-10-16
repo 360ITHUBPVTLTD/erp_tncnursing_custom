@@ -6,7 +6,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "imported_batch_id",
+  "exam_id",
   "student_name",
   "mobile",
   "district",
@@ -119,24 +119,23 @@
    "label": "Exam Title Name"
   },
   {
-   "fieldname": "imported_batch_id",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Imported Batch ID",
-   "options": "Student Exam",
-   "reqd": 1
-  },
-  {
    "fieldname": "created_by",
    "fieldtype": "Data",
    "hidden": 1,
-   "label": "Created By",
-   "options": "__user"
+   "label": "Created By"
+  },
+  {
+   "fieldname": "exam_id",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Exam ID",
+   "options": "Student Exam",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-05 18:32:51.341411",
+ "modified": "2024-09-26 12:09:36.114563",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Students Master Data",

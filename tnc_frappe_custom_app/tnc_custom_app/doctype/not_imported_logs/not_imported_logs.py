@@ -23,16 +23,16 @@ def create_student(student_name, mobile,imported_batch_id):
     doc = frappe.new_doc('Student')
     doc.student_name = student_name
     doc.mobile = mobile
-    doc.student_batch_id = imported_batch_id
+    doc.exam_id = imported_batch_id
     doc.insert()
     return doc.name
 
 @frappe.whitelist()
-def create_student_result(student_id, batch_id, student_name, mobile, rank, total_right, total_wrong, total_marks, total_skip, percentage):
+def create_student_result(student_id, exam_id, student_name, mobile, rank, total_right, total_wrong, total_marks, total_skip, percentage):
     # Create new Student Results record
     doc = frappe.new_doc('Student Results')
     doc.student_id = student_id
-    doc.batch_id = batch_id
+    doc.exam_id = exam_id
     doc.student_name = student_name
     doc.mobile = mobile
     doc.rank = rank

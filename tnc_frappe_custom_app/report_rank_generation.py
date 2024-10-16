@@ -69,7 +69,7 @@ def generate_ranks(docname, start_rank, initial_regularised_ranks, last_regulari
         if isinstance(ranks, str):
             return {"status": "error", "message": ranks}
 
-        students = frappe.get_all('Student Results', filters={'batch_id': docname}, fields=['name', 'percentage'], order_by='percentage desc')
+        students = frappe.get_all('Student Results', filters={'exam_id': docname}, fields=['name', 'percentage'], order_by='percentage desc')
 
         if not students:
             return {"status": "error", "message": "No students found to generate ranks"}
@@ -121,7 +121,7 @@ def assign_colors(docname, green_end, yellow_end):
         green_end = int(total_students * (exam_doc.green_ends_to / 100))
         yellow_end = int(total_students * (exam_doc.yellow_ends_to / 100))
 
-        student_results = frappe.get_all('Student Results', filters={'batch_id': docname}, fields=['name', 'rank'], order_by='rank asc')
+        student_results = frappe.get_all('Student Results', filters={'exam_id': docname}, fields=['name', 'rank'], order_by='rank asc')
 
         for student_result in student_results:
             if student_result.rank <= green_end:
@@ -153,7 +153,7 @@ def reset_ranks(exam_title_name):
     # Fetch all records where exam_title_name matches
     student_results = frappe.get_all(
         "Student Results",
-        filters={"batch_id": exam_title_name},
+        filters={"exam_id": exam_title_name},
         fields=["name"]
     )
     exam_title_name = frappe.get_value('Student Exam', {'name': exam_title_name}, 'name')
@@ -305,7 +305,7 @@ def readjust_ranks(docname, start_rank, initial_regularised_ranks, last_regulari
             return {"message": ranks}  # Handle validation errors from get_step_size
 
         # Fetch students and validate
-        students = frappe.get_all('Student Results', filters={'batch_id': docname}, fields=['name', 'percentage'], order_by='percentage desc')
+        students = frappe.get_all('Student Results', filters={'exam_id': docname}, fields=['name', 'percentage'], order_by='percentage desc')
         if not students:
             return {"message": "No Students are available to generate the ranks"}
 

@@ -37,18 +37,18 @@ def get_exam_performance_data(filters):
 
     for exam in student_exams:
         # Count records for 'Students Master Data' for the given exam
-        student_master_data_count = frappe.db.count('Students Master Data', {'imported_batch_id': exam.name})
+        student_master_data_count = frappe.db.count('Students Master Data', {'exam_id': exam.name})
         
         # Count records for 'Students Master Data' where 'imported' is set to 1
-        student_master_data_imported_count = frappe.db.count('Students Master Data', {'imported_batch_id': exam.name, 'imported': 1})
+        student_master_data_imported_count = frappe.db.count('Students Master Data', {'exam_id': exam.name, 'imported': 1})
 
         # Count records for students created from 'Student' where batch ID matches
-        student_created_count = frappe.db.count('Student', {'student_batch_id': exam.name})
+        student_created_count = frappe.db.count('Student', {'exam_id': exam.name})
 
         # Count records for student results from 'Student Results' where batch ID matches
-        student_results_count = frappe.db.count('Student Results', {'batch_id': exam.name})
+        student_results_count = frappe.db.count('Student Results', {'exam_id': exam.name})
 
-        student_color_assigned = frappe.db.count('Student Results', {'rank_color': ("in",["R","G","Y"]),'batch_id': exam.name})
+        student_color_assigned = frappe.db.count('Student Results', {'rank_color': ("in",["R","G","Y"]),'exam_id': exam.name})
 
         # Add data to the report
         data.append({

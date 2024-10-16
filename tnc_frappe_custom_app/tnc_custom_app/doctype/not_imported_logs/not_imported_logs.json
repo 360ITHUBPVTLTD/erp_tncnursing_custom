@@ -5,7 +5,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "imported_batch_id",
+  "exam_id",
   "student_name",
   "mobile",
   "district",
@@ -26,12 +26,6 @@
   "error_message"
  ],
  "fields": [
-  {
-   "fieldname": "imported_batch_id",
-   "fieldtype": "Link",
-   "label": "Imported Batch ID",
-   "options": "Student Exam"
-  },
   {
    "fetch_from": "student_id.student_name",
    "fieldname": "student_name",
@@ -136,11 +130,17 @@
    "label": "Student Result ID",
    "options": "Student Results",
    "read_only": 1
+  },
+  {
+   "fieldname": "exam_id",
+   "fieldtype": "Link",
+   "label": "Exam ID",
+   "options": "Student Exam"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-18 11:41:50.134842",
+ "modified": "2024-09-26 12:46:21.801313",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Not Imported Logs",

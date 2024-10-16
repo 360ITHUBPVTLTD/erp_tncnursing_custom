@@ -135,9 +135,9 @@ class StudentResults(Document):
         duplicate_entry = frappe.db.exists('Student Results', {
             # 'exam_name': self.exam_name,
             # 'exam_date': self.exam_date,
-            # 'batch_id': self.batch_id,
+            # 'exam_id': self.exam_id,
             'student_id': self.student_id,
-            'batch_id': self.batch_id,
+            'exam_id': self.exam_id,
             # 'exam_title_name': self.exam_title_name,
             # 'student_mobile': self.student_mobile,
             # 'name': ['!=', self.name]  # Exclude the current document from the check

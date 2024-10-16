@@ -10,15 +10,15 @@ class StudentsMasterData(Document):
 
 # class StudentsMasterData(Document):
 #     def after_insert(self):
-#         # Get the imported_batch_id from the current Student Master document
-#         imported_batch_id = self.imported_batch_id
+#         # Get the exam_id from the current Student Master document
+#         imported_batch_id = self.exam_id
 
 #         if imported_batch_id:
 #             # Count the number of students in Student Master with the same imported_batch_id
-#             count = frappe.db.count('Students Master Data', {'imported_batch_id': imported_batch_id})
+#             count = frappe.db.count('Students Master Data', {'exam_id': imported_batch_id})
 
 #             try:
-#                 # Fetch the corresponding Student Exam document using imported_batch_id (matching the name)
+#                 # Fetch the corresponding Student Exam document using exam_id (matching the name)
 #                 student_exam_doc = frappe.get_doc('Student Exam', imported_batch_id)
                 
 #                 # Update the actual_count field in Student Exam with the count of matching students
@@ -26,21 +26,21 @@ class StudentsMasterData(Document):
 #                 student_exam_doc.save()
 
 #             except frappe.DoesNotExistError:
-#                 # If no Student Exam is found with the matching imported_batch_id
+#                 # If no Student Exam is found with the matching exam_id
 #                 frappe.throw(f"No Student Exam found with name {imported_batch_id}")
 #         else:
-#             frappe.throw("imported_batch_id is missing in the Student Master record")
+#             frappe.throw("exam_id is missing in the Student Master record")
 
 
 
 class StudentsMasterData(Document):
     def after_insert(self):
         # Get the imported_batch_id from the current Student Master document
-        imported_batch_id = self.imported_batch_id
+        imported_batch_id = self.exam_id
 
         if imported_batch_id:
             # Count the number of students in Student Master with the same imported_batch_id
-            count = frappe.db.count('Students Master Data', {'imported_batch_id': imported_batch_id})
+            count = frappe.db.count('Students Master Data', {'exam_id': imported_batch_id})
 
             try:
                 # Fetch the corresponding Student Exam document using imported_batch_id (matching the name)
@@ -52,7 +52,7 @@ class StudentsMasterData(Document):
                 # Fetch the highest rank (DESC order) for the given imported_batch_id
                 highest_rank = frappe.db.get_value(
                     'Students Master Data',
-                    {'imported_batch_id': imported_batch_id},
+                    {'exam_id': imported_batch_id},
                     'rank',
                     order_by='rank desc'
                 )
@@ -61,7 +61,7 @@ class StudentsMasterData(Document):
                     # Store the highest rank in the last_rank field of Student Exam
                     student_exam_doc.last_rank = highest_rank
                 else:
-                    frappe.throw(f"No rank found for imported_batch_id {imported_batch_id}")
+                    frappe.throw(f"No rank found for exam_id {imported_batch_id}")
 
                 # Save the updated Student Exam document
                 student_exam_doc.save()
@@ -70,7 +70,7 @@ class StudentsMasterData(Document):
                 # If no Student Exam is found with the matching imported_batch_id
                 frappe.throw(f"No Student Exam found with name {imported_batch_id}")
         else:
-            frappe.throw("imported_batch_id is missing in the Student Master record")
+            frappe.throw("exam_id is missing in the Student Master record")
 
 
 
@@ -83,7 +83,7 @@ def sync_uninported_data():
     # Fetch all records from 'Student Masters Data' where 'imported' is unchecked
     student_records = frappe.get_all('Students Master Data', 
                                      filters={'imported': 0}, 
-                                     fields=['imported_batch_id', 'student_name', 'mobile', 'district', 'state', 
+                                     fields=['exam_id', 'student_name', 'mobile', 'district', 'state', 
                                              'rank', 'total_marks', 'total_right', 'total_wrong', 'total_skip', 'percentage'])
     
     if not student_records:
@@ -93,7 +93,7 @@ def sync_uninported_data():
     for record in student_records:
         new_log = frappe.get_doc({
             'doctype': 'Not Imported Logs',
-            'imported_batch_id': record['imported_batch_id'],
+            'exam_id': record['exam_id'],
             'student_name': record['student_name'],
             'mobile': record['mobile'],
             'district': record['district'],
