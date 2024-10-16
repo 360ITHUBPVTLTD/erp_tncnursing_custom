@@ -12,7 +12,11 @@
   "whatsapp_instance_section",
   "instance_id",
   "who_are_having_access_to_whatsapp_section",
-  "whatsapp_access"
+  "whatsapp_access",
+  "email_settings_section",
+  "cc",
+  "admin_email",
+  "email_app_password"
  ],
  "fields": [
   {
@@ -55,12 +59,32 @@
    "fieldtype": "Table MultiSelect",
    "label": "WhatsApp Access",
    "options": "WhatsApp Child Table"
+  },
+  {
+   "fieldname": "email_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Email Settings"
+  },
+  {
+   "fieldname": "cc",
+   "fieldtype": "Small Text",
+   "label": "CC"
+  },
+  {
+   "fieldname": "admin_email",
+   "fieldtype": "Data",
+   "label": "Admin Email"
+  },
+  {
+   "fieldname": "email_app_password",
+   "fieldtype": "Data",
+   "label": "Email App Password"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-09-11 17:45:48.020187",
+ "modified": "2024-10-16 14:36:19.844566",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Admin Settings",

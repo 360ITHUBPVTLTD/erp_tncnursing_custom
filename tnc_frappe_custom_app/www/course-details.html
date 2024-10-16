@@ -1,0 +1,430 @@
+
+{% extends "templates/custom_base.html" %}
+
+{% block content %}
+
+<style>
+.responsive-img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+}
+    </style>
+</head>
+
+<body>
+
+    <!-- Scroll-top -->
+    <button class="scroll__top scroll-to-target" data-target="html">
+        <i class="tg-flaticon-arrowhead-up"></i>
+    </button>
+    <!-- Scroll-top-end-->
+
+    <!-- header-area -->
+    <!-- header-area-end -->
+
+
+
+    <!-- main-area -->
+    <main class="main-area fix">
+
+        <!-- courses-details-area -->
+        <section class="courses__details-area section-py-120" data-aos="fade-up" data-aos-delay="200"
+        >
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12">
+                        <h2 class="title">NORCET Preparation Course 2024</h2>
+                            <div class="courses__details-meta">
+                                <ul class="list-wrap">
+                                    <li class="date"><i class="flaticon-calendar"></i>Starts from 10 Oct, 2024</li>
+                                    <li><i class="flaticon-mortarboard"></i>2,250 Students Enrolled</li>
+                                </ul>
+                            </div>
+                        <div class="courses__details-thumb" data-aos="fade-up" data-aos-delay="300">
+                            <img src="assets/tnc_frappe_custom_app/tnc/img/courses/courses_details.jpg" alt="img" class="responsive-img">
+                        </div>
+                        <div class="courses__details-content">
+                            <ul class="courses__item-meta list-wrap">
+                                <li class="courses__item-tag">
+                                    <a href="course.html">NORCET</a>
+                                </li>
+                                <!-- <li class="avg-rating"><i class="fas fa-star"></i> (4.5 Reviews)</li> -->
+                            </ul>
+                            <ul class="nav nav-tabs" id="myTab" role="tablist" data-aos="fade-right" data-aos-delay="500" >
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview-tab-pane" type="button" role="tab" aria-controls="overview-tab-pane" aria-selected="true">Overview</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="curriculum-tab" data-bs-toggle="tab" data-bs-target="#curriculum-tab-pane" type="button" role="tab" aria-controls="curriculum-tab-pane" aria-selected="false">Curriculum</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="instructors-tab" data-bs-toggle="tab" data-bs-target="#instructors-tab-pane" type="button" role="tab" aria-controls="instructors-tab-pane" aria-selected="false">Online Course</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews-tab-pane" type="button" role="tab" aria-controls="reviews-tab-pane" aria-selected="false">Offline Course</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="myTabContent" data-aos="fade-up" data-aos-delay="800">
+                                <div class="tab-pane fade show active" id="overview-tab-pane" role="tabpanel" aria-labelledby="overview-tab" tabindex="0">
+                                    <div class="courses__overview-wrap">
+                                        <h3 class="title">Course Description</h3>
+                                        <p>The NORCET Preparation Course 2024 at TNC Nursing equips aspiring nursing professionals with essential knowledge and skills to excel in the Nursing Officer Recruitment Common Eligibility Test. With expert guidance, comprehensive study materials, and practice exams, students gain confidence to achieve their career goals.</p>
+                                        <h3 class="title">What you'll learn in this course?</h3>
+                                        <p>In this course, you'll learn critical nursing concepts, exam strategies, time management techniques, and gain hands-on practice with mock tests, enhancing your readiness for the NORCET and boosting your confidence for the exam.</p>
+                                        <ul class="about__info-list list-wrap">
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">Comprehensive coverage of nursing fundamentals and key topics.</p>
+                                            </li>
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">Effective exam strategies for optimal performance on test day.</p>
+                                            </li>
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">Time management techniques to enhance study efficiency.</p>
+                                            </li>
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">Access to mock tests for realistic exam practice.</p>
+                                            </li>
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">Personalized guidance from experienced nursing instructors and mentors.</p>
+                                            </li>
+                                        </ul>
+                                        <p class="last-info">This course offers tailored instruction and resources, ensuring students are well-prepared to confidently tackle the NORCET and succeed in their nursing careers.</p>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="curriculum-tab-pane" role="tabpanel" aria-labelledby="curriculum-tab" tabindex="0">
+                                    <div class="courses__curriculum-wrap">
+                                        <h3 class="title">Course Curriculum</h3>
+                                        <p>The NORCET exam curriculum encompasses essential nursing topics, ensuring students develop a robust understanding of patient care, pharmacology, health assessment, and specialized nursing practices.</p>
+                                        <div class="accordion" id="accordionExample">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingOne">
+                                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"  aria-expanded="true" aria-controls="collapseOne">
+                                                        Fundamentals of Nursing
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body">
+                                                        <ul class="list-wrap">
+                                                            <li class="course-item open-item">
+                                                                <!-- <a href="https://www.youtube.com/watch?v=b2Az7_lLh3g" class="course-item-link popup-video">
+                                                                    <span class="item-name">Course Installation</span>
+                                                                    <div class="course-item-meta">
+                                                                        <span class="item-meta duration">03:03</span>
+                                                                    </div>
+                                                                </a> -->
+                                                                    <span class="item-name">Nursing Process</span>                                                                
+                                                            </li>
+                                                            <li class="course-item">
+                                                                <span class="item-name">Patient Care Techniques</span>
+                                                            </li>
+                                                            <li class="course-item">
+                                                                <span class="item-name">Infection Control Practices</span>
+                                                            </li>
+                                                            <li class="course-item">
+                                                                <span class="item-name">Medical Terminology</span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingTwo">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                        Health Assessment
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body">
+                                                        <ul class="list-wrap">
+                                                            <li class="course-item">
+                                                                <span class="item-name">Comprehensive Health History</span>
+                                                            </li>
+                                                            <li class="course-item">
+                                                                <span class="item-name">Physical Examination Techniques</span>
+                                                            </li>
+                                                            <li class="course-item">
+                                                                <span class="item-name">Vital Signs Monitoring</span>
+                                                            </li>
+                                                            <li class="course-item">
+                                                                <span class="item-name">Assessment of Body Systems</span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingThree">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                        Pharmacology and Medications
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                                                    data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body">
+                                                        <ul class="list-wrap">
+                                                            <li class="course-item">
+                                                                <span class="item-name">Drug Classifications and Mechanisms</span>
+                                                            </li>
+                                                            <li class="course-item">
+                                                                <span class="item-name">Medication Administration Routes</span>
+                                                            </li>
+                                                            <li class="course-item">
+                                                                <span class="item-name">Dosage Calculations</span>
+                                                            </li>
+                                                            <li class="course-item">
+                                                                <span class="item-name">Adverse Drug Reactions and Interactions</span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingFour">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapsefour">
+                                                        Medical-Surgical Nursing
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+                                                    data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body">
+                                                        <ul class="list-wrap">
+                                                            <li class="course-item">
+                                                                <span class="item-name">Common Medical Conditions and Treatments</span>
+                                                            </li>
+                                                            <li class="course-item">
+                                                                <span class="item-name">Preoperative and Postoperative Care</span>
+                                                            </li>
+                                                            <li class="course-item">
+                                                                <span class="item-name">Management of Chronic Illnesses</span>
+                                                            </li>
+                                                            <li class="course-item">
+                                                                <span class="item-name">Emergency Nursing Procedures</span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingFive">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                                        Maternal and Child Health Nursing
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
+                                                    data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body">
+                                                        <ul class="list-wrap">
+                                                            <li class="course-item">
+                                                                <span class="item-name">Prenatal Care and Assessment</span>
+                                                            </li>
+                                                            <li class="course-item">
+                                                                <span class="item-name">Labor and Delivery Management</span>
+                                                            </li>
+                                                            <li class="course-item">
+                                                                <span class="item-name">Newborn Care and Assessments</span>
+                                                            </li>
+                                                            <li class="course-item">
+                                                                <span class="item-name">Pediatric Growth and Development Milestones</span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="instructors-tab-pane" role="tabpanel" aria-labelledby="instructors-tab" tabindex="0">
+                                    <div class="courses__overview-wrap">
+                                        <h3 class="title">Course Description</h3>
+                                        <p>Our online NORCET preparation course offers flexible learning with interactive sessions, comprehensive study materials, and expert support, ensuring students are well-equipped to excel in their nursing exams.</p>
+                                        <h3 class="title">Key Highlights of the Online NORCET Preparation Course</h3>
+                                        <ul class="about__info-list list-wrap">
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">Flexible course duration, allowing you to study at your own pace.</p>
+                                            </li>
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">Interactive live sessions for real-time guidance from expert instructors.</p>
+                                            </li>
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">24/7 access to recorded lectures and comprehensive study materials.</p>
+                                            </li>
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">Regular practice quizzes to evaluate and track your progress.</p>
+                                            </li>
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">Instant doubt resolution through dedicated student forums and support.</p>
+                                            </li>
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">Instant doubt resolution through dedicated student forums and support.</p>
+                                            </li>
+                                        </ul>
+                                        <br>
+                                        <div class="tg-button-wrap">
+                                            <a href="events.html" class="btn arrow-btn">Enroll Now <img src="assets/tnc_frappe_custom_app/tnc/img/icons/right_arrow.svg" alt="img" class="injectable"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabindex="0">
+                                    <div class="courses__overview-wrap">
+                                        <h3 class="title">Course Description</h3>
+                                        <p>The offline courses at TNC Nursing offer structured classroom learning, hands-on practical sessions, personalized doubt clearing, and in-class assessments, providing a focused environment for comprehensive preparation and peer collaboration.</p>
+                                        <h3 class="title">Key Highlights of the Online NORCET Preparation Course</h3>
+                                        <ul class="about__info-list list-wrap">
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">Structured class schedule with face-to-face interaction and guidance.</p>
+                                            </li>
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">Hands-on practical sessions for enhanced learning and skill-building.</p>
+                                            </li>
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">Dedicated study materials and notes for offline reference.</p>
+                                            </li>
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">In-class quizzes and assessments to track learning progress.</p>
+                                            </li>
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">One-on-one doubt clearing with instructors for personalized support.</p>
+                                            </li>
+                                            <li class="about__info-list-item">
+                                                <i class="flaticon-angle-right"></i>
+                                                <p class="content">Classroom environment for focused learning and peer collaboration.</p>
+                                            </li>
+                                        </ul>
+                                        <br>
+                                        <div class="tg-button-wrap">
+                                            <a href="events.html" class="btn arrow-btn">Enroll Now <img src="assets/tnc_frappe_custom_app/tnc/img/icons/right_arrow.svg" alt="img" class="injectable"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-xl-3 col-lg-4">
+                        <div class="courses__details-sidebar">
+                            <div class="courses__details-video">
+                                <img src="assets/tnc_frappe_custom_app/tnc/img/courses/course_thumb02.jpg" alt="img">
+                                <a href="https://www.youtube.com/watch?v=YwrHGratByU" class="popup-video"><i class="fas fa-play"></i></a>
+                            </div>
+                            <div class="courses__cost-wrap">
+                                <span>This Course Fee:</span>
+                                <h2 class="title">$18.00 <del>$32.00</del></h2>
+                            </div>
+                            <div class="courses__information-wrap">
+                                <h5 class="title">Course includes:</h5>
+                                <ul class="list-wrap">
+                                    <li>
+                                        <img src="assets/tnc_frappe_custom_app/tnc/img/icons/course_icon01.svg" alt="img" class="injectable">
+                                        Level
+                                        <span>Expert</span>
+                                    </li>
+                                    <li>
+                                        <img src="assets/tnc_frappe_custom_app/tnc/img/icons/course_icon02.svg" alt="img" class="injectable">
+                                        Duration
+                                        <span>11h 20m</span>
+                                    </li>
+                                    <li>
+                                        <img src="assets/tnc_frappe_custom_app/tnc/img/icons/course_icon03.svg" alt="img" class="injectable">
+                                        Lessons
+                                        <span>12</span>
+                                    </li>
+                                    <li>
+                                        <img src="assets/tnc_frappe_custom_app/tnc/img/icons/course_icon04.svg" alt="img" class="injectable">
+                                        Quizzes
+                                        <span>145</span>
+                                    </li>
+                                    <li>
+                                        <img src="assets/tnc_frappe_custom_app/tnc/img/icons/course_icon05.svg" alt="img" class="injectable">
+                                        Certifications
+                                        <span>Yes</span>
+                                    </li>
+                                    <li>
+                                        <img src="assets/tnc_frappe_custom_app/tnc/img/icons/course_icon06.svg" alt="img" class="injectable">
+                                        Graduation
+                                        <span>25K</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="courses__payment">
+                                <h5 class="title">Secure Payment:</h5>
+                                <img src="assets/tnc_frappe_custom_app/tnc/img/others/payment.png" alt="img">
+                            </div>
+                            <div class="courses__details-social">
+                                <h5 class="title">Share this course:</h5>
+                                <ul class="list-wrap">
+                                    <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                    <li><a href="#"><i class="fab fa-whatsapp"></i></a></li>
+                                    <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                                    <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="courses__details-enroll">
+                                <div class="tg-button-wrap">
+                                    <a href="courses.html" class="btn btn-two arrow-btn">
+                                        See All Instructors
+                                        <img src="assets/tnc_frappe_custom_app/tnc/img/icons/right_arrow.svg" alt="img" class="injectable">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </section>
+        <!-- courses-details-area-end -->
+
+    </main>
+    <!-- main-area-end -->
+
+
+
+    <!-- footer-area -->
+    <!-- footer-area-end -->
+
+
+
+
+    <!-- JS here -->
+    <script src="assets/tnc_frappe_custom_app/tnc/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/bootstrap.min.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/imagesloaded.pkgd.min.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/jquery.magnific-popup.min.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/jquery.odometer.min.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/jquery.appear.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/tween-max.min.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/select2.min.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/swiper-bundle.min.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/jquery.marquee.min.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/tg-cursor.min.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/vivus.min.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/ajax-form.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/svg-inject.min.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/jquery.circleType.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/jquery.lettering.min.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/plyr.min.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/wow.min.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/aos.js"></script>
+    <script src="assets/tnc_frappe_custom_app/tnc/js/main.js"></script>
+    <script>
+        SVGInject(document.querySelectorAll("img.injectable"));
+    </script>
+</body>
+
+{% endblock %}

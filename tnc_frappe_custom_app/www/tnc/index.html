@@ -1,0 +1,969 @@
+
+{% extends "templates/custom_base.html" %}
+
+{% block content %}
+
+<style>
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    background: #000;
+    margin-bottom: 20px;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+        .video-play-button {
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  box-sizing: content-box;
+  display: block;
+  width: 32px;
+  height: 44px;
+  padding: 18px 20px 18px 28px;
+}
+
+.video-play-button:before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  display: block;
+  width: 55px;
+  height: 55px;
+  background: #eb2055;
+  border-radius: 50%;
+  animation: pulse-border 1100ms ease-out infinite;
+}
+
+.video-play-button:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  display: block;
+  width: 60px;
+  height: 60px;
+  background: #eb2055;
+  border-radius: 50%;
+  transition: all 200ms;
+}
+
+.video-play-button span {
+  display: block;
+  position: relative;
+  z-index: 3;
+  width: 0;
+  height: 0;
+  border-left: 19px solid #fff;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  top: 10px;
+  left: 5px;
+}
+
+@keyframes pulse-border {
+  0% {
+    transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1.5);
+    opacity: 0;
+  }
+}
+</style>
+
+
+<body>
+
+    <!-- Scroll-top -->
+    <button class="scroll__top scroll-to-target" data-target="html">
+        <i class="tg-flaticon-arrowhead-up"></i>
+    </button>
+    <!-- Scroll-top-end-->
+
+    <!-- header-area -->
+
+    <!-- header-area-end -->
+
+
+
+    <!-- main-area -->
+    <main class="main-area fix">
+
+        <!-- banner-area -->
+        <section class="banner-area banner-bg tg-motion-effects" data-background="assets/tnc_frappe_custom_app/tnc/img/banner/banner_bg.png">
+            <div class="container">
+                <div class="row justify-content-between align-items-start">
+                    <div class="col-xl-5 col-lg-6">
+                        <div class="banner__content">
+                            <h3 class="title tg-svg" data-aos="fade-right" data-aos-delay="400">
+                                Excel in NORCET with
+                                <br>Expert <b style="color: #fb0201;">Nursing Coaching</b>
+                            </h3>
+                            <p data-aos="fade-right" data-aos-delay="600">Prepare for NORCET with top-notch coaching and comprehensive study resources</p>
+                            <div class="banner__btn-wrap" data-aos="fade-right" data-aos-delay="800">
+                                <a href="contact.html" class="btn arrow-btn">Start Your Journey to NORCET Success!<img src="assets/tnc_frappe_custom_app/tnc/img/icons/right_arrow.svg" alt="img" class="injectable"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="banner__images">
+                            <img src="assets/tnc_frappe_custom_app/tnc/img/banner/banner_img.png" alt="img" class="main-img" data-aos="fade-up" data-aos-delay="200">
+                            <div class="shape big-shape" data-aos="fade-up-right" data-aos-delay="600">
+                                <img src="assets/tnc_frappe_custom_app/tnc/img/banner/banner_shape01.png" alt="shape" class="tg-motion-effects1">
+                            </div>
+                            <img src="assets/tnc_frappe_custom_app/tnc/img/banner/bg_dots.svg" alt="shape" class="shape bg-dots">
+                            <img src="assets/tnc_frappe_custom_app/tnc/img/banner/banner_shape02.png" alt="shape" class="shape small-shape tg-motion-effects3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <img src="assets/tnc_frappe_custom_app/tnc/img/banner/banner_shape01.svg" alt="shape" class="line-shape" data-aos="fade-right" data-aos-delay="1600"> -->
+        </section>
+        <!-- banner-area-end -->
+
+
+
+                <!-- choose-area -->
+                <section class="choose__area-four tg-motion-effects section-py-140">
+                    <div class="container">
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-lg-6 col-md-10">
+                                <div class="choose__img-four">
+                                    <div class="left__side">
+                                        <img src="assets/tnc_frappe_custom_app/tnc/img/others/h7_choose_img01.jpg" alt="img" data-aos="fade-down" data-aos-delay="200">
+                                        <img src="assets/tnc_frappe_custom_app/tnc/img/others/h7_choose_img02.jpg" alt="img" data-aos="fade-up" data-aos-delay="200">
+                                    </div>
+                                    <div class="right__side" data-aos="fade-left" data-aos-delay="400">
+                                        <img src="assets/tnc_frappe_custom_app/tnc/img/others/h7_choose_img03.jpg" alt="img">
+                                        <a href="https://youtu.be/Txk7RiL9i0Y?si=NzRyi4B-Pbv5OBOJ" class="popup-video" target="_blank"><i class="fas fa-play"></i></a>
+                                    </div>
+                                    <img src="assets/tnc_frappe_custom_app/tnc/img/others/h7_choose_shape01.svg" alt="shape" class="shape shape-one tg-motion-effects4">
+                                    <img src="assets/tnc_frappe_custom_app/tnc/img/others/h7_choose_shape02.svg" alt="shape" class="shape shape-two">                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="choose__content-four">
+                                    <div class="section__title mb-20">
+                                        <span class="sub-title">About Us</span>
+                                        <h2 class="title bold">Empowering Future Nurses with Excellence</h2>
+                                    </div>
+                                    <p>At TNC Nursing in Patna, we empower aspiring nursing professionals with comprehensive education and expert guidance. Recognized for our high success rate in competitive nursing exams, we offer both online and offline courses tailored to diverse learning needs, supported by experienced faculty and structured study plans to help students achieve their career goals.</p>
+                                    <ul class="about__info-list list-wrap">
+                                        <li class="about__info-list-item">
+                                            <i class="flaticon-angle-right"></i>
+                                            <p class="content">Comprehensive Education and Guidance</p>
+                                        </li>
+                                        <li class="about__info-list-item">
+                                            <i class="flaticon-angle-right"></i>
+                                            <p class="content">High Success Rate Achieved</p>
+                                        </li>
+                                        <li class="about__info-list-item">
+                                            <i class="flaticon-angle-right"></i>
+                                            <p class="content">Experienced Faculty Support</p>
+                                        </li>
+                                    </ul>
+                                    <div class="tg-button-wrap">
+                                        <a href="about-us.html" class="btn arrow-btn">Learn More About Us<img src="assets/tnc_frappe_custom_app/tnc/img/icons/right_arrow.svg" alt="img" class="injectable"></a>
+                                    </div>    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- choose-area-end -->
+        
+
+
+        <!-- course-area -->
+        <section class="courses-area section-pt-120 section-pb-90" data-background="assets/tnc_frappe_custom_app/tnc/img/bg/courses_bg.jpg" data-aos="fade-up" data-aos-delay="200">
+            <div class="container">
+                <div class="section__title-wrap">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6">
+                            <div class="section__title text-center mb-40">
+                                <span class="sub-title">Our Courses</span>
+                                <h2 class="title">Unlock Your Potential with Our Courses!</h2>
+                                <p class="desc">Explore our diverse courses designed to equip you with the knowledge and skills needed for a successful nursing career. </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="courseTabContent" data-aos="fade-up" data-aos-delay="400">
+                    <div class="tab-pane fade show active" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
+                        <div class="swiper courses-swiper-active">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <div class="courses__item shine__animate-item">
+                                        <div class="courses__item-thumb">
+                                            <a href="course-details.html" class="shine__animate-link">
+                                                <img src="assets/tnc_frappe_custom_app/tnc/img/courses/course_thumb01.jpg" alt="img">
+                                            </a>
+                                        </div>
+                                        <div class="courses__item-content">
+                                            <ul class="courses__item-meta list-wrap">
+                                                <li class="courses__item-tag">
+                                                    <a href="course.html">NORCET</a>
+                                                </li>
+                                                <!-- <li class="avg-rating"><i class="fas fa-star"></i> (4.8 Reviews)</li> -->
+                                            </ul>
+                                            <h5 class="title"><a href="course-details.html">NORCET Preparation Course 2024</a></h5>
+                                            <p class="author">Intensive training for success in the NORCET exam awaits you</p>
+                                            <div class="courses__item-bottom">
+                                                <div class="button">
+                                                    <a href="course-details.html">
+                                                        <span class="text">Enroll Now</span>
+                                                        <i class="flaticon-arrow-right"></i>
+                                                    </a>
+                                                </div>
+                                                <!-- <h5 class="price">$15.00</h5> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="courses__item shine__animate-item">
+                                        <div class="courses__item-thumb">
+                                            <a href="course-details.html" class="shine__animate-link">
+                                                <img src="assets/tnc_frappe_custom_app/tnc/img/courses/course_thumb02.jpg" alt="img">
+                                            </a>
+                                        </div>
+                                        <div class="courses__item-content">
+                                            <ul class="courses__item-meta list-wrap">
+                                                <li class="courses__item-tag">
+                                                    <a href="course.html">Nursing</a>
+                                                </li>
+                                                <!-- <li class="avg-rating"><i class="fas fa-star"></i> (4.5 Reviews)</li> -->
+                                            </ul>
+                                            <h5 class="title"><a href="course-details.html">RRB Staff Nursing Exam 2024 Preparation</a></h5>
+                                            <p class="author">Focused training for success in RRB Staff Nurse exams</p>
+                                            <div class="courses__item-bottom">
+                                                <div class="button">
+                                                    <a href="course-details.html">
+                                                        <span class="text">Enroll Now</span>
+                                                        <i class="flaticon-arrow-right"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="courses__item shine__animate-item">
+                                        <div class="courses__item-thumb">
+                                            <a href="course-details.html" class="shine__animate-link">
+                                                <img src="assets/tnc_frappe_custom_app/tnc/img/courses/course_thumb03.jpg" alt="img">
+                                            </a>
+                                        </div>
+                                        <div class="courses__item-content">
+                                            <ul class="courses__item-meta list-wrap">
+                                                <li class="courses__item-tag">
+                                                    <a href="course.html">Nursing</a>
+                                                </li>
+                                            </ul>
+                                            <h5 class="title"><a href="course-details.html">KGMU Nursing Exam Preparation 2024</a></h5>
+                                            <p class="author">Comprehensive preparation for KGMU nursing entrance exam success</p>
+                                            <div class="courses__item-bottom">
+                                                <div class="button">
+                                                    <a href="course-details.html">
+                                                        <span class="text">Enroll Now</span>
+                                                        <i class="flaticon-arrow-right"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="courses__item shine__animate-item">
+                                        <div class="courses__item-thumb">
+                                            <a href="course-details.html" class="shine__animate-link">
+                                                <img src="assets/tnc_frappe_custom_app/tnc/img/courses/course_thumb04.jpg" alt="img">
+                                            </a>
+                                        </div>
+                                        <div class="courses__item-content">
+                                            <ul class="courses__item-meta list-wrap">
+                                                <li class="courses__item-tag">
+                                                    <a href="course.html">Nursing</a>
+                                                </li>
+                                            </ul>
+                                            <h5 class="title"><a href="course-details.html">State-level Nursing Exam Preparation 2024</a></h5>
+                                            <p class="author">Tailored courses to excel in state-specific nursing entrance exams</p>
+                                            <div class="courses__item-bottom">
+                                                <div class="button">
+                                                    <a href="course-details.html">
+                                                        <span class="text">Enroll Now</span>
+                                                        <i class="flaticon-arrow-right"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="courses__item shine__animate-item">
+                                        <div class="courses__item-thumb">
+                                            <a href="course-details.html" class="shine__animate-link">
+                                                <img src="assets/tnc_frappe_custom_app/tnc/img/courses/course_thumb05.jpg" alt="img">
+                                            </a>
+                                        </div>
+                                        <div class="courses__item-content">
+                                            <ul class="courses__item-meta list-wrap">
+                                                <li class="courses__item-tag">
+                                                    <a href="course.html">NORCET</a>
+                                                </li>
+                                            </ul>
+                                            <h5 class="title"><a href="course-details.html">NORCET Preparation Course 2024</a></h5>
+                                            <p class="author">Intensive training for success in the NORCET exam awaits you</p>
+                                            <div class="courses__item-bottom">
+                                                <div class="button">
+                                                    <a href="course-details.html">
+                                                        <span class="text">Enroll Now</span>
+                                                        <i class="flaticon-arrow-right"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="courses__item shine__animate-item">
+                                        <div class="courses__item-thumb">
+                                            <a href="course-details.html" class="shine__animate-link">
+                                                <img src="assets/tnc_frappe_custom_app/tnc/img/courses/course_thumb06.jpg" alt="img">
+                                            </a>
+                                        </div>
+                                        <div class="courses__item-content">
+                                            <ul class="courses__item-meta list-wrap">
+                                                <li class="courses__item-tag">
+                                                    <a href="course.html">Railway</a>
+                                                </li>
+                                            </ul>
+                                            <h5 class="title"><a href="course-details.html">RRB Staff Nursing Exam 2024 Preparation</a></h5>
+                                            <p class="author">Focused training for success in RRB Staff Nurse exams</p>
+                                            <div class="courses__item-bottom">
+                                                <div class="button">
+                                                    <a href="course-details.html">
+                                                        <span class="text">Enroll Now</span>
+                                                        <i class="flaticon-arrow-right"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="courses__nav">
+                            <div class="courses-button-prev"><i class="flaticon-arrow-right"></i></div>
+                            <div class="courses-button-next"><i class="flaticon-arrow-right"></i></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <!-- course-area-end -->
+        <!-- features-area -->
+        <section class="instructor__area" data-aos="fade-up" data-aos-delay="200">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-6 col-lg-8">
+                        <div class="section__title text-center mb-40">
+                            <span class="sub-title">Why Choose Us?</span>
+                            <h2 class="title">Choose Excellence: Join TNC Nursing</h2>
+                            <p>Join TNC Nursing for expert guidance, proven success, <br> and tailored learning experiences.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="features__item-wrap">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-4 col-md-6"  data-aos="fade-right" data-aos-delay="200">
+                            <div class="features__item-two">
+                                <div class="features__content-two">
+                                    <div class="content-top">
+                                        <div class="features__icon-two">
+                                            <img src="assets/tnc_frappe_custom_app/tnc/img/icons/h2_features_icon01.svg" alt="img" class="injectable">
+                                        </div>
+                                        <h2 class="title">Expert Faculty</h2>
+                                    </div>
+                                    <p>Gain insights from experienced professionals with vast expertise in nursing education and practice.</p>
+                                </div>
+                                <div class="features__item-shape">
+                                    <img src="assets/tnc_frappe_custom_app/tnc/img/others/features_item_shape.svg" alt="img" class="injectable">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="250">
+                            <div class="features__item-two">
+                                <div class="features__content-two">
+                                    <div class="content-top">
+                                        <div class="features__icon-two">
+                                            <img src="assets/tnc_frappe_custom_app/tnc/img/icons/h2_features_icon02.svg" alt="img" class="injectable">
+                                        </div>
+                                        <h2 class="title">Proven Success</h2>
+                                    </div>
+                                    <p>Achieve your professional career goals with our exceptional high success rate in competitive nursing exams.</p>
+                                </div>
+                                <div class="features__item-shape">
+                                    <img src="assets/tnc_frappe_custom_app/tnc/img/others/features_item_shape.svg" alt="img" class="injectable">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6" data-aos="fade-left" data-aos-delay="300">
+                            <div class="features__item-two">
+                                <div class="features__content-two">
+                                    <div class="content-top">
+                                        <div class="features__icon-two">
+                                            <img src="assets/tnc_frappe_custom_app/tnc/img/icons/h2_features_icon03.svg" alt="img" class="injectable">
+                                        </div>
+                                        <h2 class="title">Comprehensive Resources</h2>
+                                    </div>
+                                    <p>Access a comprehensive range of study materials, practice exams, interactive quizzes, and online learning tools.</p>
+                                </div>
+                                <div class="features__item-shape">
+                                    <img src="assets/tnc_frappe_custom_app/tnc/img/others/features_item_shape.svg" alt="img" class="injectable">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- features-area-end -->
+
+        <!-- fact-area -->
+        <section class="fact__area" >
+            <div class="container">
+                <div class="fact__inner-wrap">
+                    <div class="row">
+                        <div class="col-lg-3 col-6">
+                            <div class="fact__item">
+                                <h2 class="count"><span class="odometer" data-count="10"></span>K+</h2>
+                                <p>Students coached annually</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="fact__item">
+                                <h2 class="count"><span class="odometer" data-count="30"></span>+</h2>
+                                <p>Expert Instructors</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="fact__item">
+                                <h2 class="count"><span class="odometer" data-count="15"></span>+</h2>
+                                <p>Years of Teaching Experience</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="fact__item">
+                                <h2 class="count"><span class="odometer" data-count="2000"></span>+</h2>
+                                <p>Practice Questions in Our app</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- fact-area-end -->
+
+        <!-- Achievements Slider -->
+        <section class="faq__area" data-aos="fade-up" data-aos-delay="200">
+            <div class="container">
+                <div class="section__title-wrap">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6">
+                            <div class="section__title text-center mb-40">
+                                <h2 class="title">Latest Achievements: <br> Proud Moments</h2>
+                                <p class="desc">Our students have achieved remarkable results, showcasing their dedication and hard work. We celebrate their successes and commitment to excellence at TNC Nursing.</p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slider" data-aos="fade-right" data-aos-delay="200">
+                    <div class="slide_viewer">
+                      <div class="slide_group">
+                        <div class="slide">
+                            <img src="assets/tnc_frappe_custom_app/tnc/img/others/Slider-1.jpg" alt="">
+                        </div>
+                        <div class="slide">
+                            <img src="assets/tnc_frappe_custom_app/tnc/img/others/Slider-2.jpg" alt="">
+                        </div>
+                        <div class="slide">
+                            <img src="assets/tnc_frappe_custom_app/tnc/img/others/Slider-1.jpg" alt="">
+                        </div>
+                        <div class="slide">
+                            <img src="assets/tnc_frappe_custom_app/tnc/img/others/Slider-2.jpg" alt="">
+                        </div>
+                      </div>
+                    </div>
+                  </div><!-- End // .slider -->
+                  
+                  <div class="slide_buttons">
+                  </div>
+                  
+
+            </div>
+           
+        </section>
+        <!-- Achievements Slider-end -->
+
+        
+
+        <!-- testimonial-area -->
+
+            <section class="testimonial__area-two section-py-120 testimonial__bg" data-background="assets/tnc_frappe_custom_app/tnc/img/bg/testimonials_bg.jpg">
+                    <div class="container" data-aos="fade-up" data-aos-delay="200">
+                        <div class="row justify-content-center">
+                            <div class="col-xl-5">
+                                <div class="section__title text-center mb-50">
+                                    <span class="sub-title">Our Testimonials</span>
+                                    <h2 class="title">Voices of Our Success</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" data-aos="fade-up" data-aos-delay="300">
+                            <div class="col-12">
+                                <div class="testimonial__item-wrap">
+                                    <div class="swiper-container testimonial-swiper-active-two">
+                                        <div class="swiper-wrapper">
+                                            <div class="swiper-slide">
+                                                <div class="testimonial__item-two">
+                                                    <div class="video-container">
+                                                        <iframe src="https://www.youtube.com/embed/Yd73b7IMRYw?si=Y_wHgpDk8jXKZUbw&mute=1&controls=1" frameborder="0" allowfullscreen></iframe>
+                                                    </div>
+                                                    <div class="courses__item-thumb">
+                                                        <!-- Replace the img with iframe and add controls parameter -->
+                                                        <!-- Play Button -->
+                                                        <!-- <a id="play-video" class="video-play-button" href="https://www.youtube.com/embed/Yd73b7IMRYw?si=Y_wHgpDk8jXKZUbw" data-toggle="modal" data-target="#savoybeachhotel">
+                                                            <span></span>
+                                                        </a> -->
+                                                    </div>
+                                                    <div class="testimonial__content-two">
+                                                        <p>I am Sakshi Thakur, and I secured AIR 176 in NORCET 6.0. Thanks to TNC Nursing for their excellent coaching and support. The dedicated teachers and comprehensive study materials helped me achieve my goal!</p>
+                                                    </div>
+                                                    <div class="testimonial__author testimonial__author-two">
+                                                        <div class="testimonial__author-thumb testimonial__author-thumb-two">
+                                                            <img src="assets/tnc_frappe_custom_app/tnc/img/others/testi_author01.png" alt="img">
+                                                        </div>
+                                                        <div class="testimonial__author-content testimonial__author-content-two">
+                                                            <h2 class="title">Sakshi Thakur</h2>
+                                                            <span>AIR 176, NORCET 6.0</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>                              
+                                            
+                                            <div class="swiper-slide">
+                                                <div class="testimonial__item-two">
+                                                    <div class="video-container">
+                                                        <iframe src="https://www.youtube.com/embed/3QhxfqN19jU?si=8ogA2Q_hlP1BlrpX&mute=1&controls=1" frameborder="0" allowfullscreen></iframe>
+                                                    </div>
+                                                    <div class="testimonial__content-two">
+                                                        <p>I’m Anita Kumbar, and I’m proud to have achieved AIR 165 in NORCET 6.0! I owe my success to TNC Nursing. Their dedicated teachers and comprehensive materials made a significant difference in my preparation for the exam.</p>
+                                                    </div>
+                                                    <div class="testimonial__author testimonial__author-two">
+                                                        <div class="testimonial__author-thumb testimonial__author-thumb-two">
+                                                            <img src="assets/tnc_frappe_custom_app/tnc/img/others/testi_author02.png" alt="img">
+                                                        </div>
+                                                        <div class="testimonial__author-content testimonial__author-content-two">
+                                                            <h2 class="title">Anita Kumbar</h2>
+                                                            <span>AIR 165, NORCET 6.0</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="swiper-slide">
+                                                <div class="testimonial__item-two">
+                                                    <div class="video-container">
+                                                        <iframe src="https://www.youtube.com/embed/Txk7RiL9i0Y?si=CNODKh3FlkUAfYu&mute=1&controls=1" frameborder="0" allowfullscreen></iframe>
+                                                    </div>
+                                                    <div class="testimonial__content-two">
+                                                        <p>I’m Kapil Sharma, and I achieved AIR 06 in UPUMS 6.0. I’m grateful to TNC Nursing for their incredible support and quality education. Their dedicated teachers and resources made a big difference in my preparation. Thank you, TNC!</p>
+                                                    </div>
+                                                    <div class="testimonial__author testimonial__author-two">
+                                                        <div class="testimonial__author-thumb testimonial__author-thumb-two">
+                                                            <img src="assets/tnc_frappe_custom_app/tnc/img/others/testi_author03.png" alt="img">
+                                                        </div>
+                                                        <div class="testimonial__author-content testimonial__author-content-two">
+                                                            <h2 class="title">Kapil Sharma</h2>
+                                                            <span>AIR 06, UPUMS</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="swiper-slide">
+                                                <div class="testimonial__item-two">
+                                                    <div class="video-container">
+                                                        <iframe src="https://www.youtube.com/embed/P0bXUZXSgg0?si=0xfNp9WpBEyN4-oe&mute=1&controls=1" frameborder="0" allowfullscreen></iframe>
+                                                    </div>
+                                                    <div class="testimonial__content-two">
+                                                        <p>I am proud to share that Hemanth Kumar Suman from TNC Nursing achieved AIR 161 in NORCET 6.0. His hard work and dedication truly paid off. TNC provided excellent guidance, and I believe many more will follow in his footsteps!</p>
+                                                    </div>
+                                                    <div class="testimonial__author testimonial__author-two">
+                                                        <div class="testimonial__author-thumb testimonial__author-thumb-two">
+                                                            <img src="assets/tnc_frappe_custom_app/tnc/img/others/testi_author04.png" alt="img">
+                                                        </div>
+                                                        <div class="testimonial__author-content testimonial__author-content-two">
+                                                            <h2 class="title">Hemanth Kumar Suman</h2>
+                                                            <span>AIR 161, NORCET 6.0</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="swiper-slide">
+                                                <div class="testimonial__item-two">
+                                                    <div class="video-container">
+                                                        <iframe src="https://www.youtube.com/embed/w_DXNcQxaF8?si=dMeFGkBsKeRp86Ii&mute=1&controls=1" frameborder="0" allowfullscreen></iframe>
+                                                    </div>
+                                                    <div class="testimonial__content-two">
+                                                        <p>I am Nisha Sharma from TNC Nursing. Securing AIR 163 in NORCET 6.0 is a dream come true for me. TNC's excellent guidance, resources, and support helped me prepare effectively for the exam. I am truly grateful!</p>
+                                                    </div>
+                                                    <div class="testimonial__author testimonial__author-two">
+                                                        <div class="testimonial__author-thumb testimonial__author-thumb-two">
+                                                            <img src="assets/tnc_frappe_custom_app/tnc/img/others/testi_author05.png" alt="img">
+                                                        </div>
+                                                        <div class="testimonial__author-content testimonial__author-content-two">
+                                                            <h2 class="title">Nisha Sharma</h2>
+                                                            <span>AIR 163, NORCET 6.0</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </section>
+
+        <!-- testimonial-area-end -->
+        
+                <!-- newsletter-area -->
+                <section class="newsletter__area" data-aos="fade-up" data-aos-delay="200">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-4">
+                                <div class="newsletter__img-wrap">
+                                    <img src="assets/tnc_frappe_custom_app/tnc/img/others/newsletter_img.png" alt="img" data-aos="fade-right" data-aos-delay="250">
+                                    <img src="assets/tnc_frappe_custom_app/tnc/img/others/newsletter_shape01.png" alt="img" data-aos="fade-up" data-aos-delay="400">
+                                    <img src="assets/tnc_frappe_custom_app/tnc/img/others/newsletter_shape02.png" alt="img" class="alltuchtopdown">
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="newsletter__content">
+                                    <h2 class="title">Take the First Step Toward Your Nursing Career <span>Join TNC Nursing Today!</span></h2>
+                                    <div class="newsletter__form">
+                                        <form action="#">
+                                            <button type="submit" class="btn" data-aos="fade-up" data-aos-delay="300">Enroll Now for Success</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="newsletter__shape">
+                        <img src="assets/tnc_frappe_custom_app/tnc/img/others/newsletter_shape03.png" alt="img" data-aos="fade-left" data-aos-delay="400">
+                    </div>
+                </section>
+                <!-- newsletter-area-end -->
+
+                <!-- event-area -->
+                <section class="event__area section-pt-120 section-pb-90"  data-background="assets/tnc_frappe_custom_app/tnc/img/bg/courses_bg.jpg">
+                    <div class="container">
+                        <div class="event__inner-wrap">
+                            <div class="row">
+                                <div class="col-30" data-aos="fade-right" data-aos-delay="200">
+                                    <div class="event__content">
+                                        <div class="section__title mb-20">
+                                            <span class="sub-title">Upcoming Events</span>
+                                            <h2 class="title">Latest News and Important Announcements</h2>
+                                        </div>
+                                        <p>Stay up-to-date with the latest news and announcements on exam applications, result dates, and crucial updates for all nursing examinations, sourced directly from official channels.</p>
+                                        <div class="tg-button-wrap">
+                                            <a href="events.html" class="btn arrow-btn">See All Events <img src="assets/tnc_frappe_custom_app/tnc/img/icons/right_arrow.svg" alt="img" class="injectable"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-70" data-aos="fade-left" data-aos-delay="280">
+                                    <div class="event__item-wrap">
+                                        <div class="row justify-content-center">
+                                            <div class="col-lg-4 col-md-6">
+                                                <div class="event__item shine__animate-item">
+                                                    <div class="event__item-thumb">
+                                                        <a href="events-details.html" class="shine__animate-link"><img src="assets/tnc_frappe_custom_app/tnc/img/events/event_thumb01.jpg" alt="img"></a>
+                                                    </div>
+                                                    <div class="event__item-content">
+                                                        <span class="date">28 September, 2024</span>
+                                                        <h2 class="title"><a href="events-details.html">NORCET 2024 Results Officially Released</a></h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-6">
+                                                <div class="event__item shine__animate-item">
+                                                    <div class="event__item-thumb">
+                                                        <a href="events-details.html" class="shine__animate-link"><img src="assets/tnc_frappe_custom_app/tnc/img/events/event_thumb02.jpg" alt="img"></a>
+                                                    </div>
+                                                    <div class="event__item-content">
+                                                        <span class="date">22 September, 2024</span>
+                                                        <h2 class="title"><a href="events-details.html">RRB Staff Nurse Answer Key Out</a></h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-6">
+                                                <div class="event__item shine__animate-item">
+                                                    <div class="event__item-thumb">
+                                                        <a href="events-details.html" class="shine__animate-link"><img src="assets/tnc_frappe_custom_app/tnc/img/events/event_thumb03.jpg" alt="img"></a>
+                                                    </div>
+                                                    <div class="event__item-content">
+                                                        <span class="date">15 September, 2024</span>
+                                                        <h2 class="title"><a href="events-details.html">KGMU Exam Results Now Published</a></h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="event__shape">
+                        <img src="assets/tnc_frappe_custom_app/tnc/img/events/event_shape.png" alt="img" class="alltuchtopdown">
+                    </div>
+                </section>
+                <!-- event-area-end -->       
+        
+
+        <!-- blog-post-area -->
+        <section class="blog__post-area-eight section-pt-140 section-pb-110" data-aos="fade-up" data-aos-delay="200">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-6">
+                        <div class="section__title text-center mb-50">
+                            <span class="sub-title">News & Blogs</span>
+                            <h2 class="title bold">Our Latest News Feed</h2>
+                            <p>when known printer took a galley of type scrambl edmake</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="blog__post-item-six shine__animate-item">
+                            <div class="blog__post-thumb-six">
+                                <a href="blog-details.html" class="shine__animate-link"><img src="assets/tnc_frappe_custom_app/tnc/img/blog/h8_blog_post01.jpg" alt="img"></a>
+                                <a href="blog.html" class="post-tag-four">Exam Preparation</a>
+                            </div>
+                            <div class="blog__post-content-six">
+                                <div class="blog__post-meta">
+                                    <ul class="list-wrap">
+                                        <li><i class="flaticon-calendar"></i>20 July, 2024</li>
+                                        <li><i class="flaticon-user-1"></i>by <a href="blog-details.html">Admin</a></li>
+                                    </ul>
+                                </div>
+                                <h2 class="title"><a href="blog-details.html">Top Study Strategies for Nursing Exams</a></h2>
+                                <a href="blog-details.html" class="btn arrow-btn">Read More <img src="assets/tnc_frappe_custom_app/tnc/img/icons/right_arrow.svg" alt="" class="injectable"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="blog__post-item-six shine__animate-item">
+                            <div class="blog__post-thumb-six">
+                                <a href="blog-details.html" class="shine__animate-link"><img src="assets/tnc_frappe_custom_app/tnc/img/blog/h8_blog_post02.jpg" alt="img"></a>
+                                <a href="blog.html" class="post-tag-four">Exam Insights</a>
+                            </div>
+                            <div class="blog__post-content-six">
+                                <div class="blog__post-meta">
+                                    <ul class="list-wrap">
+                                        <li><i class="flaticon-calendar"></i>22 August, 2024</li>
+                                        <li><i class="flaticon-user-1"></i>by <a href="blog-details.html">Admin</a></li>
+                                    </ul>
+                                </div>
+                                <h2 class="title"><a href="blog-details.html">Understanding the NORCET Exam Pattern and Syllabus</a></h2>
+                                <a href="blog-details.html" class="btn arrow-btn">Read More <img src="assets/tnc_frappe_custom_app/tnc/img/icons/right_arrow.svg" alt="" class="injectable"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="blog__post-item-six shine__animate-item">
+                            <div class="blog__post-thumb-six">
+                                <a href="blog-details.html" class="shine__animate-link"><img src="assets/tnc_frappe_custom_app/tnc/img/blog/h8_blog_post03.jpg" alt="img"></a>
+                                <a href="blog.html" class="post-tag-four">Exam Success Tips</a>
+                            </div>
+                            <div class="blog__post-content-six">
+                                <div class="blog__post-meta">
+                                    <ul class="list-wrap">
+                                        <li><i class="flaticon-calendar"></i>20 September, 2024</li>
+                                        <li><i class="flaticon-user-1"></i>by <a href="blog-details.html">Admin</a></li>
+                                    </ul>
+                                </div>
+                                <h2 class="title"><a href="blog-details.html">Essential Tips for RRB Staff Nurse Exam Success</a></h2>
+                                <a href="blog-details.html" class="btn arrow-btn">Read More <img src="assets/tnc_frappe_custom_app/tnc/img/icons/right_arrow.svg" alt="" class="injectable"></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+        <!-- blog-post-area-end -->
+
+
+    </main>
+    <!-- main-area-end -->
+
+
+
+    <!-- footer-area -->
+    <!-- footer-area-end -->
+
+
+
+
+    <!-- JS here -->
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/vendor/jquery-3.6.0.min.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/bootstrap.min.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/imagesloaded.pkgd.min.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/jquery.magnific-popup.min.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/jquery.odometer.min.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/jquery.appear.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/tween-max.min.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/select2.min.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/swiper-bundle.min.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/jquery.marquee.min.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/tg-cursor.min.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/vivus.min.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/ajax-form.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/svg-inject.min.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/jquery.circleType.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/jquery.lettering.min.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/plyr.min.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/wow.min.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/aos.js"></script>
+     <script src="assets/tnc_frappe_custom_app/tnc/js/main.js"></script>
+     <script>
+         SVGInject(document.querySelectorAll("img.injectable"));
+     </script>
+     <script>
+        $(document).ready(function () {
+          // Trigger odometer animation when section is visible (optional for performance)
+          var factAreaOffset = $('.fact__area').offset().top;
+          $(window).scroll(function () {
+            var scrollPos = $(window).scrollTop();
+            var windowHeight = $(window).height();
+            
+            if (scrollPos + windowHeight > factAreaOffset) {
+              $('.odometer').each(function () {
+                var countValue = $(this).data('count');
+                $(this).html(countValue);
+              });
+            }
+          });
+        });
+
+        $('.slider').each(function() {
+  var $this = $(this);
+  var $group = $this.find('.slide_group');
+  var $slides = $this.find('.slide');
+  var bulletArray = [];
+  var currentIndex = 0;
+  var timeout;
+
+  function move(newIndex) {
+    var animateLeft, slideLeft;
+
+    advance();
+
+    if ($group.is(':animated') || currentIndex === newIndex) {
+      return;
+    }
+
+    bulletArray[currentIndex].removeClass('active');
+    bulletArray[newIndex].addClass('active');
+
+    if (newIndex > currentIndex) {
+      slideLeft = '100%';
+      animateLeft = '-100%';
+    } else {
+      slideLeft = '-100%';
+      animateLeft = '100%';
+    }
+
+    $slides.eq(newIndex).css({
+      display: 'block',
+      left: slideLeft
+    });
+    $group.animate({
+      left: animateLeft
+    }, function() {
+      $slides.eq(currentIndex).css({
+        display: 'none'
+      });
+      $slides.eq(newIndex).css({
+        left: 0
+      });
+      $group.css({
+        left: 0
+      });
+      currentIndex = newIndex;
+    });
+  }
+
+  function advance() {
+    clearTimeout(timeout);
+    timeout = setTimeout(function() {
+      if (currentIndex < ($slides.length - 1)) {
+        move(currentIndex + 1);
+      } else {
+        move(0);
+      }
+    }, 4000); // Change slides every 4 seconds
+  }
+
+  // Automatic slide transition instead of button click
+  function initSlider() {
+    advance();
+  }
+
+  $.each($slides, function(index) {
+    var $button = $('<a class="slide_btn">&bull;</a>');
+
+    if (index === currentIndex) {
+      $button.addClass('active');
+    }
+    $button.on('click', function() {
+      move(index);
+    }).appendTo('.slide_buttons');
+    bulletArray.push($button);
+  });
+
+  initSlider(); // Start the automatic slider
+});
+
+
+      </script>
+</body>
+{% endblock %}
