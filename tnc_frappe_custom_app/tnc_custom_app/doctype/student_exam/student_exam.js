@@ -13,7 +13,7 @@
 
 frappe.ui.form.on('Student Exam', {
     refresh: function(frm) {
-    if (!frm.doc.lock_ranks && (frm.doc.status === 'Pending to Process Data' || frm.doc.status === 'Failed Queue')) {
+    if (!frm.doc.lock_ranks && (frm.doc.status === 'Pending to Process Data' || frm.doc.status === 'Failed Queue' || frm.doc.status === '')) {
         frm.add_custom_button(__('Process Data'), function() {
             frappe.call({
                 method: "frappe.client.get_count",
@@ -22,7 +22,7 @@ frappe.ui.form.on('Student Exam', {
                     filters: {
                         // Add your filters here
                         'imported': 0, 
-                        'imported_batch_id': frm.doc.name,
+                        'exam_id': frm.doc.name,
                     }
                 },
                 callback: function(r) {

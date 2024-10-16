@@ -62,8 +62,8 @@ class StudentExam(Document):
         pass
         # Ensure that exam_date is not empty before proceeding
         # if self.exam_date:
-        #     # Fetch the Student Results entry where batch_id equals self.name
-        #     student_result = frappe.get_value("Student Results", {"batch_id": self.name}, "name")
+        #     # Fetch the Student Results entry where exam_id equals self.name
+        #     student_result = frappe.get_value("Student Results", {"exam_id": self.name}, "name")
             
         #     if student_result:
         #         # Load the document using the name from get_value
@@ -120,7 +120,7 @@ def student_process_data(name, limit=1):
                 job_anchor_tag=f'<a href="{ base_url }/app/rq-job/{ job.name }">{ job.name }</a>'
                 return {"status":False, "msg":f"Data processing is already in Queue {job_anchor_tag}. . . the operation will be finished in 10 minutes, Please wait for the operation to complete"}
         
-        total_records = frappe.db.count('Students Master Data', filters={'imported': 0, 'imported_batch_id': name})
+        total_records = frappe.db.count('Students Master Data', filters={'imported': 0, 'exam_id': name})
         if not total_records:
             return {"status": False, "msg": f"No Student Master Data to process for this Exam {name}"}
             
@@ -151,9 +151,9 @@ def process_students_in_background(name):
     try:
         students_exam_doc = frappe.get_doc('Student Exam', name)
         students_master_data = frappe.get_all('Students Master Data', filters={
-            'imported': 0, 'imported_batch_id': name
+            'imported': 0, 'exam_id': name
         }, fields=['name', 'student_name', 'mobile', 'state', 'rank', 'total_marks', 'district', 
-                   'total_right', 'total_wrong', 'total_skip', 'percentage', 'imported_batch_id'], 
+                   'total_right', 'total_wrong', 'total_skip', 'percentage', 'exam_id'], 
             # start=start,
             # limit=limit,
                      )
@@ -200,13 +200,13 @@ def process_data_realtime(name):
         
         # Fetch all records from Students Master Data where imported is not checked
         students_master_data = frappe.get_all('Students Master Data', filters={
-            'imported': 0, 'imported_batch_id': name
-        }, fields=['name', 'student_name', 'mobile', 'state', 'rank', 'total_marks', 'district', 'total_right', 'total_wrong', 'total_skip', 'percentage', 'imported_batch_id'], 
+            'imported': 0, 'exam_id': name
+        }, fields=['name', 'student_name', 'mobile', 'state', 'rank', 'total_marks', 'district', 'total_right', 'total_wrong', 'total_skip', 'percentage', 'exam_id'], 
         # start=start, 
         # limit=limit
         )
     
-        total_records = frappe.db.count('Students Master Data', filters={'imported': 0, 'imported_batch_id': name})
+        total_records = frappe.db.count('Students Master Data', filters={'imported': 0, 'exam_id': name})
     
         if not students_master_data:
             # If no records are found, return a message indicating no data to sync
@@ -260,7 +260,7 @@ def student_and_result_validation_and_creation(student_data):
                     'state': student_data['state'],
                     'district': student_data['district'],
                     'system_imported': 1,
-                    'student_batch_id': student_data['imported_batch_id'],
+                    'exam_id': student_data['exam_id'],
                     'total_exams':1,
                 })
                 new_student.insert()
@@ -268,7 +268,7 @@ def student_and_result_validation_and_creation(student_data):
             except Exception as e:
                 frappe.get_doc({
                     'doctype': 'Not Imported Logs',
-                    'imported_batch_id': student_data['imported_batch_id'],
+                    'exam_id': student_data['exam_id'],
                     'student_name': student_data['student_name'],
                     'mobile': student_data['mobile'],
                     'exam_date': student_data.get('date'),
@@ -305,7 +305,7 @@ def student_and_result_validation_and_creation(student_data):
                 'total_wrong': student_data.get('total_wrong'),
                 'total_skip': student_data.get('total_skip'),
                 'percentage': student_data.get('percentage'),
-                'batch_id': student_data.get('imported_batch_id'),
+                'exam_id': student_data.get('exam_id'),
                 'system_imported': 1
             })
             new_test_series_result.insert()
@@ -319,7 +319,7 @@ def student_and_result_validation_and_creation(student_data):
             frappe.get_doc({
                     'doctype': 'Not Imported Logs',
                     'error_message' : frappe.get_traceback(),
-                    'imported_batch_id': student_data['imported_batch_id'],
+                    'exam_id': student_data['exam_id'],
                     'student_name': student_data['student_name'],
                     'mobile': student_data['mobile'],
                     'exam_date': student_data.get('date'),
@@ -336,10 +336,10 @@ def student_and_result_validation_and_creation(student_data):
                 }).insert()
 
             frappe.log_error(frappe.get_traceback(), f"Error in creating Student Results: {str(e)}")
-#    frappe.log_error(frappe.get_traceback(), f"Error syncing student master data {student_data['name']} in Student Exam {student_data['imported_batch_id']} for student name {student_data['student_name']} with mobile number {student_data['mobile']}.")
+#    frappe.log_error(frappe.get_traceback(), f"Error syncing student master data {student_data['name']} in Student Exam {student_data['exam_id']} for student name {student_data['student_name']} with mobile number {student_data['mobile']}.")
     except Exception as e:
         # General error logging
-        frappe.log_error(frappe.get_traceback(), f"Error syncing student master data {student_data['name']} in Student Exam {student_data['imported_batch_id']} for student name {student_data['student_name']} with mobile number {student_data['mobile']}.")
+        frappe.log_error(frappe.get_traceback(), f"Error syncing student master data {student_data['name']} in Student Exam {student_data['exam_id']} for student name {student_data['student_name']} with mobile number {student_data['mobile']}.")
 
 
 
@@ -349,7 +349,7 @@ import frappe
 
 @frappe.whitelist()
 def fetch_unimported_logs(imported_batch_id):
-    logs = frappe.get_all('Not Imported Logs', filters={'imported_batch_id': imported_batch_id}, fields=['imported_batch_id', 'student_name', 'mobile', 'district', 'state', 'rank', 'total_marks', 'total_right', 'total_wrong', 'total_skip', 'percentage','student_master_data_id','name','status'])
+    logs = frappe.get_all('Not Imported Logs', filters={'exam_id': imported_batch_id}, fields=['exam_id', 'student_name', 'mobile', 'district', 'state', 'rank', 'total_marks', 'total_right', 'total_wrong', 'total_skip', 'percentage','student_master_data_id','name','status'])
     return logs
 
 
@@ -365,8 +365,8 @@ import frappe
 
 @frappe.whitelist()
 def delete_student_results(exam_id):
-    # Get all Student Results records where batch_id matches the exam_name
-    student_results = frappe.get_all('Student Results', filters={'batch_id': exam_id})
+    # Get all Student Results records where exam_id matches the exam_name
+    student_results = frappe.get_all('Student Results', filters={'exam_id': exam_id})
 
     if student_results:
         # Delete each result
@@ -402,7 +402,7 @@ def assign_colors(exam_name):
         
         print(green_end,yellow_end)
         # Fetch the Student Results for the current exam, ordered by rank
-        student_results = frappe.get_all('Student Results', filters={'batch_id': exam_name}, fields=['name', 'rank'], order_by='rank asc')
+        student_results = frappe.get_all('Student Results', filters={'exam_id': exam_name}, fields=['name', 'rank'], order_by='rank asc')
         # print(student_results)
         # Initialize a counter to track the current student's position
         # counter = 1
@@ -442,7 +442,7 @@ def bulk_assign_colors(green_end,yellow_end):
         # print(student_exams)
         for exam in student_exams:
             try:
-                student_exam_result_last_rank = frappe.get_all('Student Results', filters={"batch_id":exam.name},fields=["rank"],order_by="rank desc",limit=1)
+                student_exam_result_last_rank = frappe.get_all('Student Results', filters={"exam_id":exam.name},fields=["rank"],order_by="rank desc",limit=1)
                 student_exam_doc = frappe.get_doc('Student Exam',exam.name)
                 student_exam_doc.green_starts_from = 0
                 student_exam_doc.yellow_starts_from = int(green_end)+1
@@ -574,10 +574,10 @@ def bulk_assign_colors(green_end,yellow_end):
 # def student_process_data(name):
 #     students_exam_doc = frappe.get_doc('Student Exam',name)
 #     # Fetch all records from Students Master Data where imported is not checked
-#     students_master_data = frappe.get_all('Students Master Data', filters={'imported': 0,'imported_batch_id':name}, fields=[
+#     students_master_data = frappe.get_all('Students Master Data', filters={'imported': 0,'exam_id':name}, fields=[
 #         'name',  # Include 'name' field to identify records
 #         'student_name', 'mobile', 'state', 'rank', 'total_marks', 'district',
-#         'total_right', 'total_wrong', 'total_skip', 'percentage', 'imported_batch_id'
+#         'total_right', 'total_wrong', 'total_skip', 'percentage', 'exam_id'
 #     ])
     
 #     if not students_master_data:
@@ -605,7 +605,7 @@ def bulk_assign_colors(green_end,yellow_end):
 #                 'state': student_data['state'],
 #                 'district': student_data['district'],
 #                 'system_imported': 1,
-#                 'student_batch_id': student_data['imported_batch_id'],
+#                 'exam_id': student_data['exam_id'],
 #                 'total_exams':1,
 #             })
 #             new_student.insert()
@@ -621,7 +621,7 @@ def bulk_assign_colors(green_end,yellow_end):
 #         # Check if the result already exists to avoid duplication
 #         # existing_result = frappe.db.exists('Student Results', {
 #         #     'student_id': student_id,
-#         #     'batch_id': student_data.get('imported_batch_id'),
+#         #     'exam_id': student_data.get('exam_id'),
 #         #     # 'exam_date': student_data.get('date')
 #         # })
  
@@ -641,7 +641,7 @@ def bulk_assign_colors(green_end,yellow_end):
 #                 'total_wrong': student_data.get('total_wrong'),
 #                 'total_skip': student_data.get('total_skip'),
 #                 'percentage': student_data.get('percentage'),
-#                 'batch_id': student_data.get('imported_batch_id'),
+#                 'exam_id': student_data.get('exam_id'),
 #                 'system_imported': 1
 #             })
 #             new_test_series_result.insert()

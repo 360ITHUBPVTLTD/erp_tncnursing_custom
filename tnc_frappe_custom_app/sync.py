@@ -70,10 +70,10 @@
 # def sync_data(name):
 #     # Fetch all records from Students Master Data where imported is not checked
 #     print(name)
-#     students_master_data = frappe.get_all('Students Master Data', filters={'imported': 0,'imported_batch_id':name}, fields=[
+#     students_master_data = frappe.get_all('Students Master Data', filters={'imported': 0,'exam_id':name}, fields=[
 #         'name',  # Include 'name' field to identify records
 #         'student_name', 'mobile', 'state', 'rank', 'total_marks', 'district', 
-#         'total_right', 'total_wrong', 'total_skip', 'percentage', 'imported_batch_id'
+#         'total_right', 'total_wrong', 'total_skip', 'percentage', 'exam_id'
 #     ])
     
 #     for student_data in students_master_data:
@@ -92,7 +92,7 @@
 #                 'state': student_data['state'],
 #                 'district': student_data['district'],
 #                 'system_imported': 1,
-#                 'student_batch_id': student_data['imported_batch_id'],
+#                 'exam_id': student_data['exam_id'],
 #             })
 #             new_student.insert()
 #             student_id = new_student.name
@@ -124,7 +124,7 @@
 #                 'total_wrong': student_data.get('total_wrong'),
 #                 'total_skip': student_data.get('total_skip'),
 #                 'percentage': student_data.get('percentage'),
-#                 'batch_id': student_data.get('imported_batch_id'),
+#                 'exam_id': student_data.get('exam_id'),
 #                 'system_imported': 1
 #             })
 #             new_test_series_result.insert()
@@ -149,10 +149,10 @@
 # def sync_data(name):
 #     students_exam_doc = frappe.get_doc('Student Exam',name)
 #     # Fetch all records from Students Master Data where imported is not checked
-#     students_master_data = frappe.get_all('Students Master Data', filters={'imported': 0,'imported_batch_id':name}, fields=[
+#     students_master_data = frappe.get_all('Students Master Data', filters={'imported': 0,'exam_id':name}, fields=[
 #         'name',  # Include 'name' field to identify records
 #         'student_name', 'mobile', 'state', 'rank', 'total_marks', 'district', 
-#         'total_right', 'total_wrong', 'total_skip', 'percentage', 'imported_batch_id'
+#         'total_right', 'total_wrong', 'total_skip', 'percentage', 'exam_id'
 #     ])
     
 #     if not students_master_data:
@@ -177,7 +177,7 @@
 #                 'state': student_data['state'],
 #                 'district': student_data['district'],
 #                 'system_imported': 1,
-#                 'student_batch_id': student_data['imported_batch_id'],
+#                 'exam_id': student_data['exam_id'],
 #             })
 #             new_student.insert()
 #             student_id = new_student.name
@@ -188,7 +188,7 @@
 #         # Check if the result already exists to avoid duplication
 #         # existing_result = frappe.db.exists('Student Results', {
 #         #     'student_id': student_id,
-#         #     'batch_id': student_data.get('imported_batch_id'),
+#         #     'exam_id': student_data.get('exam_id'),
 #         #     # 'exam_date': student_data.get('date')
 #         # })
 
@@ -208,7 +208,7 @@
 #                 'total_wrong': student_data.get('total_wrong'),
 #                 'total_skip': student_data.get('total_skip'),
 #                 'percentage': student_data.get('percentage'),
-#                 'batch_id': student_data.get('imported_batch_id'),
+#                 'exam_id': student_data.get('exam_id'),
 #                 'system_imported': 1
 #             })
 #             new_test_series_result.insert()

@@ -33,34 +33,34 @@ def get_exam_performance_data(filters):
 
     for exam in student_exams:
 
-		student_master_data_records = frappe.db.count('Students Master Data', {'imported_batch_id': imported_batch_id})
+		student_master_data_records = frappe.db.count('Students Master Data', {'exam_id': imported_batch_id})
         # student_master_data_records = frappe.get_all(
         #     "Students Master Data",
         #     fields=["name"],
-        #     filters={"imported_batch_id": exam.name},
+        #     filters={"exam_id": exam.name},
         #     limit_page_length=0,  # Ensures no data is fetched, only count
         #     as_list=True
         # )
         
-		student_master_data_records = frappe.db.count('Students Master Data', {'imported_batch_id': imported_batch_id,, "imported": 1})
+		student_master_data_records = frappe.db.count('Students Master Data', {'exam_id': imported_batch_id,, "imported": 1})
         # student_master_data_records_imported = frappe.get_all(
         #     "Students Master Data",
         #     fields=["name"],
-        #     filters={"imported_batch_id": exam.name, "imported": 1},
+        #     filters={"exam_id": exam.name, "imported": 1},
         #     limit_page_length=0,  # Ensures no data is fetched, only count
         #     as_list=True
         # )
-        students_imported = frappe.db.count('Student', {"student_batch_id": exam.name})
+        students_imported = frappe.db.count('Student', {"exam_id": exam.name})
         # students_imported = frappe.get_all(
         #     "Student",
-        #     filters={"student_batch_id": exam.name},
+        #     filters={"exam_id": exam.name},
         #     limit_page_length=0,
         #     as_list=True
         # )
-        student_results_imported = frappe.db.count('Student Results', {"batch_id": exam.name})
+        student_results_imported = frappe.db.count('Student Results', {"exam_id": exam.name})
         # student_results_imported = frappe.get_all(
         #     "Student Results",
-        #     filters={"batch_id": exam.name},
+        #     filters={"exam_id": exam.name},
         #     limit_page_length=0,
         #     as_list=True
         # )

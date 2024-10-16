@@ -54,7 +54,7 @@
 
 # def execute(filters=None):
 #     columns = [
-#         {"label": "Batch ID", "fieldname": "batch_id", "fieldtype": "Data", "width": 120},
+#         {"label": "Batch ID", "fieldname": "exam_id", "fieldtype": "Data", "width": 120},
 #         {"label": "Student ID", "fieldname": "student_id", "fieldtype": "Link", "options": "Student", "width": 120},
 #         {"label": "Student Name", "fieldname": "student_name", "fieldtype": "Data", "width": 150},
 #         {"label": "Student Mobile", "fieldname": "student_mobile", "fieldtype": "Data", "width": 120},
@@ -88,7 +88,7 @@
 
 #     query = f"""
 #         SELECT
-#             batch_id, student_id, student_name, student_mobile,
+#             exam_id, student_id, student_name, student_mobile,
 #             exam_name, exam_title_name, exam_date, rank,
 #             total_marks, total_right, total_wrong, total_skip, percentage
 #         FROM
@@ -105,7 +105,7 @@ import frappe
 def execute(filters=None):
     # Define the columns for the report
     columns = [
-        {"label": "Batch ID", "fieldname": "batch_id", "fieldtype": "Data", "width": 120},
+        {"label": "Exam ID", "fieldname": "exam_id", "fieldtype": "Data", "width": 120},
         {"label": "Student ID", "fieldname": "student_id", "fieldtype": "Link", "options": "Student", "width": 120},
         {"label": "Student Name", "fieldname": "student_name", "fieldtype": "Data", "width": 150},
         {"label": "Student Mobile", "fieldname": "student_mobile", "fieldtype": "Data", "width": 120},
@@ -137,8 +137,8 @@ def get_data(filters):
     conditions = []
     if filters.get("exam_name"):
         conditions.append("exam_name = %(exam_name)s")
-    if filters.get("exam_title_name"):  # exam_title_name filter corresponds to batch_id in Student Results
-        conditions.append("batch_id = %(exam_title_name)s")
+    if filters.get("exam_title_name"):  # exam_title_name filter corresponds to exam_id in Student Results
+        conditions.append("exam_id = %(exam_title_name)s")
 
     # Build the WHERE clause
     conditions_str = " AND ".join(conditions)
@@ -149,7 +149,7 @@ def get_data(filters):
     # SQL query to fetch data from the Student Results doctype
     query = f"""
         SELECT
-            batch_id, student_id, student_name, student_mobile,
+            exam_id, student_id, student_name, student_mobile,
             exam_name, exam_title_name, exam_date, rank,
             total_marks, total_right, total_wrong, total_skip, percentage
         FROM

@@ -6,7 +6,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "batch_id",
+  "exam_id",
   "student_id",
   "student_name",
   "student_mobile",
@@ -43,7 +43,7 @@
    "read_only": 1
   },
   {
-   "fetch_from": "batch_id.exam_name",
+   "fetch_from": "exam_id.exam_name",
    "fieldname": "exam_name",
    "fieldtype": "Link",
    "in_filter": 1,
@@ -57,7 +57,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "batch_id.exam_date",
+   "fetch_from": "exam_id.exam_date",
    "fieldname": "exam_date",
    "fieldtype": "Date",
    "in_filter": 1,
@@ -117,29 +117,29 @@
    "read_only": 1
   },
   {
-   "fetch_from": "batch_id.exam_title_name",
+   "fetch_from": "exam_id.exam_title_name",
    "fieldname": "exam_title_name",
    "fieldtype": "Data",
    "label": "Exam Title Name",
    "read_only": 1
   },
   {
-   "fieldname": "batch_id",
-   "fieldtype": "Link",
-   "label": "Batch ID",
-   "options": "Student Exam",
-   "reqd": 1
-  },
-  {
    "fieldname": "rank_color",
    "fieldtype": "Data",
    "label": "Rank Color",
    "read_only": 1
+  },
+  {
+   "fieldname": "exam_id",
+   "fieldtype": "Link",
+   "label": "Exam ID",
+   "options": "Student Exam",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-16 13:11:16.088342",
+ "modified": "2024-09-26 12:52:28.851143",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Results",

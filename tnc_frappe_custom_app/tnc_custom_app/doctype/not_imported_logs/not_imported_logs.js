@@ -45,7 +45,7 @@ frappe.ui.form.on('Not Imported Logs', {
                                     args: {
                                         student_name: values.student_name,
                                         mobile: values.mobile,
-                                        imported_batch_id :frm.doc.imported_batch_id,
+                                        imported_batch_id :frm.doc.exam_id,
                                     },
                                     callback: function(create_response) {
                                         const student_id = create_response.message;
@@ -58,7 +58,7 @@ frappe.ui.form.on('Not Imported Logs', {
                                                 method: 'tnc_frappe_custom_app.tnc_custom_app.doctype.not_imported_logs.not_imported_logs.create_student_result',
                                                 args: {
                                                     student_id: student_id,
-                                                    batch_id: frm.doc.imported_batch_id,
+                                                    exam_id: frm.doc.exam_id,
                                                     student_name: values.student_name,
                                                     mobile: values.mobile,
                                                     rank: frm.doc.rank,

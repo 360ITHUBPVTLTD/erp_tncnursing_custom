@@ -11,8 +11,8 @@ def sync_ranks():
         exam_name = exam['name']
         print(exam_name)
         
-        # Fetch results for the current exam's batch_id
-        results = frappe.get_all('Student Results', filters={'batch_id': exam_name}, fields=['rank'], order_by='rank asc')
+        # Fetch results for the current exam's exam_id
+        results = frappe.get_all('Student Results', filters={'exam_id': exam_name}, fields=['rank'], order_by='rank asc')
 
         if results:
             # Get the last rank (the highest rank number)
@@ -74,7 +74,7 @@ def assign_colors(exam_name):
         }
     
     # Fetch the Student Results for the current exam
-    student_results = frappe.get_all('Student Results', filters={'batch_id': exam_name}, fields=['name', 'rank'])
+    student_results = frappe.get_all('Student Results', filters={'exam_id': exam_name}, fields=['name', 'rank'])
 
     # Loop through the results and assign colors based on the rank ranges
     for result in student_results:

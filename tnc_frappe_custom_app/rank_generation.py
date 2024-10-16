@@ -55,9 +55,9 @@ def generate_ranks(docname, start_rank, initial_regularised_ranks, last_regulari
     if isinstance(ranks, str):
         return {"message": ranks}
     
-    # Fetch all students filtered by batch_id, sorted by percentage in descending order
+    # Fetch all students filtered by exam_id, sorted by percentage in descending order
     students = frappe.get_all('Student Results', 
-                              filters={'batch_id': docname}, 
+                              filters={'exam_id': docname}, 
                               fields=['name', 'percentage'], 
                               order_by='percentage desc')
 

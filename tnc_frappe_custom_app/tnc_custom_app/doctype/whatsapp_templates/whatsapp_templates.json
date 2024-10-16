@@ -6,7 +6,10 @@
  "engine": "InnoDB",
  "field_order": [
   "template_name",
-  "message"
+  "message",
+  "column_break_bbtn",
+  "attachment_type",
+  "attach_image"
  ],
  "fields": [
   {
@@ -18,11 +21,26 @@
    "fieldname": "template_name",
    "fieldtype": "Data",
    "label": "Template Name"
+  },
+  {
+   "fieldname": "attach_image",
+   "fieldtype": "Attach",
+   "label": "Attach Image "
+  },
+  {
+   "fieldname": "attachment_type",
+   "fieldtype": "Select",
+   "label": "Attachment Type",
+   "options": "Text\nImage\nFile"
+  },
+  {
+   "fieldname": "column_break_bbtn",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-20 17:01:12.335414",
+ "modified": "2024-09-23 15:01:20.485690",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "WhatsApp Templates",

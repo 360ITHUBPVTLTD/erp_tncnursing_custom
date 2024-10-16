@@ -8,7 +8,7 @@
  "field_order": [
   "student_name",
   "mobile",
-  "student_batch_id",
+  "exam_id",
   "total_exams",
   "subjects",
   "column_break_lxec",
@@ -68,13 +68,6 @@
    "label": "Amount"
   },
   {
-   "fieldname": "student_batch_id",
-   "fieldtype": "Link",
-   "label": "Student Batch ID",
-   "options": "Student Exam",
-   "read_only": 1
-  },
-  {
    "fieldname": "subjects",
    "fieldtype": "Data",
    "hidden": 1,
@@ -85,11 +78,18 @@
    "fieldtype": "Int",
    "label": "Total Exams",
    "read_only": 1
+  },
+  {
+   "fieldname": "exam_id",
+   "fieldtype": "Link",
+   "label": "Exam ID",
+   "options": "Student Exam",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-20 17:50:58.387758",
+ "modified": "2024-09-26 12:38:02.608885",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student",
