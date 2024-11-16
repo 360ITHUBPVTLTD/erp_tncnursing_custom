@@ -239,7 +239,7 @@ def get_template_message(template_id):
 #                 "doctype": "File",
 #                 "file_name": os.path.basename(image),
 #                 "file_url": image,
-#                 "attached_to_doctype": "Student",  # Adjust this if needed
+#                 "attached_to_doctype": "Online Student",  # Adjust this if needed
 #                 "attached_to_name": name,          # Adjust this if needed
 #                 "is_private": 0
 #             })
@@ -427,7 +427,7 @@ def send_whatsapp_Image_message(name, mobile_number, student_name, message, imag
                 "doctype": "File",
                 "file_name": os.path.basename(image),
                 "file_url": image,
-                "attached_to_doctype": "Student",  # Adjust this if needed
+                "attached_to_doctype": "Online Student",  # Adjust this if needed
                 "attached_to_name": name,          # Adjust this if needed
                 "is_private": 0
             })

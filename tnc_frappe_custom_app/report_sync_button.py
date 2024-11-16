@@ -31,12 +31,12 @@ import frappe
 #         frappe.log_error(f"Student Data: {student_data}", "Sync Data Debug")
 
 #         # Check if student already exists in Student doctype by mobile number
-#         existing_student = frappe.db.exists('Student', {'mobile': student_data['mobile']})
+#         existing_student = frappe.db.exists('Online Student', {'mobile': student_data['mobile']})
         
 #         if not existing_student:
 #             # Create a new student record in the Student doctype
 #             new_student = frappe.get_doc({
-#                 'doctype': 'Student',
+#                 'doctype': 'Online Student',
 #                 'student_name': student_data['student_name'],
 #                 'mobile': student_data['mobile'],
 #                 'state': student_data['state'],
@@ -48,7 +48,7 @@ import frappe
 #             student_id = new_student.name
 #         else:
 #             # Fetch the existing student's ID
-#             student_id = frappe.get_value('Student', {'mobile': student_data['mobile']}, 'name')
+#             student_id = frappe.get_value('Online Student', {'mobile': student_data['mobile']}, 'name')
 
 #         # Check if the result already exists to avoid duplication
 #         existing_result = frappe.db.exists('Student Results', {
@@ -116,12 +116,12 @@ def sync_data(report_name):
         frappe.log_error(f"Student Data: {student_data}", "Sync Data Debug")
 
         # Check if student already exists in Student doctype by mobile number
-        existing_student = frappe.db.exists('Student', {'mobile': student_data['mobile']})
+        existing_student = frappe.db.exists('Online Student', {'mobile': student_data['mobile']})
         
         if not existing_student:
             # Create a new student record in the Student doctype
             new_student = frappe.get_doc({
-                'doctype': 'Student',
+                'doctype': 'Online Student',
                 'student_name': student_data['student_name'],
                 'mobile': student_data['mobile'],
                 'state': student_data['state'],
@@ -133,7 +133,7 @@ def sync_data(report_name):
             student_id = new_student.name
         else:
             # Fetch the existing student's ID
-            student_id = frappe.get_value('Student', {'mobile': student_data['mobile']}, 'name')
+            student_id = frappe.get_value('Online Student', {'mobile': student_data['mobile']}, 'name')
 
         # Check if the result already exists to avoid duplication
         existing_result = frappe.db.exists('Student Results', {

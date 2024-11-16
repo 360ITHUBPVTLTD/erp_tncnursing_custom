@@ -14,12 +14,12 @@ from frappe.model.document import Document
 #         # Ensure that the student_mobile is provided
 #         if self.student_mobile:
 #             # Check if the student already exists based on the mobile number
-#             student_exists = frappe.db.exists('Student', {'mobile': self.student_mobile})
+#             student_exists = frappe.db.exists('Online Student', {'mobile': self.student_mobile})
             
 #             if not student_exists:
 #                 # If the student does not exist, create a new Student record
 #                 new_student = frappe.get_doc({
-#                     'doctype': 'Student',
+#                     'doctype': 'Online Student',
 #                     'student_name': self.student_name,
 #                     'mobile': self.student_mobile
 #                 })
@@ -29,7 +29,7 @@ from frappe.model.document import Document
 #                 self.student_id = new_student.name
 #             else:
 #                 # If the student exists, fetch the student ID and update the Student Results record
-#                 student = frappe.get_doc('Student', student_exists)
+#                 student = frappe.get_doc('Online Student', student_exists)
 #                 self.student_id = student.name
 #         else:
 #             frappe.throw("Student Mobile is required to create a Student record.")
@@ -46,7 +46,7 @@ from frappe.model.document import Document
 
 #     def check_duplicate_entry(self):
 #         # Check if a record with the same exam_name, exam_date, and student_mobile already exists
-#         duplicate_entry = frappe.db.exists('Student Results', {
+#         duplicate_entry = frappe.db.exists('Online Student Results', {
 #             'exam_name': self.exam_name,
 #             'exam_date': self.exam_date,
 #             'student_mobile': self.student_mobile
@@ -68,7 +68,7 @@ from frappe.model.document import Document
 
 #     def check_duplicate_entry(self):
 #         # Check if a record with the same exam_name, exam_date, and student_mobile already exists
-#         duplicate_entry = frappe.db.exists('Student Results', {
+#         duplicate_entry = frappe.db.exists('Online Student Results', {
 #             'exam_name': self.exam_name,
 #             'exam_date': self.exam_date,
 #             'student_mobile': self.student_mobile,
@@ -89,12 +89,12 @@ from frappe.model.document import Document
 #         # Ensure that the student_mobile is provided
 #         if self.student_mobile:
 #             # Check if the student already exists based on the mobile number
-#             student_exists = frappe.db.exists('Student', {'mobile': self.student_mobile})
+#             student_exists = frappe.db.exists('Online Student', {'mobile': self.student_mobile})
             
 #             if not student_exists:
 #                 # If the student does not exist, create a new Student record
 #                 new_student = frappe.get_doc({
-#                     'doctype': 'Student',
+#                     'doctype': 'Online Student',
 #                     'student_name': self.student_name,
 #                     'mobile': self.student_mobile,
 #                     # 'district': self.district,  # Add other fields if necessary
@@ -107,10 +107,10 @@ from frappe.model.document import Document
 #                 self.student_id = new_student.name
 #             else:
 #                 # If the student exists, fetch the student ID and update the Student Results record
-#                 student = frappe.get_doc('Student', student_exists)
+#                 student = frappe.get_doc('Online Student', student_exists)
 #                 self.student_id = student.name
 #         else:
-#             frappe.throw("Student Mobile is required to create or link a Student record.")
+#             frappe.throw("Online Student Mobile is required to create or link a Student record.")
 
 
 
@@ -151,12 +151,12 @@ class StudentResults(Document):
         # Ensure that the student_mobile is provided
         if self.student_mobile:
             # Check if the student already exists based on the mobile number
-            student_exists = frappe.db.exists('Student', {'mobile': self.student_mobile})
+            student_exists = frappe.db.exists('Online Student', {'mobile': self.student_mobile})
             
             if not student_exists:
                 # If the student does not exist, create a new Student record
                 new_student = frappe.get_doc({
-                    'doctype': 'Student',
+                    'doctype': 'Online Student',
                     'student_name': self.student_name,
                     'mobile': self.student_mobile,
                     # 'district': self.district,  # Add other fields if necessary
@@ -169,13 +169,13 @@ class StudentResults(Document):
                 self.student_id = new_student.name
             else:
                 # If the student exists, fetch the student ID and update the Student Results record
-                self.student_id = frappe.get_value('Student', {'mobile': self.student_mobile}, 'name')
+                self.student_id = frappe.get_value('Online Student', {'mobile': self.student_mobile}, 'name')
         else:
             frappe.throw(_("Student Mobile is required to create or link a Student record."))
 
     # def after_delete(doc):
     #     student_id = doc.student_id
-    #     student_doc = frappe.get_doc('Student', student_id )
+    #     student_doc = frappe.get_doc('Online Student', student_id )
     #     old_test_series_results = frappe.get_doc('Student Results',filters={"student_id":student_id})
     #     student_doc=len(old_test_series_results)+1
     #     student_doc.save()
