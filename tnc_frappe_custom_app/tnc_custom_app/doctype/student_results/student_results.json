@@ -28,7 +28,7 @@
    "fieldname": "student_id",
    "fieldtype": "Link",
    "label": "Student ID",
-   "options": "Student",
+   "options": "Online Student",
    "read_only": 1,
    "reqd": 1
   },
@@ -139,7 +139,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-26 12:52:28.851143",
+ "modified": "2024-12-02 14:53:42.263446",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Results",
