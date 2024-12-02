@@ -27,7 +27,7 @@ def delete_all_records_in_student_results():
 @frappe.whitelist()
 def delete_all_records_in_student():
     try:
-        frappe.db.sql("DELETE FROM `tabStudent`")
+        frappe.db.sql("DELETE FROM `tabOnline Student`")
         frappe.db.commit()
         return 'success'
     except Exception as e:

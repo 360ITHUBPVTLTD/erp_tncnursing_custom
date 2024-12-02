@@ -55,7 +55,7 @@
 # def execute(filters=None):
 #     columns = [
 #         {"label": "Batch ID", "fieldname": "exam_id", "fieldtype": "Data", "width": 120},
-#         {"label": "Student ID", "fieldname": "student_id", "fieldtype": "Link", "options": "Student", "width": 120},
+#         {"label": "Student ID", "fieldname": "student_id", "fieldtype": "Link", "options": "Online Student", "width": 120},
 #         {"label": "Student Name", "fieldname": "student_name", "fieldtype": "Data", "width": 150},
 #         {"label": "Student Mobile", "fieldname": "student_mobile", "fieldtype": "Data", "width": 120},
 #         {"label": "Exam Name", "fieldname": "exam_name", "fieldtype": "Link", "options": "Student Exam", "width": 150},
@@ -106,7 +106,7 @@ def execute(filters=None):
     # Define the columns for the report
     columns = [
         {"label": "Exam ID", "fieldname": "exam_id", "fieldtype": "Data", "width": 120},
-        {"label": "Student ID", "fieldname": "student_id", "fieldtype": "Link", "options": "Student", "width": 120},
+        {"label": "Student ID", "fieldname": "student_id", "fieldtype": "Link", "options": "Online Student", "width": 120},
         {"label": "Student Name", "fieldname": "student_name", "fieldtype": "Data", "width": 150},
         {"label": "Student Mobile", "fieldname": "student_mobile", "fieldtype": "Data", "width": 120},
         {"label": "Exam Name", "fieldname": "exam_name", "fieldtype": "Link", "options": "Test Series Type", "width": 150},
@@ -142,6 +142,7 @@ def get_data(filters):
 
     # Build the WHERE clause
     conditions_str = " AND ".join(conditions)
+    print(conditions_str)
 
     if conditions_str:
         conditions_str = f"WHERE {conditions_str}"
@@ -161,6 +162,8 @@ def get_data(filters):
 
     # Fetch the filtered data
     data = frappe.db.sql(query, filters, as_dict=True)
+    print(data)
+    print(filters)
 
     total_count = len(data)
 

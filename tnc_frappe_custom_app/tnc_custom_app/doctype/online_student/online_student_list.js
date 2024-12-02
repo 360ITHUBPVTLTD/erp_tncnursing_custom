@@ -1,5 +1,5 @@
 
-frappe.listview_settings['Student'] = {
+frappe.listview_settings['Online Student'] = {
     onload: function(listview) {
         listview.page.add_inner_button(__('Delete Data'), function() {
             // Show a confirmation dialog
@@ -32,7 +32,7 @@ frappe.listview_settings['Student'] = {
 
 ///////////////////Below is the BUlk message button whatsapp ///////////////////////////////////////////////
 
-// frappe.listview_settings['Student'] = {
+// frappe.listview_settings['Online Student'] = {
 //     onload: function (listview) {
 //         listview.page.add_inner_button(__('Bulk WhatsApp'), function () {
 //             // Prompt user to enter a custom message

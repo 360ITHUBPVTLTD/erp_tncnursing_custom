@@ -49,7 +49,7 @@
 #             link_id = response_data.get("id")
 
 #             # Store payment link details in Razorpay Payment Links doctype
-#             student = frappe.get_doc('Student', student_id)
+#             student = frappe.get_doc('Online Student', student_id)
 #             payment_link_doc = frappe.new_doc('Razorpay Payment Links')
 #             payment_link_doc.student_id = student_id
 #             payment_link_doc.student_name = student.student_name
@@ -119,7 +119,7 @@ def generate_payment_link(student_id, amount, description):
             link_id = response_data.get("id")
 
             # Store payment link details in Razorpay Payment Links doctype
-            student = frappe.get_doc('Student', student_id)
+            student = frappe.get_doc('Online Student', student_id)
             payment_link_doc = frappe.new_doc('Razorpay Payment Links')
             payment_link_doc.student_id = student_id
             payment_link_doc.student_name = student.student_name
@@ -203,7 +203,7 @@ def cancel_payment_link(link_id):
             payment_link_doc.save()
 
             # Clear the payment_link field in the associated Student doctype
-            student_doc = frappe.get_doc('Student', payment_link_doc.student_id)
+            student_doc = frappe.get_doc('Online Student', payment_link_doc.student_id)
             student_doc.payment_link = None
             student_doc.save()
 

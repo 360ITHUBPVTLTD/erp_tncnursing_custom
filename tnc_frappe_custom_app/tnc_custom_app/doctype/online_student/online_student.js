@@ -1,7 +1,7 @@
 // Copyright (c) 2024, Administrator and contributors
 // For license information, please see license.txt
 
-// frappe.ui.form.on("Student", {
+// frappe.ui.form.on("Online Student", {
 // 	refresh(frm) {
 
 // 	},
@@ -10,7 +10,7 @@
 
 ////////////////// Payment Link Generating in CLient script //////////////////
 
-// frappe.ui.form.on('Student', {
+// frappe.ui.form.on('Online Student', {
 //     refresh: function(frm) {
 //         frappe.call({
 //             method: 'frappe.client.get_list',
@@ -41,7 +41,7 @@
 //                                         if (response.message && response.message.short_url) {
 //                                             frappe.msgprint(__('Payment Link Generated Successfully'));
 
-//                                             // Set the payment link value in the Student doctype
+//                                             // Set the payment link value in the Online Student doctype
 //                                             frm.set_value('payment_link', response.message.short_url);
                                             
 //                                             // Automatically save the form after setting the payment link
@@ -64,7 +64,7 @@
 
 
 
-// frappe.ui.form.on('Student', {
+// frappe.ui.form.on('Online Student', {
 //     refresh: function(frm) {
 //         // Add a custom button
 //         // frappe.call({
@@ -172,7 +172,7 @@
 
 //////////////////////////////////// Print Button in the Form View //////////////////////////////////
 
-frappe.ui.form.on('Student', {
+frappe.ui.form.on('Online Student', {
     refresh: function(frm) {
         frm.add_custom_button(__('Print'), function() {
             // Call the custom function to handle the prompt and printing
@@ -182,7 +182,7 @@ frappe.ui.form.on('Student', {
 });
 
 function show_print_prompt(frm) {
-    // Fetch exam_name from Student Results where student_id = frm.doc.name
+    // Fetch exam_name from Online Student Results where student_id = frm.doc.name
     frappe.call({
         method: 'frappe.client.get_list',
         args: {
@@ -200,7 +200,7 @@ function show_print_prompt(frm) {
                 // Show the prompt
                 frappe.prompt([
                     {
-                        label: 'Student Name',
+                        label: 'Online Student Name',
                         fieldname: 'student_name',
                         fieldtype: 'Data',
                         default: frm.doc.student_name,
@@ -222,14 +222,14 @@ function show_print_prompt(frm) {
                     }
                 ],
                 function(values){
-                    // Update the subject field in the Student doctype
+                    // Update the subject field in the Online Student doctype
                     frm.set_value('subjects', values.subject);
 
                     // Save the form
                     frm.save().then(function() {
                         // Redirect to the print page after saving
                         const baseUrl = window.location.origin;
-                        window.open(`${baseUrl}/api/method/frappe.utils.print_format.download_pdf?doctype=Student&name=${frm.doc.name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en`);
+                        window.open(`${baseUrl}/api/method/frappe.utils.print_format.download_pdf?doctype=Online Student&name=${frm.doc.name}&format=Online Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en`);
 
                         // Clear the subject field after successful save
                         frm.set_value('subjects', '');
@@ -237,7 +237,7 @@ function show_print_prompt(frm) {
                         frm.save();
                     });
                 },
-                __('Print Student Information'),
+                __('Print Online Student Information'),
                 __('Print'));
             }
         }
@@ -245,8 +245,8 @@ function show_print_prompt(frm) {
 }
 
 
-///////////////////////////// Below code is to redirect the Student results doctype for the particular filters(student_id) /////////
-frappe.ui.form.on('Student', {
+///////////////////////////// Below code is to redirect the Online Student results doctype for the particular filters(student_id) /////////
+frappe.ui.form.on('Online Student', {
     refresh: function(frm) {
         // Add the "Go to Result" button
         frm.add_custom_button(__('Go to Result'), function() {
@@ -256,7 +256,7 @@ frappe.ui.form.on('Student', {
             // Construct the URL with the filter
             var url = `/app/student-results?student_id=${encodeURIComponent(student_id)}`;
             
-            // Redirect to the Student Results doctype with the filter
+            // Redirect to the Online Student Results doctype with the filter
             window.open(url, '_blank');  // Open in a new tab
         });
     }
@@ -264,7 +264,7 @@ frappe.ui.form.on('Student', {
 
 /////////////////////////////////////////
 
-// frappe.ui.form.on('Student', {
+// frappe.ui.form.on('Online Student', {
 //     refresh: function(frm) {
 //         // Add a custom button
 //         // frappe.call({
@@ -293,7 +293,7 @@ frappe.ui.form.on('Student', {
 //                                 fieldname: 'message',
 //                                 fieldtype: 'Small Text',
 //                                 reqd: 1,
-//                                 default: `Dear Students ,
+//                                 default: `Dear Online Students ,
  
 // Many Many Congratulations
                                  
@@ -366,9 +366,9 @@ frappe.ui.form.on('Student', {
 
 
 
-////////// Below is the Template selector sending message to the Students( WITHOUT PDF )//////////////////////////
+////////// Below is the Template selector sending message to the Online Students( WITHOUT PDF )//////////////////////////
 
-// frappe.ui.form.on('Student', {
+// frappe.ui.form.on('Online Student', {
 //     refresh: function(frm) {
 //         frm.add_custom_button(__('WhatsApp Template Message'), function() {
 //             // Create the prompt dialog
@@ -480,7 +480,7 @@ frappe.ui.form.on('Student', {
 //     }
 // });
 
-frappe.ui.form.on('Student', {
+frappe.ui.form.on('Online Student', {
     refresh: function(frm) {
         // Add the main dropdown button
         // frm.add_custom_button(__('Send WhatsApp'), function() {

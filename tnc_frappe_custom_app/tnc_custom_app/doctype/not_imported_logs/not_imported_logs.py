@@ -13,14 +13,14 @@ import frappe
 
 @frappe.whitelist()
 def check_mobile_exists(mobile):
-    student = frappe.get_value('Student', {'mobile': mobile}, 'name')
+    student = frappe.get_value('Online Student', {'mobile': mobile}, 'name')
     if student:
         return True
     return False
 
 @frappe.whitelist()
 def create_student(student_name, mobile,imported_batch_id):
-    doc = frappe.new_doc('Student')
+    doc = frappe.new_doc('Online Student')
     doc.student_name = student_name
     doc.mobile = mobile
     doc.exam_id = imported_batch_id

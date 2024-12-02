@@ -249,12 +249,12 @@ def process_data_realtime(name):
 
 def student_and_result_validation_and_creation(student_data):
     try:
-        existing_student = frappe.db.exists('Student', {'mobile': student_data['mobile']})
+        existing_student = frappe.db.exists('Online Student', {'mobile': student_data['mobile']})
         student_id = None
         if not existing_student:
             try:
                 new_student = frappe.get_doc({
-                    'doctype': 'Student',
+                    'doctype': 'Online Student',
                     'student_name': student_data['student_name'],
                     'mobile': student_data['mobile'],
                     'state': student_data['state'],
@@ -287,7 +287,7 @@ def student_and_result_validation_and_creation(student_data):
                 return
 
         else:
-            student_doc = frappe.get_doc('Student', existing_student )
+            student_doc = frappe.get_doc('Online Student', existing_student )
             old_test_series_results = frappe.get_all('Student Results',filters={"student_id":existing_student})
             student_doc.total_exams=len(old_test_series_results)+1
             student_doc.save()
@@ -593,13 +593,13 @@ def bulk_assign_colors(green_end,yellow_end):
 #         frappe.log_error(f"Student Data: {student_data}", "Sync Data Debug")
  
 #         # Check if student already exists in Student doctype by mobile number
-#         existing_student = frappe.db.exists('Student', {'mobile': student_data['mobile']})
+#         existing_student = frappe.db.exists('Online Student', {'mobile': student_data['mobile']})
         
 #         if not existing_student:
 #         # if True:
 #             # Create a new student record in the Student doctype
 #             new_student = frappe.get_doc({
-#                 'doctype': 'Student',
+#                 'doctype': 'Online Student',
 #                 'student_name': student_data['student_name'],
 #                 'mobile': student_data['mobile'],
 #                 'state': student_data['state'],
@@ -612,8 +612,8 @@ def bulk_assign_colors(green_end,yellow_end):
 #             student_id = new_student.name
 #         else:
             # Fetch the existing student's ID
-            # student_id = frappe.get_value('Student', {'mobile': student_data['mobile']}, 'name')
-            # student_doc = frappe.get_doc('Student', student_id )
+            # student_id = frappe.get_value('Online Student', {'mobile': student_data['mobile']}, 'name')
+            # student_doc = frappe.get_doc('Online Student', student_id )
             # old_test_series_results = frappe.get_doc('Student Results',filters={"student_id":student_id})
             # student_doc=len(old_test_series_results)+1
             # student_doc.save()

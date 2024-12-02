@@ -43,7 +43,7 @@ def get_exam_performance_data(filters):
         student_master_data_imported_count = frappe.db.count('Students Master Data', {'exam_id': exam.name, 'imported': 1})
 
         # Count records for students created from 'Student' where batch ID matches
-        student_created_count = frappe.db.count('Student', {'exam_id': exam.name})
+        student_created_count = frappe.db.count('Online Student', {'exam_id': exam.name})
 
         # Count records for student results from 'Student Results' where batch ID matches
         student_results_count = frappe.db.count('Student Results', {'exam_id': exam.name})

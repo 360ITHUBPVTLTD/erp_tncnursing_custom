@@ -108,7 +108,7 @@
    "fieldname": "student_id",
    "fieldtype": "Link",
    "label": "Student ID",
-   "options": "Student",
+   "options": "Online Student",
    "read_only": 1
   },
   {
@@ -140,7 +140,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-26 12:46:21.801313",
+ "modified": "2024-12-02 11:18:24.286524",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Not Imported Logs",
