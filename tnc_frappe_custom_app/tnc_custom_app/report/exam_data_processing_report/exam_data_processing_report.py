@@ -50,9 +50,9 @@ def get_exam_performance_data(filters):
         #     limit_page_length=0,  # Ensures no data is fetched, only count
         #     as_list=True
         # )
-        students_imported = frappe.db.count('Student', {"exam_id": exam.name})
+        students_imported = frappe.db.count('Online Student', {"exam_id": exam.name})
         # students_imported = frappe.get_all(
-        #     "Student",
+        #     "Online Student",
         #     filters={"exam_id": exam.name},
         #     limit_page_length=0,
         #     as_list=True
