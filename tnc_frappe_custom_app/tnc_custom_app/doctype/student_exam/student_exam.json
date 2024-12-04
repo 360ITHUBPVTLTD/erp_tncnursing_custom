@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "format:TNC-EXM-{#####}",
  "creation": "2024-08-29 10:28:05.689467",
  "doctype": "DocType",
@@ -198,7 +199,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-02 11:15:33.178757",
+ "modified": "2024-12-02 18:20:21.838241",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Exam",

@@ -26,5 +26,28 @@ frappe.listview_settings['Student Results'] = {
                 }
             );
         });
+        listview.page.add_inner_button('Process Data', () => {
+            frappe.prompt(
+                {
+                    label: 'File ID',
+                    fieldname: 'file_id',
+                    fieldtype: 'Data',
+                    reqd: 1
+                },
+                (values) => {
+                    frappe.call({
+                        method: 'tnc_frappe_custom_app.script_to_import_data.import_student_results_sql_student_results',
+                        args: { file_id: values.file_id },
+                        callback: function(r) {
+                            if (!r.exc) {
+                                frappe.msgprint('Data processing started. Check logs for updates.');
+                            }
+                        }
+                    });
+                },
+                'Enter File ID',
+                'Start Processing'
+            );
+        });
     }
 };
