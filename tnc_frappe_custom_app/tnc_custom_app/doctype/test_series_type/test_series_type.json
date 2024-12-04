@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:name1",
  "creation": "2024-08-19 17:51:42.384267",
@@ -18,7 +19,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-08-21 10:56:42.019143",
+ "modified": "2024-12-02 17:59:08.189299",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Test Series Type",
