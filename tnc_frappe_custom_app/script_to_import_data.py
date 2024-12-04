@@ -357,7 +357,7 @@ def upload_batch_sql_student_results(batch_data_tuples):
 
         # Check if each batch entry has 13 values, as required by the query
         for data in batch_data_tuples:
-            if len(data) != 13:
+            if len(data) != 16:
                 raise ValueError(f"Invalid data row: {data}. Expected 13 values.")
             print("Data to Insert:", data)  # Debugging
 
