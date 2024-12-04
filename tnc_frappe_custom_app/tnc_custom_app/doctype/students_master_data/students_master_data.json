@@ -2,6 +2,7 @@
  "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
+ "autoname": "field:old_id",
  "creation": "2024-08-20 13:17:15.404164",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -15,6 +16,7 @@
   "date",
   "exam_code",
   "exam_title_name",
+  "old_id",
   "column_break_yxhv",
   "created_by",
   "exam_name",
@@ -131,14 +133,21 @@
    "label": "Exam ID",
    "options": "Student Exam",
    "reqd": 1
+  },
+  {
+   "fieldname": "old_id",
+   "fieldtype": "Data",
+   "label": "Old ID",
+   "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-02 17:04:25.210159",
+ "modified": "2024-12-04 11:00:32.875286",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Students Master Data",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_import": 1,
- "allow_rename": 1,
+ "autoname": "field:old_id",
  "creation": "2024-08-19 17:54:50.756370",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -12,6 +12,7 @@
   "student_mobile",
   "exam_name",
   "exam_title_name",
+  "old_id",
   "column_break_hrmu",
   "exam_date",
   "rank",
@@ -135,14 +136,21 @@
    "label": "Exam ID",
    "options": "Student Exam",
    "reqd": 1
+  },
+  {
+   "fieldname": "old_id",
+   "fieldtype": "Data",
+   "label": "Old ID",
+   "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-02 14:53:42.263446",
+ "modified": "2024-12-04 09:53:47.532596",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Results",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
