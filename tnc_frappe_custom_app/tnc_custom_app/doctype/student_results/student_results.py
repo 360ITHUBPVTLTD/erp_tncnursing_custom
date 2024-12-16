@@ -182,3 +182,6 @@ class StudentResults(Document):
 
 
 
+# UPDATE `tabStudent Results`
+#     -> SET `exam_id` = `batch_id`
+#     -> WHERE `exam_id` IS NULL AND `batch_id` IS NOT NULL;
