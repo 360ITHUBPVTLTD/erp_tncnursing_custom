@@ -9,6 +9,10 @@
   "razorpay_base_url",
   "razorpay_api_key",
   "razorpay_secret",
+  "enrollment_threshold_section",
+  "2_installments",
+  "3_installments",
+  "gst",
   "whatsapp_instance_section",
   "instance_id",
   "who_are_having_access_to_whatsapp_section",
@@ -55,12 +59,32 @@
    "fieldtype": "Table MultiSelect",
    "label": "WhatsApp Access",
    "options": "WhatsApp Child Table"
+  },
+  {
+   "fieldname": "enrollment_threshold_section",
+   "fieldtype": "Section Break",
+   "label": "Enrollment Threshold"
+  },
+  {
+   "fieldname": "gst",
+   "fieldtype": "Percent",
+   "label": "GST"
+  },
+  {
+   "fieldname": "2_installments",
+   "fieldtype": "Data",
+   "label": "2 Installments"
+  },
+  {
+   "fieldname": "3_installments",
+   "fieldtype": "Data",
+   "label": "3 Installments"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-09-11 17:45:48.020187",
+ "modified": "2024-12-12 12:52:04.227612",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Admin Settings",

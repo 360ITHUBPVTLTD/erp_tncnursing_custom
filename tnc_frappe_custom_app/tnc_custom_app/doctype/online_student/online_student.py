@@ -18,4 +18,4 @@ class OnlineStudent(Document):
             
             if existing_online_student:
                 # Raise an error if a duplicate is found
-                frappe.throw(f"Mobile number {self.mobile} is already registered with another online student.")
+                frappe.throw(f"Mobile number {self.mobile} is already registered with another online_student.")
