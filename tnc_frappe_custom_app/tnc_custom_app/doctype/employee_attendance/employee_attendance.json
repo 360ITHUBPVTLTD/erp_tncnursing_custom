@@ -1,0 +1,55 @@
+{
+ "actions": [],
+ "autoname": "format:EMP-AT-{attendance_date}",
+ "creation": "2024-12-19 12:13:07.095174",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "attendance_date",
+  "attendance_html",
+  "attendance_marked"
+ ],
+ "fields": [
+  {
+   "fieldname": "attendance_date",
+   "fieldtype": "Date",
+   "label": "Attendance Date"
+  },
+  {
+   "fieldname": "attendance_html",
+   "fieldtype": "HTML",
+   "label": "Attendance HTML"
+  },
+  {
+   "default": "0",
+   "fieldname": "attendance_marked",
+   "fieldtype": "Check",
+   "label": "Attendance Marked"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-12-19 12:17:40.871202",
+ "modified_by": "Administrator",
+ "module": "TNC Custom App",
+ "name": "Employee Attendance",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
