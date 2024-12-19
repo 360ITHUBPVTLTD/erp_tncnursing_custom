@@ -16,7 +16,11 @@
   "whatsapp_instance_section",
   "instance_id",
   "who_are_having_access_to_whatsapp_section",
-  "whatsapp_access"
+  "whatsapp_access",
+  "email_settings_section",
+  "sender_email",
+  "password",
+  "app_password"
  ],
  "fields": [
   {
@@ -79,12 +83,32 @@
    "fieldname": "3_installments",
    "fieldtype": "Data",
    "label": "3 Installments"
+  },
+  {
+   "fieldname": "email_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Email Settings"
+  },
+  {
+   "fieldname": "sender_email",
+   "fieldtype": "Data",
+   "label": "Sender Email"
+  },
+  {
+   "fieldname": "password",
+   "fieldtype": "Data",
+   "label": "Password"
+  },
+  {
+   "fieldname": "app_password",
+   "fieldtype": "Data",
+   "label": "App Password"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-12-12 12:52:04.227612",
+ "modified": "2024-12-19 11:19:45.966521",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Admin Settings",
