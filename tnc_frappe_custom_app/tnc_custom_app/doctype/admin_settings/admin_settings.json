@@ -15,6 +15,8 @@
   "gst",
   "whatsapp_instance_section",
   "instance_id",
+  "razorpay_link_validationin_days_section",
+  "razorpay_link_valid_upto",
   "who_are_having_access_to_whatsapp_section",
   "whatsapp_access"
  ],
@@ -79,12 +81,22 @@
    "fieldname": "3_installments",
    "fieldtype": "Data",
    "label": "3 Installments"
+  },
+  {
+   "fieldname": "razorpay_link_validationin_days_section",
+   "fieldtype": "Section Break",
+   "label": "Razorpay Link Validation(in days)"
+  },
+  {
+   "fieldname": "razorpay_link_valid_upto",
+   "fieldtype": "Int",
+   "label": "Razorpay Link Valid Upto"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-12-12 12:52:04.227612",
+ "modified": "2024-12-21 15:29:55.927226",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Admin Settings",
