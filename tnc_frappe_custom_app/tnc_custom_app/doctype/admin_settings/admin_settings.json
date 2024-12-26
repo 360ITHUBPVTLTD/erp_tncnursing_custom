@@ -18,7 +18,11 @@
   "razorpay_link_validationin_days_section",
   "razorpay_link_valid_upto",
   "who_are_having_access_to_whatsapp_section",
-  "whatsapp_access"
+  "whatsapp_access",
+  "email_settings_section",
+  "sender_email",
+  "password",
+  "app_password"
  ],
  "fields": [
   {
@@ -91,12 +95,34 @@
    "fieldname": "razorpay_link_valid_upto",
    "fieldtype": "Int",
    "label": "Razorpay Link Valid Upto"
+  },
+   }
+   "fieldname": "email_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Email Settings"
+  },
+  {
+   "fieldname": "sender_email",
+   "fieldtype": "Data",
+   "label": "Sender Email"
+  },
+  {
+   "fieldname": "password",
+   "fieldtype": "Data",
+   "label": "Password"
+  },
+  {
+   "fieldname": "app_password",
+   "fieldtype": "Data",
+   "label": "App Password"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
+
  "modified": "2024-12-21 15:29:55.927226",
+
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Admin Settings",
