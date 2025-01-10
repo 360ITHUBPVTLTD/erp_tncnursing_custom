@@ -79,6 +79,12 @@ app_license = "mit"
 
 
 scheduler_events = {
+
+    "cron":{
+    	"0 3 1 * *": [
+            "tnc_frappe_custom_app.custom_employee.allocate_weekly_leaves"
+        ],
+    },
     
     # "all": [
     #   "lsa.tasks.all"
@@ -92,9 +98,9 @@ scheduler_events = {
     # "weekly": [
     #   "lsa.tasks.weekly"
     # ],
-    "monthly": [
-      "tnc_frappe_custom_app.custom_employee.allocate_weekly_leaves"
-    ],
+    # "monthly": [
+    #   "tnc_frappe_custom_app.custom_employee.allocate_weekly_leaves"
+    # ],
 }
 
 # add methods and filters to jinja environment

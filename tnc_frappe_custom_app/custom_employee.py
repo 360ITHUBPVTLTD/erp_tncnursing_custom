@@ -20,10 +20,10 @@ def allocate_weekly_leaves(custom_date=None):
             #     frappe.throw(("Invalid date format for custom_date. Please use YYYY-MM-DD."))
         else:
             current_date = getdate()
-        current_date = getdate()
-        if current_date.day != 10:
-            return
-        # current_date = date(2024, 3, 1)
+        # current_date = getdate()
+        # if current_date.day != 10:
+        #     return
+        current_date = date(2024, 3, 1)
 
 
         weeks = get_week_ranges(current_date)
@@ -32,12 +32,12 @@ def allocate_weekly_leaves(custom_date=None):
 
         # Fetch all active employees
         employees = frappe.get_all("Employee", filters={"status": "Active","name":"HR-EMP-00002"}, fields=["name"])
-        
+        # frappe.log_error(f"Allocating weekly leaves", "Leave Allocation Started")
         for employee in employees:
             # if employee.name != "HR-EMP-00002":
             #     continue
             sunady_month_start_leaves = 0
-            
+            # frappe.log_error(f"Allocating weekly leaves", f"Leave Allocation Started for {employee.name}")
             for week in weeks:
                 if week[0] == week[1]:
                     sunady_month_start_leaves = 1
@@ -92,7 +92,7 @@ def allocate_weekly_leaves(custom_date=None):
                 # Optionally submit the allocation if required
                 allocation.submit()
                 frappe.db.commit()
-
+                # frappe.log_error(f"Allocating weekly leaves", f"Leave Allocation Started for {employee.name} for {week[0]} to {week[1]}")
                 logger.info(f"Allocated 1 leave to {employee.name} from {week[0]} to {week[1]} with carry_forward={allocation.carry_forward}")
 
         frappe.db.commit()
@@ -100,7 +100,7 @@ def allocate_weekly_leaves(custom_date=None):
 
     except Exception as e:
         # logger.error(f"Error in allocating weekly leaves: {e}")
-        frappe.log_error(f"Error in allocating weekly leaves: {e}", "Leave Allocation Error for date:  {}")
+        frappe.log_error(f"Error in allocating weekly leaves: {e}", "Leave Allocation Error for date: ")
         frappe.throw(("An error occurred while allocating weekly leaves: {0}").format(str(e)))
 
 
