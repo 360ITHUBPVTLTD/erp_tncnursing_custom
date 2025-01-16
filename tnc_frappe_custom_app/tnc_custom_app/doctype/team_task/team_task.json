@@ -1,0 +1,222 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": ".####",
+ "creation": "2025-01-16 17:50:41.554666",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "task_title",
+  "task_type",
+  "task_priority",
+  "task_status",
+  "column_break_zwou",
+  "created_by",
+  "task_creation_date_time",
+  "assigned_to",
+  "billable",
+  "section_break_iczt",
+  "customer_task",
+  "section_break_tkez",
+  "customer_id",
+  "column_break_qbut",
+  "customer_name",
+  "column_break_epmi",
+  "contact_person_name",
+  "column_break_badr",
+  "mobile_number",
+  "column_break_kqky",
+  "email",
+  "section_break_ujrm",
+  "task_details",
+  "section_break_qygf",
+  "expected_end_date_time",
+  "column_break_eivi",
+  "completion_date_time",
+  "task_due_status"
+ ],
+ "fields": [
+  {
+   "fieldname": "task_title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Task Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "task_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Task Type",
+   "options": "Team Task Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "task_priority",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Task Priority",
+   "options": "Low\nNormal\nHigh\nEmergency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "task_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Task Status",
+   "options": "Pending\nUnder Process\nCompleted\nCancelled\nHold",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_zwou",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "__user",
+   "fieldname": "created_by",
+   "fieldtype": "Data",
+   "label": "Created By",
+   "reqd": 1
+  },
+  {
+   "default": "Now",
+   "fieldname": "task_creation_date_time",
+   "fieldtype": "Datetime",
+   "label": "Task Creation Date Time"
+  },
+  {
+   "fieldname": "assigned_to",
+   "fieldtype": "Link",
+   "label": "Assigned To",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "billable",
+   "fieldtype": "Select",
+   "label": "Billable",
+   "options": "\nYes\nNo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_iczt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "customer_task",
+   "fieldtype": "Check",
+   "label": "Customer Task"
+  },
+  {
+   "fieldname": "section_break_tkez",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "customer_task",
+   "fieldname": "customer_id",
+   "fieldtype": "Link",
+   "label": "Customer ID",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "column_break_qbut",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "customer_task",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name"
+  },
+  {
+   "fieldname": "column_break_epmi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "customer_task",
+   "fieldname": "contact_person_name",
+   "fieldtype": "Data",
+   "label": "Contact Person Name"
+  },
+  {
+   "fieldname": "column_break_badr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "customer_task",
+   "fieldname": "mobile_number",
+   "fieldtype": "Data",
+   "label": "Mobile Number"
+  },
+  {
+   "fieldname": "column_break_kqky",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "customer_task",
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fieldname": "section_break_ujrm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "task_details",
+   "fieldtype": "Text Editor",
+   "label": "Task Details"
+  },
+  {
+   "fieldname": "section_break_qygf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "expected_end_date_time",
+   "fieldtype": "Datetime",
+   "label": "Expected End Date Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_eivi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "completion_date_time",
+   "fieldtype": "Datetime",
+   "label": "Completion Date Time"
+  },
+  {
+   "fieldname": "task_due_status",
+   "fieldtype": "Select",
+   "label": "Task Due Status",
+   "options": "Open\nOver Due\nHold\nClosed"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-01-16 18:10:48.937172",
+ "modified_by": "Administrator",
+ "module": "TNC Custom App",
+ "name": "Team Task",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
