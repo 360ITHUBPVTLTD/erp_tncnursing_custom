@@ -14,19 +14,17 @@
   "created_by",
   "task_creation_date_time",
   "assigned_to",
-  "billable",
   "section_break_iczt",
-  "customer_task",
+  "student_task",
   "section_break_tkez",
-  "customer_id",
+  "student_id",
   "column_break_qbut",
-  "customer_name",
-  "column_break_epmi",
-  "contact_person_name",
+  "student_name",
   "column_break_badr",
   "mobile_number",
   "column_break_kqky",
   "email",
+  "column_break_epmi",
   "section_break_ujrm",
   "task_details",
   "section_break_qygf",
@@ -64,7 +62,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Task Status",
-   "options": "Pending\nUnder Process\nCompleted\nCancelled\nHold",
+   "options": "Pending\nUnder Process\nCompleted\nCancelled",
    "reqd": 1
   },
   {
@@ -76,13 +74,15 @@
    "fieldname": "created_by",
    "fieldtype": "Data",
    "label": "Created By",
+   "read_only": 1,
    "reqd": 1
   },
   {
    "default": "Now",
    "fieldname": "task_creation_date_time",
    "fieldtype": "Datetime",
-   "label": "Task Creation Date Time"
+   "label": "Task Creation Date Time",
+   "read_only": 1
   },
   {
    "fieldname": "assigned_to",
@@ -92,72 +92,44 @@
    "reqd": 1
   },
   {
-   "fieldname": "billable",
-   "fieldtype": "Select",
-   "label": "Billable",
-   "options": "\nYes\nNo",
-   "reqd": 1
-  },
-  {
    "fieldname": "section_break_iczt",
    "fieldtype": "Section Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "customer_task",
-   "fieldtype": "Check",
-   "label": "Customer Task"
   },
   {
    "fieldname": "section_break_tkez",
    "fieldtype": "Section Break"
   },
   {
-   "depends_on": "customer_task",
-   "fieldname": "customer_id",
-   "fieldtype": "Link",
-   "label": "Customer ID",
-   "options": "Customer"
-  },
-  {
    "fieldname": "column_break_qbut",
    "fieldtype": "Column Break"
-  },
-  {
-   "depends_on": "customer_task",
-   "fieldname": "customer_name",
-   "fieldtype": "Data",
-   "label": "Customer Name"
   },
   {
    "fieldname": "column_break_epmi",
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "customer_task",
-   "fieldname": "contact_person_name",
-   "fieldtype": "Data",
-   "label": "Contact Person Name"
-  },
-  {
    "fieldname": "column_break_badr",
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "customer_task",
+   "depends_on": "student_task",
+   "fetch_from": "student_id.mobile_number",
    "fieldname": "mobile_number",
    "fieldtype": "Data",
-   "label": "Mobile Number"
+   "label": "Mobile Number",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_kqky",
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "customer_task",
+   "depends_on": "student_task",
+   "fetch_from": "student_id.email",
    "fieldname": "email",
    "fieldtype": "Data",
-   "label": "Email"
+   "label": "Email",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_ujrm",
@@ -185,18 +157,41 @@
   {
    "fieldname": "completion_date_time",
    "fieldtype": "Datetime",
-   "label": "Completion Date Time"
+   "label": "Completion Date Time",
+   "read_only": 1
   },
   {
    "fieldname": "task_due_status",
    "fieldtype": "Select",
    "label": "Task Due Status",
-   "options": "Open\nOver Due\nHold\nClosed"
+   "options": "Open\nOver Due\nHold\nClosed",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "student_task",
+   "fieldtype": "Check",
+   "label": "Student Task"
+  },
+  {
+   "depends_on": "student_task",
+   "fieldname": "student_id",
+   "fieldtype": "Link",
+   "label": "Student ID",
+   "options": "Student"
+  },
+  {
+   "depends_on": "student_task",
+   "fetch_from": "student_id.student_name",
+   "fieldname": "student_name",
+   "fieldtype": "Data",
+   "label": "Student Name",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-16 18:10:48.937172",
+ "modified": "2025-01-17 15:48:32.537860",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Team Task",
