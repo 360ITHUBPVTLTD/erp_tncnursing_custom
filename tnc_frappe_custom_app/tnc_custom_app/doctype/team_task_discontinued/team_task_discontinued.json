@@ -46,7 +46,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Task Type",
-   "options": "Team Task Type",
+   "options": "Team Task Type Discontinued",
    "reqd": 1
   },
   {
@@ -191,10 +191,10 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-17 15:48:32.537860",
+ "modified": "2025-02-06 10:16:32.505617",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
- "name": "Team Task",
+ "name": "Team Task Discontinued",
  "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [

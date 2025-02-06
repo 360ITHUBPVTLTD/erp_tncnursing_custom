@@ -12,18 +12,18 @@ EXTRA_TEST_RECORD_DEPENDENCIES = []  # eg. ["User"]
 IGNORE_TEST_RECORD_DEPENDENCIES = []  # eg. ["User"]
 
 
-class TestTeamTaskType(UnitTestCase):
+class TestTeamTaskDiscontinued(UnitTestCase):
 	"""
-	Unit tests for TeamTaskType.
+	Unit tests for TeamTaskDiscontinued.
 	Use this class for testing individual functions and methods.
 	"""
 
 	pass
 
 
-class TestTeamTaskType(IntegrationTestCase):
+class TestTeamTaskDiscontinued(IntegrationTestCase):
 	"""
-	Integration tests for TeamTaskType.
+	Integration tests for TeamTaskDiscontinued.
 	Use this class for testing interactions between multiple components.
 	"""
 
