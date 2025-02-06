@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class TeamTask(Document):
+class TeamTaskTypeDiscontinued(Document):
 	pass
