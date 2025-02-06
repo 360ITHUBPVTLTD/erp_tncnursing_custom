@@ -4,7 +4,8 @@ app_publisher = "Administrator"
 app_description = "About the TNC"
 app_email = "admin@gmail.com"
 app_license = "mit"
-
+app_logo_url = "/assets/tnc_frappe_custom_app/images/dial.svg"
+# /home/pankaj/Pictures/bench-tnc-erp/apps/tnc_frappe_custom_app/tnc_frappe_custom_app/public/Images/dial.svg
 # Apps
 # ------------------
 
