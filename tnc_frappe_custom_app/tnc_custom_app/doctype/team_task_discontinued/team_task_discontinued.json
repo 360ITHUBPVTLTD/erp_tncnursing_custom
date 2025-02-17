@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": ".####",
  "creation": "2025-01-16 17:50:41.554666",
@@ -191,7 +192,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-02-06 10:16:32.505617",
+ "modified": "2025-02-06 10:26:28.726928",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Team Task Discontinued",
