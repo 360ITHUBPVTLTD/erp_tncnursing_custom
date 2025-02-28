@@ -229,7 +229,7 @@ function show_print_prompt(frm) {
                     frm.save().then(function() {
                         // Redirect to the print page after saving
                         const baseUrl = window.location.origin;
-                        window.open(`${baseUrl}/api/method/frappe.utils.print_format.download_pdf?doctype=Online Student&name=${frm.doc.name}&format=Online Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en`);
+                        window.open(`${baseUrl}/api/method/frappe.utils.print_format.download_pdf?doctype=Online Student&name=${frm.doc.name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang= en`);
 
                         // Clear the subject field after successful save
                         frm.set_value('subjects', '');
