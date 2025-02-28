@@ -31,28 +31,28 @@
 // };
 
 // ////////////////////////////////  Official whatsapp button  /////////////////////////////////////////////
-frappe.listview_settings['Online Student'] = {
-    onload: function(listview) {
-        listview.page.add_inner_button(__('Bulk Send Results'), function() {
-            frappe.confirm(
-                __('Are you sure you want to send results to all students?'),
-                function() {
-                    frappe.call({
-                        method: 'tnc_frappe_custom_app.tnc_custom_app.doctype.online_student.online_student.send_bulk_student_results_to_students',
+// frappe.listview_settings['Online Student'] = {
+//     onload: function(listview) {
+//         listview.page.add_inner_button(__('Bulk Send Results'), function() {
+//             frappe.confirm(
+//                 __('Are you sure you want to send results to all students?'),
+//                 function() {
+//                     frappe.call({
+//                         method: 'tnc_frappe_custom_app.tnc_custom_app.doctype.online_student.online_student.send_bulk_student_results_to_students',
                         
-                        callback: function(r) {
-                            if (!r.exc) {
-                                frappe.msgprint(__('Results sent successfully'));
-                            } else {
-                                frappe.msgprint(__('Failed to send results. Check logs for details.'));
-                            }
-                        }
-                    });
-                }
-            );
-        });
-    }
-};
+//                         callback: function(r) {
+//                             if (!r.exc) {
+//                                 frappe.msgprint(__('Results sent successfully'));
+//                             } else {
+//                                 frappe.msgprint(__('Failed to send results. Check logs for details.'));
+//                             }
+//                         }
+//                     });
+//                 }
+//             );
+//         });
+//     }
+// };
 
 
 
