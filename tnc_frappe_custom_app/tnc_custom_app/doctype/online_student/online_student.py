@@ -23,8 +23,7 @@ class OnlineStudent(Document):
 
 ######################################## Send bulk whatsapp results sharing to Students ####################################################################
 
-import frappe
-import requests
+
 
 import frappe
 import requests
