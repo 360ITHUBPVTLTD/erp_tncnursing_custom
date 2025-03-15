@@ -88,7 +88,7 @@ TNC Administration"""
         # Uncomment to enable actual sending
         try:
             response = requests.post(api_url, json=payload, headers=headers)
-            print("RESPONSEEEEEEEEEEEEEEEEEEWWWWWWWWWWWWWWW", response.json())
+            # print("RESPONSEEEEEEEEEEEEEEEEEEWWWWWWWWWWWWWWW", response.json())
             response.raise_for_status()
             # pass
         except requests.exceptions.RequestException as e:
