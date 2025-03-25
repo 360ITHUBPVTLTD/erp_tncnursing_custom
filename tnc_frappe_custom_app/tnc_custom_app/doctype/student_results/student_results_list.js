@@ -23,7 +23,7 @@ frappe.listview_settings['Student Results'] = {
                     }
 
                     frappe.call({
-                        method: 'tnc_frappe_custom_app.tnc_custom_app.doctype.student_results.student_results.send_results_for_selected_exams',
+                        method: 'tnc_frappe_custom_app.tnc_custom_app.doctype.student_results.student_results.create_bulk_whatsapp_entry_for_single_exam',
                         args: {
                             exam_ids: [values.exam_id]
                         },
@@ -110,18 +110,8 @@ frappe.listview_settings['Student Results'] = {
                                             },
                                             callback: function (res) {
                                                 if (!res.exc) {
-                                                    frappe.call({
-                                                        method: 'frappe.client.set_value',
-                                                        args: {
-                                                            doctype: 'Bulk whatsapp Sharing Results',
-                                                            name: bulk_docname,
-                                                            fieldname: { status: 'Submitted' }
-                                                        },
-                                                        callback: function () {
-                                                            frappe.msgprint(__('WhatsApp results sent successfully.'));
-                                                            dialog.hide();
-                                                        }
-                                                    });
+                                                    frappe.msgprint(__('WhatsApp results sent successfully.'));
+                                                    dialog.hide();
                                                 } else {
                                                     frappe.msgprint(__('Failed to send WhatsApp messages.'));
                                                 }

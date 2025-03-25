@@ -1,165 +1,165 @@
 {
-    "actions": [],
-    "allow_import": 1,
-    "allow_rename": 1,
-    "creation": "2024-08-19 17:54:50.756370",
-    "doctype": "DocType",
-    "engine": "InnoDB",
-    "field_order": [
-     "exam_id",
-     "student_id",
-     "student_name",
-     "student_mobile",
-     "exam_name",
-     "exam_title_name",
-     "column_break_hrmu",
-     "exam_date",
-     "rank",
-     "rank_color",
-     "total_marks",
-     "total_right",
-     "total_wrong",
-     "total_skip",
-     "percentage",
-     "system_imported"
-    ],
-    "fields": [
-     {
-      "fieldname": "student_id",
-      "fieldtype": "Link",
-      "label": "Student ID",
-      "options": "Online Student",
-      "read_only": 1,
-      "reqd": 1
-     },
-     {
-      "fetch_from": "student_id.mobile",
-      "fieldname": "student_mobile",
-      "fieldtype": "Data",
-      "in_filter": 1,
-      "in_list_view": 1,
-      "in_standard_filter": 1,
-      "label": "Student Mobile",
-      "read_only": 1
-     },
-     {
-      "fetch_from": "exam_id.exam_name",
-      "fieldname": "exam_name",
-      "fieldtype": "Link",
-      "in_filter": 1,
-      "in_standard_filter": 1,
-      "label": "Exam Name",
-      "options": "Test Series Type",
-      "read_only": 1
-     },
-     {
-      "fieldname": "column_break_hrmu",
-      "fieldtype": "Column Break"
-     },
-     {
-      "fetch_from": "exam_id.exam_date",
-      "fieldname": "exam_date",
-      "fieldtype": "Date",
-      "in_filter": 1,
-      "in_standard_filter": 1,
-      "label": "Exam Date",
-      "read_only": 1
-     },
-     {
-      "fieldname": "rank",
-      "fieldtype": "Int",
-      "label": "Rank",
-      "read_only": 1
-     },
-     {
-      "fieldname": "total_marks",
-      "fieldtype": "Int",
-      "label": "Total Marks",
-      "read_only": 1
-     },
-     {
-      "fieldname": "total_right",
-      "fieldtype": "Int",
-      "label": "Total Right",
-      "read_only": 1
-     },
-     {
-      "fieldname": "total_wrong",
-      "fieldtype": "Int",
-      "label": "Total Wrong",
-      "read_only": 1
-     },
-     {
-      "fieldname": "total_skip",
-      "fieldtype": "Int",
-      "label": "Total Skip",
-      "read_only": 1
-     },
-     {
-      "fieldname": "percentage",
-      "fieldtype": "Float",
-      "label": "Percentage",
-      "read_only": 1
-     },
-     {
-      "fetch_from": "student_id.student_name",
-      "fieldname": "student_name",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "label": "Student Name",
-      "read_only": 1
-     },
-     {
-      "default": "0",
-      "fieldname": "system_imported",
-      "fieldtype": "Check",
-      "label": "System Imported",
-      "read_only": 1
-     },
-     {
-      "fetch_from": "exam_id.exam_title_name",
-      "fieldname": "exam_title_name",
-      "fieldtype": "Data",
-      "label": "Exam Title Name",
-      "read_only": 1
-     },
-     {
-      "fieldname": "rank_color",
-      "fieldtype": "Data",
-      "label": "Rank Color",
-      "read_only": 1
-     },
-     {
-      "fieldname": "exam_id",
-      "fieldtype": "Link",
-      "label": "Exam ID",
-      "options": "Student Exam",
-      "reqd": 1
-     }
-    ],
-    "index_web_pages_for_search": 1,
-    "links": [],
-    "modified": "2024-11-16 15:54:24.023226",
-    "modified_by": "Administrator",
-    "module": "TNC Custom App",
-    "name": "Student Results",
-    "owner": "Administrator",
-    "permissions": [
-     {
-      "create": 1,
-      "delete": 1,
-      "email": 1,
-      "export": 1,
-      "print": 1,
-      "read": 1,
-      "report": 1,
-      "role": "System Manager",
-      "share": 1,
-      "write": 1
-     }
-    ],
-    "search_fields": "student_id,student_mobile,exam_name,exam_date",
-    "sort_field": "creation",
-    "sort_order": "DESC",
-    "states": []
-   }
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "creation": "2024-08-19 17:54:50.756370",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "exam_id",
+  "student_id",
+  "student_name",
+  "student_mobile",
+  "exam_name",
+  "exam_title_name",
+  "column_break_hrmu",
+  "exam_date",
+  "rank",
+  "rank_color",
+  "total_marks",
+  "total_right",
+  "total_wrong",
+  "total_skip",
+  "percentage",
+  "system_imported"
+ ],
+ "fields": [
+  {
+   "fieldname": "student_id",
+   "fieldtype": "Link",
+   "label": "Student ID",
+   "options": "Online Student",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "student_id.mobile",
+   "fieldname": "student_mobile",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Student Mobile",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "exam_id.exam_name",
+   "fieldname": "exam_name",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_standard_filter": 1,
+   "label": "Exam Name",
+   "options": "Test Series Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_hrmu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "exam_id.exam_date",
+   "fieldname": "exam_date",
+   "fieldtype": "Date",
+   "in_filter": 1,
+   "in_standard_filter": 1,
+   "label": "Exam Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rank",
+   "fieldtype": "Int",
+   "label": "Rank",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_marks",
+   "fieldtype": "Int",
+   "label": "Total Marks",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_right",
+   "fieldtype": "Int",
+   "label": "Total Right",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_wrong",
+   "fieldtype": "Int",
+   "label": "Total Wrong",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_skip",
+   "fieldtype": "Int",
+   "label": "Total Skip",
+   "read_only": 1
+  },
+  {
+   "fieldname": "percentage",
+   "fieldtype": "Float",
+   "label": "Percentage",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "student_id.student_name",
+   "fieldname": "student_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Student Name",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "system_imported",
+   "fieldtype": "Check",
+   "label": "System Imported",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "exam_id.exam_title_name",
+   "fieldname": "exam_title_name",
+   "fieldtype": "Data",
+   "label": "Exam Title Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rank_color",
+   "fieldtype": "Data",
+   "label": "Rank Color",
+   "read_only": 1
+  },
+  {
+   "fieldname": "exam_id",
+   "fieldtype": "Link",
+   "label": "Exam ID",
+   "options": "Student Exam",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-03-25 17:52:18.979929",
+ "modified_by": "Administrator",
+ "module": "TNC Custom App",
+ "name": "Student Results",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "student_id,student_mobile,exam_name,exam_date",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

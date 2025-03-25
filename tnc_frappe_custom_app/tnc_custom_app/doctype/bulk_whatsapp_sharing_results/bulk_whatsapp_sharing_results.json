@@ -8,6 +8,8 @@
   "from_date",
   "to_date",
   "test_series",
+  "student_exam_id",
+  "exam_title_name",
   "column_break_amxg",
   "sent",
   "count",
@@ -51,12 +53,24 @@
    "label": "Status",
    "options": "Draft\nCancelled\nSubmitted",
    "read_only": 1
+  },
+  {
+   "fieldname": "student_exam_id",
+   "fieldtype": "Link",
+   "label": "Student Exam ID",
+   "options": "Student Exam"
+  },
+  {
+   "fetch_from": "student_exam_id.exam_title_name",
+   "fieldname": "exam_title_name",
+   "fieldtype": "Data",
+   "label": "Exam Title Name"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-24 17:00:48.593214",
+ "modified": "2025-03-25 18:27:24.824841",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Bulk whatsapp Sharing Results",

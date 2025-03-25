@@ -181,6 +181,47 @@ class StudentResults(Document):
     #     student_doc.save()
 
 
+############################## Creating a Entry in the Bulk whatsapp doctype ############################################
+# @frappe.whitelist()
+# def create_bulk_whatsapp_entry_for_single_exam(exam_ids):
+#     print("Raw test_series:", exam_ids)  # e.g., '["NORCET 7.0"]'
+#     test_series_list = json.loads(exam_ids)  # now a Python list
+#     print("Parsed test_series_list:", test_series_list)
+
+#     filters = {"exam_date": ["between", [from_date, to_date]]}
+    
+#     if test_series_list:
+#         filters["exam_name"] = ["in", test_series_list]
+
+#     results = frappe.get_all(
+#         "Student Results",
+#         filters=filters,
+#         fields=["name", "student_id", "student_name", "student_mobile", "exam_name"],
+#         distinct=True
+#     )
+#     print("Results found:", results)
+
+#     if not results:
+#         frappe.log_error("No students found for WhatsApp sharing", "WhatsApp Results Skipped")
+#         return {"success": False, "message": "No students found."}
+
+#     doc = frappe.new_doc("Bulk whatsapp Sharing Results")
+#     doc.status = "Draft"
+
+
+#     doc.insert()
+#     frappe.db.commit()
+
+#     student_count = len(results)
+
+#     return {
+#         "success": True,
+#         "docname": doc.name,
+#         "student_count": student_count
+#     }
+
+
+
 
 
 
@@ -328,8 +369,6 @@ def create_bulk_whatsapp_entry(from_date, to_date, test_series):
         "student_count": student_count
     }
 
-
-
 ############################################## Cancel Bulk Result ################################
 
 @frappe.whitelist()
@@ -356,6 +395,11 @@ from frappe.utils import get_url
 def send_results_by_date_range(from_date, to_date, test_series,bulk_docname):
     if not from_date or not to_date:
         frappe.throw(_("From Date and To Date are required."))
+
+    resp = frappe.db.set_value("Bulk whatsapp Sharing Results", bulk_docname, "status", "Submitted")
+    frappe.log_error(f"Response from frappe.db.set_value: {resp}", "Status Update")
+
+
     # Enqueue the background job
     frappe.enqueue(
         method="tnc_frappe_custom_app.tnc_custom_app.doctype.student_results.student_results.send_results_background",  # ✅ Replace with your actual module path
@@ -366,9 +410,10 @@ def send_results_by_date_range(from_date, to_date, test_series,bulk_docname):
         test_series=test_series,
         bulk_docname=bulk_docname
     )
-
+    # send_results_background(from_date, to_date, test_series,bulk_docname)
     return {"status": "Queued", "message": "Result sending is scheduled in background."}
 
+import traceback
 def send_results_background(from_date, to_date, test_series,bulk_docname):
     try:
         # Parse test_series if it's JSON string
@@ -433,30 +478,22 @@ TNC Administration"""
 
             try:
                 response = requests.post(api_url, json=payload, headers=headers)
-                response.raise_for_status()
-                print("RESSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",response.json())
-                frappe.log_error("WhatsApp Response", f"Srikanth: {response.json()}")
+                # response.raise_for_status()
+                # print("RESSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",response.json())
+                # frappe.log_error(title="WhatsApp Response",message= f"Srikanth: {response.json()}")
                 count += 1
-                if bulk_docname:
-                    print("Tesssssssssssssssssssssssssssssssssssssssssssssssssssss",count)
-                    try:
-                        bulk_wa = frappe.get_doc('Bulk whatsapp Sharing Results', bulk_docname)
-                        # print("WAWAWAWAWAW",bulk_wa)
-                        bulk_wa.sent = 1
-                        bulk_wa.count = count
-                        bulk_wa.flags.ignore_permissions = True
-                        bulk_wa.save(ignore_permissions=True)
-                        frappe.db.commit()
-                    except Exception as e:
-                        print(e)
-                        # frappe.log_error(f"Failed to update Bulk Whatsapp Sharing Results {bulk_docname}: {str(e)}", "Update Error")
             except requests.exceptions.RequestException as e:
                 frappe.log_error(f"WhatsApp Failed for {student.get('student_name')}: {str(e)}", "WhatsApp API Error")
-
+    
+        bulk_wa = frappe.get_doc('Bulk whatsapp Sharing Results', bulk_docname)
+        # print("WAWAWAWAWAW",bulk_wa)
+        bulk_wa.sent = 1
+        bulk_wa.count = count
+        # bulk_wa.flags.ignore_permissions = True
+        bulk_wa.save(ignore_permissions=True)
+        frappe.db.commit()
         frappe.log_error("WhatsApp Results Summary", f"Successfully sent results to {count} students.")
 
-        
-
     except Exception as e:
-        frappe.log_error("WhatsApp Results Background Error", f"Unexpected error: {str(e)}")
+        frappe.log_error(title="WhatsApp Results Background Error", message=f"Unexpected error: {str(e)}{traceback.format_exc()}")
 
