@@ -424,6 +424,8 @@ def send_results_by_date_range(from_date, to_date, test_series,bulk_docname):
         frappe.throw(_("From Date and To Date are required."))
 
     resp = frappe.db.set_value("Bulk whatsapp Sharing Results", bulk_docname, "status", "Submitted")
+    
+    frappe.db.commit()
     frappe.log_error(f"Response from frappe.db.set_value: {resp}", "Status Update")
 
 
