@@ -304,6 +304,7 @@ TNC Administration"""
 
             # You can dynamically build the PDF link later
             # media_url = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+            # media_url = "https://tnc.360ithub.com/api/method/frappe.utils.print_format.download_pdf?doctype=Student%20Results&name=TSR-00366625&format=Student%20Results%20Sharing&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en"
             media_url = f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Student%20Results&name={docname}&format=Student%20Results%20Sharing&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en"
             frappe.log_error(title="PDF URL", message=f"PDF URL__Bulkkkk: {media_url}")
             payload = {
@@ -316,6 +317,7 @@ TNC Administration"""
                 "msgType": "media",
                 "mediaUrl": media_url,
                 "mediaType": "document",
+                "documentName": "student_results.pdf",
                 "templateName": "student_sharing_results_template"
             }
 
@@ -486,7 +488,7 @@ Please Check your Results Summary
 Best regards,
 TNC Administration"""
 
-            media_url = f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Student%20Results&name={docname}&Dynamic%20Student%20Print%20Format&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en"
+            media_url = f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Student%20Results&name={docname}&format=Dynamic%20Student%20Print%20Format&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en"
             frappe.log_error(title="PDF URL", message=f"PDF URL__Bulkkkk: {media_url}")
             # media_url = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
             payload = {
@@ -499,6 +501,7 @@ TNC Administration"""
                 "msgType": "media",
                 "mediaUrl": media_url,
                 "mediaType": "document",
+                "documentName": "student_results.pdf",
                 "templateName": "student_sharing_results_template"
             }
 
