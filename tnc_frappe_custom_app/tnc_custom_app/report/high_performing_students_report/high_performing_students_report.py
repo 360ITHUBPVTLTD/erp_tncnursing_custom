@@ -92,17 +92,18 @@
 
 #     return result
 
-
 import frappe
 
 def execute(filters=None):
     filters = filters or {}
     columns = get_columns()
     data = get_data(filters)
-    html_summary = get_html_summary(filters)
-    return columns, data, html_summary
+    html = get_html_summary(filters)
+    return columns, data, html
 
-
+# ----------------------------------------------
+# Report Columns
+# ----------------------------------------------
 def get_columns():
     return [
         {"label": "Student ID", "fieldname": "student_id", "fieldtype": "Data", "width": 100},
@@ -117,29 +118,11 @@ def get_columns():
         {"label": "Red %", "fieldname": "red_percent", "fieldtype": "Float", "width": 100},
     ]
 
-
+# ----------------------------------------------
+# Report Data
+# ----------------------------------------------
 def get_data(filters):
-    conditions = []
-
-    if filters.get("exam_date"):
-        from_date, to_date = filters.get("exam_date")
-        if from_date:
-            conditions.append("sr.exam_date >= %(from_date)s")
-            filters["from_date"] = from_date
-        if to_date:
-            conditions.append("sr.exam_date <= %(to_date)s")
-            filters["to_date"] = to_date
-
-    if filters.get("exam_name"):
-        conditions.append("sr.exam_name = %(exam_name)s")
-    if filters.get("student_id"):
-        conditions.append("sr.student_id = %(student_id)s")
-    if filters.get("exam_id"):
-        conditions.append("sr.exam_id = %(exam_id)s")
-
-    where_clause = " AND ".join(conditions)
-    if where_clause:
-        where_clause = "WHERE " + where_clause
+    where_clause, query_filters = get_common_conditions(filters)
 
     query = f"""
         SELECT 
@@ -155,53 +138,34 @@ def get_data(filters):
         GROUP BY sr.student_id
     """
 
-    result = frappe.db.sql(query, filters, as_dict=True)
+    results = frappe.db.sql(query, query_filters, as_dict=True)
 
-    for row in result:
+    for row in results:
         total = row.total_exams or 1
         row.green_percent = round((row.green_count / total) * 100, 2)
         row.yellow_percent = round((row.yellow_count / total) * 100, 2)
         row.red_percent = round((row.red_count / total) * 100, 2)
 
-    # Sort by Green % descending
-    result.sort(key=lambda x: x["green_percent"], reverse=True)
-
-    # Apply count filter if given
     if filters.get("count"):
-        result = result[:int(filters["count"])]
+        results = results[:int(filters["count"])]
 
-    return result
+    return sorted(results, key=lambda x: x.green_percent, reverse=True)
 
-
+# ----------------------------------------------
+# Summary Number Cards (HTML)
+# ----------------------------------------------
 def get_html_summary(filters):
-    conditions = []
-
-    if filters.get("exam_date"):
-        from_date, to_date = filters.get("exam_date")
-        if from_date:
-            conditions.append("exam_date >= %(from_date)s")
-            filters["from_date"] = from_date
-        if to_date:
-            conditions.append("exam_date <= %(to_date)s")
-            filters["to_date"] = to_date
-
-    if filters.get("exam_name"):
-        conditions.append("exam_name = %(exam_name)s")
-    if filters.get("student_id"):
-        conditions.append("student_id = %(student_id)s")
-
-    where_clause = " AND ".join(conditions)
-    if where_clause:
-        where_clause = "WHERE " + where_clause
-
-    result = frappe.db.sql(f"""
+    where_clause, query_filters = get_common_conditions(filters)
+    print("sssssssssssssssssssssssssssssssssssssssssssssss", where_clause,query_filters)
+    summary_query = f"""
         SELECT 
-            COUNT(DISTINCT exam_title_name) AS total_exams,
-            COUNT(DISTINCT student_id) AS unique_students
-        FROM `tabStudent Results`
+            COUNT(DISTINCT sr.exam_title_name) AS total_exams,
+            COUNT(DISTINCT sr.student_id) AS unique_students
+        FROM `tabStudent Results` sr
         {where_clause}
-    """, filters, as_dict=True)[0]
-
+    """
+    print("Query", summary_query)
+    result = frappe.db.sql(summary_query, query_filters, as_dict=True)[0]
 
     total_exams = format_indian_number(result.total_exams)
     unique_students = format_indian_number(result.unique_students)
@@ -220,6 +184,40 @@ def get_html_summary(filters):
     """
     return html
 
+# ----------------------------------------------
+# Common Filtering Logic
+# ----------------------------------------------
+def get_common_conditions(filters):
+    conditions = []
+    query_filters = {}
+
+    if filters.get("exam_date"):
+        from_date, to_date = filters.get("exam_date")
+        if from_date:
+            conditions.append("sr.exam_date >= %(from_date)s")
+            query_filters["from_date"] = from_date
+        if to_date:
+            conditions.append("sr.exam_date <= %(to_date)s")
+            query_filters["to_date"] = to_date
+
+    if filters.get("exam_name"):
+        conditions.append("sr.exam_name = %(exam_name)s")
+        query_filters["exam_name"] = filters["exam_name"]
+
+    if filters.get("student_id"):
+        conditions.append("sr.student_id = %(student_id)s")
+        query_filters["student_id"] = filters["student_id"]
+
+    if filters.get("exam_id"):
+        conditions.append("sr.exam_id = %(exam_id)s")
+        query_filters["exam_id"] = filters["exam_id"]
+
+    where_clause = "WHERE " + " AND ".join(conditions) if conditions else ""
+    return where_clause, query_filters
+
+# ----------------------------------------------
+# Utility: Format number Indian style
+# ----------------------------------------------
 def format_indian_number(n):
     s = str(int(n))
     r = ''
