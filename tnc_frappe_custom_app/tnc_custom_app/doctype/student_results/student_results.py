@@ -322,6 +322,8 @@ TNC Administration"""
             try:
                 response = requests.post(api_url, json=payload, headers=headers)
                 response.raise_for_status()
+                frappe.log_error(title="WhatsApp Response",message= f"test: {response.json()}")
+
                 # print("WhatsaAPAP REsponse",response.json())
                 count += 1
                 # print(f"[SUCCESS] Sent WhatsApp to {student_name} ({mobile})")
