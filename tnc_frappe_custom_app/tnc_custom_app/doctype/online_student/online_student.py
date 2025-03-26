@@ -31,13 +31,13 @@ import requests
 @frappe.whitelist()
 def send_bulk_student_results_to_students():
     # Hardcoded test mobile numbers (Uncomment the next line to send only to test numbers)
-    # test_mobiles = ["7893913248", "9513777002"]
+    test_mobiles = ["7893913248", "9513777001","7795194181"]
 
     # Fetch all students
     students = frappe.get_all('Online Student', fields=['mobile', 'student_name', 'name'])
 
     # Uncomment the next line to restrict sending to test mobiles only
-    # students = [s for s in students if s.mobile in test_mobiles]
+    students = [s for s in students if s.mobile in test_mobiles]
 
     wa_config = frappe.get_doc('WhatsApp Message Configuration', 'WA-Config-01')
     api_url = f"{wa_config.wa_server}/send"
@@ -73,8 +73,8 @@ TNC Administration"""
             "msg": wa_message,
             "wabaNumber": wa_config.waba_number,
             "output": "json",
-            "mobile": "919513777002",
-            # "mobile": f"91{mobile}",
+            # "mobile": "919513777002",
+            "mobile": f"91{mobile}",
             "sendMethod": "quick",
             "msgType": "media",
             
@@ -96,3 +96,111 @@ TNC Administration"""
 
     return {"status": "Success", "message": f"Results sent to {count} students"}
 
+
+
+############################### Selected Students only will receive the WhatsApp Messages ##########################
+
+
+import frappe
+
+@frappe.whitelist()
+def get_online_students():
+    students = frappe.get_all(
+        "Online Student",
+        fields=["name", "student_name", "mobile"],
+        limit_page_length=100
+    )
+    return students
+########################################################################
+import frappe
+import requests
+
+import frappe
+import json
+
+@frappe.whitelist()
+def send_results_to_selected_students(student_ids):
+    print("Raw student_ids from client:", student_ids)
+    
+    # Ensure student_ids is a list
+    if isinstance(student_ids, str):
+        try:
+            student_ids = json.loads(student_ids)  # Convert JSON string to list
+        except json.JSONDecodeError as e:
+            frappe.throw("Invalid JSON format")
+
+    print("Processed Student IDs:", student_ids, type(student_ids))
+
+    if not student_ids or not isinstance(student_ids, list):
+        frappe.throw("Invalid or empty student list.")
+
+    # Fetch student details
+    students = frappe.get_all(
+        'Online Student',
+        filters=[["name", "in", student_ids]],
+        fields=['mobile', 'student_name', 'name']
+    )
+
+    print("Fetched Students:", students)
+
+    if not students:
+        frappe.throw("No matching students found.")
+
+    try:
+        wa_config = frappe.get_doc('WhatsApp Message Configuration', 'WA-Config-01')
+        api_url = f"{wa_config.wa_server}/send"
+        headers = {
+            "apikey": wa_config.get_password('api_key'),
+            "Content-Type": "application/json"
+        }
+        base_url = frappe.utils.get_url()
+
+        count = 0  # Initialize count
+        for student in students:
+            if not student.mobile:
+                frappe.log_error(f"Missing mobile number for {student.student_name}", "WhatsApp Message Skipped")
+                continue  # Skip students without a mobile number
+
+            docname = student.name
+            mobile = student.mobile
+            print(f"Processing Student: {student.student_name}, Mobile: {mobile}, Doc: {docname}")
+
+            wa_message = f"""Dear {student.student_name},
+
+Please Check your Results Summary
+
+Best regards,
+TNC Administration"""
+
+            payload = {
+                "userid": wa_config.user_id,
+                "msg": wa_message,
+                "wabaNumber": wa_config.waba_number,
+                "output": "json",
+                "mobile": f"91{mobile}",
+                "sendMethod": "quick",
+                "msgType": "media",
+                # Replace this URL in production with the actual result PDF link
+                # "mediaUrl": f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Online Student&name={student.name}&format=Student%20Results%20PF&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en",
+                "mediaUrl" : "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                "mediaType": "document",
+                "templateName": "student_sharing_results_template"
+            }
+
+            # Sending WhatsApp Message
+            try:
+                response = requests.post(api_url, json=payload, headers=headers)
+                # print("sssssssssswdedgfefgeggggggggggggggggggggggggggggggg",response)
+                response.raise_for_status()
+                # print("WA RESPONSE",response.json())
+                count += 1  # Increment success count
+                # print(f"Message sent successfully to {mobile}")
+
+            except requests.exceptions.RequestException as e:
+                frappe.log_error(f"WhatsApp Message Failed for {student.student_name}: {str(e)}", "WhatsApp API Error")
+
+        return {"status": "Success", "message": f"Results sent to {count} students"}
+
+    except Exception as e:
+        frappe.log_error(f"Unexpected error: {str(e)}", "Send WhatsApp Results Error")
+        return {"status": "Failed", "message": "An unexpected error occurred. Check logs."}

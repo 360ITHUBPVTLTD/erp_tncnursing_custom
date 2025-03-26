@@ -1,0 +1,144 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"8nUpPZLEek\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Course</b></span>\",\"col\":12}},{\"id\":\"yOAEGnZ18p\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Course\",\"col\":6}},{\"id\":\"lPZ7PA_6Fj\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Student Batch\",\"col\":6}},{\"id\":\"rXT3n0-6oA\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Student Enquiry</b></span>\",\"col\":12}},{\"id\":\"Pvyn0DYojz\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Student Enquiry\",\"col\":6}},{\"id\":\"HeyCT_w6J3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Enquiry Follow Up\",\"col\":6}},{\"id\":\"9eQHQuEwDw\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Admissions</b></span>\",\"col\":12}},{\"id\":\"sivjWCa1Em\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Student\",\"col\":6}},{\"id\":\"4rB3J-FceE\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Batch Enrollment Form\",\"col\":6}},{\"id\":\"9K-kSX1KuV\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Order\",\"col\":6}},{\"id\":\"Wu3mdQv-R8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Installment Follow-Up\",\"col\":6}},{\"id\":\"qYLnxSqvnJ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Student Attendance Management<b></b></span>\",\"col\":12}},{\"id\":\"oAiOarIrzG\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Redirect to the Data Import Tool\",\"col\":6}},{\"id\":\"_J0nkAQYfG\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Batch Session Schedule\",\"col\":6}},{\"id\":\"YHW-2Np6SV\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Session Attendance\",\"col\":6}},{\"id\":\"G4ebjbeOlJ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Razorpay Links for the Day<b></b></span>\",\"col\":12}},{\"id\":\"X5l12J6G1U\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Todays' Payment Link HTML Block\",\"col\":12}},{\"id\":\"Lz7vbpS2_x\",\"type\":\"paragraph\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports</b></span>\",\"col\":12}},{\"id\":\"WxsDr3MDcD\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Student FollowUp Report\",\"col\":6}},{\"id\":\"5jCSKDowsE\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Student Payment FollowUp Report\",\"col\":6}},{\"id\":\"yn2VVZYaut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Student Fee Receivable Report\",\"col\":6}}]",
+ "creation": "2025-01-09 15:01:39.929153",
+ "custom_blocks": [
+  {
+   "custom_block_name": "Todays' Payment Link HTML Block",
+   "label": "Todays' Payment Link HTML Block"
+  },
+  {
+   "custom_block_name": "Redirect to the Data Import Tool",
+   "label": "Redirect to the Data Import Tool"
+  }
+ ],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "tool",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Student Management",
+ "links": [],
+ "modified": "2025-03-19 12:10:08.206630",
+ "modified_by": "Administrator",
+ "module": "TNC Custom App",
+ "name": "Student Management",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "TNC Employees"
+  }
+ ],
+ "sequence_id": 5.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Student FollowUp Report",
+   "link_to": "Student FollowUp Report",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Student Fee Receivable Report",
+   "link_to": "Student Fee Receivable Report",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Student Batch",
+   "link_to": "Student Batch",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Enquiry Follow Up",
+   "link_to": "Student Follow-Up",
+   "stats_filter": "[[\"Student Follow-Up\",\"type\",\"=\",\"Student Enquiry\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Student",
+   "link_to": "Student",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Student Payment FollowUp Report",
+   "link_to": "Student Payment FollowUp Report",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Course",
+   "link_to": "Course",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Installment Follow-Up",
+   "link_to": "Student Follow-Up",
+   "stats_filter": "[[\"Student Follow-Up\",\"type\",\"=\",\"Batch Enrollment Form\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Batch Session Schedule",
+   "link_to": "Batch Session Schedule",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Student Enquiry",
+   "link_to": "Student Enquiry",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Session Attendance",
+   "link_to": "Session Attendance",
+   "stats_filter": "[[\"Session Attendance\",\"attendee_type\",\"=\",\"Student\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Batch Enrollment Form",
+   "link_to": "Batch Enrollment Form",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Sales Order",
+   "link_to": "Sales Order",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Student Management"
+}
