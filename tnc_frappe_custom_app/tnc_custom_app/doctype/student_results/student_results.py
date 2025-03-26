@@ -236,6 +236,7 @@ from frappe.utils import get_url
 def send_results_for_single_exam(exam_ids,bulk_docname):
 
     resp = frappe.db.set_value("Bulk whatsapp Sharing Results", bulk_docname, "status", "Submitted")
+    frappe.db.commit()
     frappe.log_error(f"Response from frappe.db.set_value: {resp}", "Status Update")
     # Enqueue the background job
     frappe.enqueue(
