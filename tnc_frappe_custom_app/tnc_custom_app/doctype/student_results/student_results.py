@@ -503,7 +503,7 @@ TNC Administration"""
                 response = requests.post(api_url, json=payload, headers=headers)
                 # response.raise_for_status()
                 # print("RESSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",response.json())
-                # frappe.log_error(title="WhatsApp Response",message= f"Srikanth: {response.json()}")
+                frappe.log_error(title="WhatsApp Response",message= f"test: {response.json()}")
                 count += 1
             except requests.exceptions.RequestException as e:
                 frappe.log_error(f"WhatsApp Failed for {student.get('student_name')}: {str(e)}", "WhatsApp API Error")
