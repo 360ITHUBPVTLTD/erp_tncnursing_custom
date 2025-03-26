@@ -182,80 +182,95 @@ class StudentResults(Document):
 
 
 ############################## Creating a Entry in the Bulk whatsapp doctype ############################################
-# @frappe.whitelist()
-# def create_bulk_whatsapp_entry_for_single_exam(exam_ids):
-#     print("Raw test_series:", exam_ids)  # e.g., '["NORCET 7.0"]'
-#     test_series_list = json.loads(exam_ids)  # now a Python list
-#     print("Parsed test_series_list:", test_series_list)
+# File: tnc_frappe_custom_app/tnc_custom_app/doctype/student_results/student_results.py
 
-#     filters = {"exam_date": ["between", [from_date, to_date]]}
-    
-#     if test_series_list:
-#         filters["exam_name"] = ["in", test_series_list]
+import frappe
+from frappe.model.document import Document
+from frappe import _
 
-#     results = frappe.get_all(
-#         "Student Results",
-#         filters=filters,
-#         fields=["name", "student_id", "student_name", "student_mobile", "exam_name"],
-#         distinct=True
-#     )
-#     print("Results found:", results)
+@frappe.whitelist()
+def create_bulk_whatsapp_entry_for_single_exam(exam_ids):
+    if not exam_ids:
+        frappe.throw(_("No Exam ID provided."))
 
-#     if not results:
-#         frappe.log_error("No students found for WhatsApp sharing", "WhatsApp Results Skipped")
-#         return {"success": False, "message": "No students found."}
+    if isinstance(exam_ids, str):
+        import json
+        exam_ids = json.loads(exam_ids)
 
-#     doc = frappe.new_doc("Bulk whatsapp Sharing Results")
-#     doc.status = "Draft"
+    created_docname = None
+    total_students = 0
 
+    for exam_id in exam_ids:
+        exam = frappe.get_doc("Student Exam", exam_id)
 
-#     doc.insert()
-#     frappe.db.commit()
+        # Get students from Student Results linked to this exam
+        student_results = frappe.get_all(
+            "Student Results",
+            filters={"exam_id": exam_id},
+            fields=["student_id"]
+        )
 
-#     student_count = len(results)
+        total_students += len(student_results)
 
-#     return {
-#         "success": True,
-#         "docname": doc.name,
-#         "student_count": student_count
-#     }
+        # Create a new Bulk WhatsApp Sharing Results doc
+        bulk_doc = frappe.new_doc("Bulk whatsapp Sharing Results")
+        bulk_doc.student_exam_id = exam_id
+        bulk_doc.status = "Draft"
+        # bulk_doc.student_count = len(student_results)
+        bulk_doc.save(ignore_permissions=True)
+        created_docname = bulk_doc.name
 
-
-
+    return {
+        "success": True,
+        "docname": created_docname,
+        "student_count": total_students
+    }
 
 
 
 ######################## Below code is to send the WA for selected Exams only ############################
+
+from frappe.utils import get_url
+
+@frappe.whitelist()
+def send_results_for_single_exam(exam_ids,bulk_docname):
+
+    resp = frappe.db.set_value("Bulk whatsapp Sharing Results", bulk_docname, "status", "Submitted")
+    frappe.log_error(f"Response from frappe.db.set_value: {resp}", "Status Update")
+    # Enqueue the background job
+    frappe.enqueue(
+        method="tnc_frappe_custom_app.tnc_custom_app.doctype.student_results.student_results.send_whatsapp_for_single_exam",  # ✅ Replace with your actual module path
+        queue='default',
+        timeout=600,
+        exam_ids=exam_ids,
+        bulk_docname=bulk_docname
+    )
+    # send_results_background(from_date, to_date, test_series,bulk_docname)
+    return {"status": "Queued", "message": "Result sending is scheduled in background."}
+
+########################## RQ Job for single exam sending Result #############################
+
 import frappe
 import json
 import requests
 from frappe import _
 
 @frappe.whitelist()
-def send_results_for_selected_exams(exam_ids):
-    # Handle stringified list (from JS call)
-    if isinstance(exam_ids, str):
-        exam_ids = json.loads(exam_ids)
-
-    if not exam_ids or not isinstance(exam_ids, list):
-        frappe.throw(_("No exam IDs provided or invalid format"))
+def send_whatsapp_for_single_exam(exam_ids,bulk_docname):
 
     try:
         # Get the exam title from the first exam ID
-        exam_title_name = frappe.get_doc('Student Exam', exam_ids[0]).exam_title_name
+        exam_title_name = frappe.db.get_value('Student Exam', exam_ids, 'exam_title_name')
+
 
         # Fetch unique students who appeared in that exam title
+        # Fetch students from Student Results using the exam ID directly
         results = frappe.get_all(
             "Student Results",
-            filters={"exam_title_name": exam_title_name},
+            filters={"exam_id": exam_ids},
             fields=["student_id", "student_name", "student_mobile", "name"],
             distinct=True
         )
-        print("Results:", results)
-    # except Exception as e:
-    #     frappe.log_error(message=str(e), title="Error in Sending WA")
-    #     return {"status": "Error in sending WhatsApp message"}
-
     # Check if any results were found
         if not results:
             return {"status": "No students found for this exam title"}
@@ -288,8 +303,8 @@ Best regards,
 TNC Administration"""
 
             # You can dynamically build the PDF link later
-            media_url = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
-            # media_url = f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Student%20Results&name={docname}&format=Student%20Results%20Sharing&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en"
+            # media_url = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+            media_url = f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Student%20Results&name={docname}&format=Student%20Results%20Sharing&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en"
 
             payload = {
                 "userid": wa_config.user_id,
@@ -307,12 +322,20 @@ TNC Administration"""
             try:
                 response = requests.post(api_url, json=payload, headers=headers)
                 response.raise_for_status()
-                print("WhatsaAPAP REsponse",response.json())
+                # print("WhatsaAPAP REsponse",response.json())
                 count += 1
-                print(f"[SUCCESS] Sent WhatsApp to {student_name} ({mobile})")
+                # print(f"[SUCCESS] Sent WhatsApp to {student_name} ({mobile})")
 
             except requests.exceptions.RequestException as e:
                 frappe.log_error(f"WhatsApp Message Failed for {student_name}: {str(e)}", "WhatsApp API Error")
+
+
+        bulk_wa = frappe.get_doc('Bulk whatsapp Sharing Results', bulk_docname)
+        bulk_wa.sent = 1
+        bulk_wa.count = count
+        bulk_wa.save(ignore_permissions=True)
+        frappe.db.commit()
+        frappe.log_error("WhatsApp Results Summary", f"Successfully sent results to {count} students.")
 
         return {"status": "Success", "message": f"Results sent to {count} students"}
 
@@ -461,8 +484,8 @@ Please Check your Results Summary
 Best regards,
 TNC Administration"""
 
-            # media_url = f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Student%20Results&name={docname}&format=Student%20Results%20Sharing&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en"
-            media_url = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+            media_url = f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Student%20Results&name={docname}&Dynamic%20Student%20Print%20Format&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en"
+            # media_url = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
             payload = {
                 "userid": wa_config.user_id,
                 "msg": wa_message,

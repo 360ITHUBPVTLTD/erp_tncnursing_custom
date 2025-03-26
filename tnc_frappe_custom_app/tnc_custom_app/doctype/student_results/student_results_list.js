@@ -21,25 +21,62 @@ frappe.listview_settings['Student Results'] = {
                         frappe.msgprint(__('Please select an exam.'));
                         return;
                     }
-
+        
                     frappe.call({
                         method: 'tnc_frappe_custom_app.tnc_custom_app.doctype.student_results.student_results.create_bulk_whatsapp_entry_for_single_exam',
                         args: {
                             exam_ids: [values.exam_id]
                         },
                         callback: function (r) {
-                            if (!r.exc) {
-                                frappe.msgprint(__('Results sent successfully.'));
-                                dialog.hide();
+                            if (!r.exc && r.message && r.message.success) {
+                                const bulk_docname = r.message.docname;
+                                const student_count = r.message.student_count;
+        
+                                frappe.confirm(
+                                    `Are you sure you want to share the results for ${student_count} students?`,
+                                    function () {
+                                        // YES: Proceed to send WhatsApp results
+                                        frappe.call({
+                                            method: 'tnc_frappe_custom_app.tnc_custom_app.doctype.student_results.student_results.send_results_for_single_exam',
+                                            args: {
+                                                exam_ids: values.exam_id,
+                                                bulk_docname: bulk_docname
+                                            },
+                                            callback: function (res) {
+                                                if (!res.exc) {
+                                                    frappe.msgprint(__('WhatsApp results sent successfully.'));
+                                                    dialog.hide();
+                                                } else {
+                                                    frappe.msgprint(__('Failed to send WhatsApp messages.'));
+                                                }
+                                            }
+                                        });
+                                    },
+                                    function () {
+                                        // NO: Cancel the bulk record
+                                        frappe.call({
+                                            method: 'tnc_frappe_custom_app.tnc_custom_app.doctype.student_results.student_results.cancel_bulk_result',
+                                            args: {
+                                                bulk_docname: bulk_docname
+                                            },
+                                            callback: function () {
+                                                frappe.msgprint(__('WhatsApp result sharing was cancelled.'));
+                                                dialog.hide();
+                                            }
+                                        });
+                                    }
+                                );
                             } else {
-                                frappe.msgprint(__('Failed to send results. Check logs for details.'));
+                                frappe.msgprint(__('Failed to create bulk entry. Please check the logs.'));
                             }
                         }
                     });
                 }
             });
+        
             dialog.show();
         }, __("Actions"));
+        
 
         // ✅ NEW BUTTON: Select Date Range
         listview.page.add_inner_button(__('Select Date Range'), function () {
