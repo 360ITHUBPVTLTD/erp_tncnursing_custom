@@ -516,7 +516,7 @@ TNC Administration"""
     
         bulk_wa = frappe.get_doc('Bulk whatsapp Sharing Results', bulk_docname)
         # print("WAWAWAWAWAW",bulk_wa)
-        # bulk_wa.sent = 1
+        bulk_wa.sent = 1
         bulk_wa.count = count
         # bulk_wa.flags.ignore_permissions = True
         bulk_wa.save(ignore_permissions=True)
