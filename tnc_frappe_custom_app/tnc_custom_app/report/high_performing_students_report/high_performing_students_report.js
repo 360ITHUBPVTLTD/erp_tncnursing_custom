@@ -21,12 +21,12 @@ frappe.query_reports["High performing Students Report"] = {
 			fieldtype: "Link",
 			options: "Online Student"
 		},
-		{
-			fieldname: "exam_id",
-			label: "Exam Title",
-			fieldtype: "Link",
-			options: "Student Exam"
-		},
+		// {
+		// 	fieldname: "exam_id",
+		// 	label: "Exam Title",
+		// 	fieldtype: "Link",
+		// 	options: "Student Exam"
+		// },
 		{
 			fieldname: "count",
 			label: "Top Students",
