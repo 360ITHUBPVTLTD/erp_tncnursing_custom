@@ -51,8 +51,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Draft\nCancelled\nSubmitted",
-   "read_only": 1
+   "options": "Draft\nCancelled\nSubmitted"
   },
   {
    "fieldname": "student_exam_id",
@@ -70,7 +69,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-25 18:27:24.824841",
+ "modified": "2025-03-26 16:32:13.636055",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Bulk whatsapp Sharing Results",
