@@ -158,6 +158,7 @@ def process_students_in_background(name):
             # limit=limit,
                      )
                      
+        master_data_highest_rank = frappe.get_value('Students Master Data', filters={'exam_id': name}, fieldname='rank', order_by='rank desc')
     
         if not students_master_data:
             frappe.log_error(frappe.get_traceback(), f"No Student Master Data To process for Exam {name}")
@@ -171,6 +172,8 @@ def process_students_in_background(name):
             # completed_records += 1
         students_exam_doc.reload()
         students_exam_doc.status = 'Data Synced'
+        students_exam_doc.start_rank = 1
+        students_exam_doc.last_rank = master_data_highest_rank
         students_exam_doc.save()
         
         frappe.db.commit()
