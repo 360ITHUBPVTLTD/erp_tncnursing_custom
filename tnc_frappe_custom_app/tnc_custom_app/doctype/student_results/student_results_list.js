@@ -30,7 +30,7 @@ frappe.listview_settings['Student Results'] = {
                         callback: function (r) {
                             if (!r.exc && r.message && r.message.success) {
                                 const bulk_docname = r.message.docname;
-                                const student_count = r.message.student_count;
+                                const student_count = r.message.unique_student_count;
         
                                 frappe.confirm(
                                     `Are you sure you want to share the results for ${student_count} students?`,
@@ -90,7 +90,7 @@ frappe.listview_settings['Student Results'] = {
                         label: 'Date Range',
                         fieldname: 'date_range',
                         fieldtype: 'Date Range',
-                        reqd: true
+                        // reqd: true
                     },
                     {
                         fieldtype: 'HTML',
@@ -101,10 +101,10 @@ frappe.listview_settings['Student Results'] = {
                 primary_action_label: __('Send'),
                 primary_action(values) {
                     const [from_date, to_date] = values.date_range || [];
-                    if (!from_date || !to_date) {
-                        frappe.msgprint(__('Please select a valid date range.'));
-                        return;
-                    }
+                    // if (!from_date || !to_date) {
+                    //     frappe.msgprint(__('Please select a valid date range.'));
+                    //     return;
+                    // }
         
                     const selected = Array.from(
                         dialog.fields_dict.test_series_checkboxes.$wrapper[0]
@@ -128,7 +128,7 @@ frappe.listview_settings['Student Results'] = {
                             console.log(r); 
                                 if (!r.exc && r.message && r.message.success) {
                                     const bulk_docname = r.message.docname;
-                                    const student_count = r.message.student_count;
+                                    const student_count = r.message.unique_student_count;
                                     cancel_on_hide = true; // Allow cancel logic if dialog is closed
                                 
                                 // Show confirmation
@@ -140,10 +140,10 @@ frappe.listview_settings['Student Results'] = {
                                         frappe.call({
                                             method: 'tnc_frappe_custom_app.tnc_custom_app.doctype.student_results.student_results.send_results_by_date_range',
                                             args: {
+                                                test_series: selected,
+                                                bulk_docname: bulk_docname,
                                                 from_date,
                                                 to_date,
-                                                test_series: selected,
-                                                bulk_docname: bulk_docname
                                             },
                                             callback: function (res) {
                                                 if (!res.exc) {
