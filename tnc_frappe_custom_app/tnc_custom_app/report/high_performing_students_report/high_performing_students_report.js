@@ -28,6 +28,12 @@ frappe.query_reports["High performing Students Report"] = {
 		// 	options: "Student Exam"
 		// },
 		{
+			fieldname: "min_total_exams",
+			label: "Total Exams Attempted",
+			fieldtype: "Int",
+			default: 0
+		},		
+		{
 			fieldname: "count",
 			label: "Top Students",
 			fieldtype: "Int",

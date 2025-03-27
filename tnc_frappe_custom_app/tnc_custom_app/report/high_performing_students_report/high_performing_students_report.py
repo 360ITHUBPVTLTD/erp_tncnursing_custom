@@ -106,7 +106,7 @@ def execute(filters=None):
 # ----------------------------------------------
 def get_columns():
     return [
-        {"label": "Student ID", "fieldname": "student_id", "fieldtype": "Data", "width": 100},
+        {"label": "Student ID", "fieldname": "student_id", "fieldtype": "Link", "options": "Online Student", "width": 100},
         {"label": "Student Name", "fieldname": "student_name", "fieldtype": "Data", "width": 200},
         {"label": "Mobile", "fieldname": "student_mobile", "fieldtype": "Data", "width": 120},
         {"label": "Total Exams", "fieldname": "total_exams", "fieldtype": "Int", "width": 100},
@@ -116,6 +116,7 @@ def get_columns():
         {"label": "Green %", "fieldname": "green_percent", "fieldtype": "Float", "width": 100},
         {"label": "Yellow %", "fieldname": "yellow_percent", "fieldtype": "Float", "width": 100},
         {"label": "Red %", "fieldname": "red_percent", "fieldtype": "Float", "width": 100},
+        {"label": "CPS", "fieldname": "cps", "fieldtype": "Float", "width": 100}
     ]
 
 # ----------------------------------------------
@@ -134,11 +135,18 @@ def get_data(filters):
             SUM(CASE WHEN sr.rank_color = 'Y' THEN 1 ELSE 0 END) AS yellow_count,
             SUM(CASE WHEN sr.rank_color = 'R' THEN 1 ELSE 0 END) AS red_count
         FROM `tabStudent Results` sr
-        {where_clause}
+        WHERE sr.rank_color IS NOT NULL AND sr.rank_color != ''
+        {f'AND {where_clause[6:]}' if where_clause else ''}
         GROUP BY sr.student_id
     """
 
+
     results = frappe.db.sql(query, query_filters, as_dict=True)
+    admin_settings = frappe.get_cached_doc("Admin Settings", "Admin Settings")
+
+    green_weight = admin_settings.green or 1.0
+    yellow_weight = admin_settings.yellow or 0.3
+    red_weight = admin_settings.red or 1.5
 
     for row in results:
         total = row.total_exams or 1
@@ -146,39 +154,87 @@ def get_data(filters):
         row.yellow_percent = round((row.yellow_count / total) * 100, 2)
         row.red_percent = round((row.red_count / total) * 100, 2)
 
-    if filters.get("count"):
-        results = results[:int(filters["count"])]
+        # Compute CPS score using dynamic weights
+        row.cps = round(
+            (row.green_percent * green_weight) +
+            (row.yellow_percent * yellow_weight) -
+            (row.red_percent * red_weight),
+            2
+        )
 
-    return sorted(results, key=lambda x: x.green_percent, reverse=True)
+
+    if filters.get("min_total_exams"):
+        min_total = int(filters["min_total_exams"])
+        results = [r for r in results if r.total_exams >= min_total]
+
+
+    results = sorted(
+    results,
+    key=lambda x: (x.green_percent, x.total_exams),
+    reverse=True
+)
+
+
+    if filters.get("count"):
+        # Sort before slicing
+        results = sorted(
+            results,
+            key=lambda x: (x.green_percent, x.total_exams),
+            reverse=True
+        )
+        results = results[:int(filters["count"])]
+    else:
+        results = sorted(
+            results,
+            key=lambda x: (x.green_percent, x.total_exams),
+            reverse=True
+        )
+
+
+    return results
 
 # ----------------------------------------------
 # Summary Number Cards (HTML)
 # ----------------------------------------------
 def get_html_summary(filters):
     where_clause, query_filters = get_common_conditions(filters)
-    print("DEBUG: where_clause:", where_clause, query_filters)
-    
-    # Debug: print the count of exam records in this date range
-    debug_query = f"""
-        SELECT COUNT(*) AS exam_count
-        FROM `tabStudent Results` sr
-        {where_clause}
-    """
-    debug_result = frappe.db.sql(debug_query, query_filters, as_dict=True)[0]
-    print("DEBUG: Total exam records in date range:", debug_result["exam_count"])
-    
-    summary_query = f"""
-        SELECT 
-            COUNT(DISTINCT sr.exam_title_name) AS total_exams,
-            COUNT(DISTINCT sr.student_id) AS unique_students
-        FROM `tabStudent Results` sr
-        {where_clause}
-    """
-    print("DEBUG: Summary Query", summary_query)
-    result = frappe.db.sql(summary_query, query_filters, as_dict=True)[0]
 
-    total_exams = format_indian_number(result["total_exams"])
-    unique_students = format_indian_number(result["unique_students"])
+    # Get Total Exams from tabStudent Exam with status = 'Data Synced'
+    exam_query = """
+        SELECT COUNT(DISTINCT se.exam_title_name) AS total_exams
+        FROM `tabStudent Exam` se
+        WHERE se.status = 'Data Synced'
+    """
+    exam_filters = {}
+
+    # Apply exam_date range if provided
+    if filters.get("exam_date"):
+        from_date, to_date = filters.get("exam_date")
+        if from_date:
+            exam_query += " AND se.exam_date >= %(from_date)s"
+            exam_filters["from_date"] = from_date
+        if to_date:
+            exam_query += " AND se.exam_date <= %(to_date)s"
+            exam_filters["to_date"] = to_date
+
+    # Apply exam_name if present
+    if filters.get("exam_name"):
+        exam_query += " AND se.exam_name = %(exam_name)s"
+        exam_filters["exam_name"] = filters["exam_name"]
+
+    exam_result = frappe.db.sql(exam_query, exam_filters, as_dict=True)[0]
+
+    # Get Unique Students from tabStudent Results (as before)
+    student_query = f"""
+        SELECT COUNT(DISTINCT sr.student_id) AS unique_students
+        FROM `tabStudent Results` sr
+        {where_clause}
+    """
+    student_result = frappe.db.sql(student_query, query_filters, as_dict=True)[0]
+
+    # Format values
+    total_exams = format_indian_number(exam_result["total_exams"])
+    unique_students = format_indian_number(student_result["unique_students"])
 
     html = f"""
     <div style="display: flex; gap: 20px; margin: 20px 0;">
