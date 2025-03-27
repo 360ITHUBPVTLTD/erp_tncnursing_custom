@@ -127,7 +127,7 @@ def student_process_data(name, limit=1):
         elif total_records > limit:
             # Enqueue the background job
             frappe.enqueue('tnc_frappe_custom_app.tnc_custom_app.doctype.student_exam.student_exam.process_students_in_background', 
-                        queue='short', 
+                        queue='long', 
                         timeout=3000, 
                         name=name, 
                         # limit=limit
