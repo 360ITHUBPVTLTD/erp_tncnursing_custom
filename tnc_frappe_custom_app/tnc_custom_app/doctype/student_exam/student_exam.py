@@ -169,10 +169,10 @@ def process_students_in_background(name):
             student_and_result_validation_and_creation(student_data)
             
             # completed_records += 1
-    
+        students_exam_doc.reload()
         students_exam_doc.status = 'Data Synced'
         students_exam_doc.save()
-    
+        
         frappe.db.commit()
         # print("Data Processing completed Successfullt!!")
     
