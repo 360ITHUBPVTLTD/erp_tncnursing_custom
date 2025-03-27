@@ -142,7 +142,7 @@ frappe.ui.form.on('Student Exam', {
             frm.add_custom_button(__('Go to Data Import'), function() {
                 const baseUrl = window.location.origin
         
-                window.open(`${baseUrl}/app/data-import`);  // Open the URL in a new tab
+                window.open(`${baseUrl}/app/data-import/new-data-import-jjtxgsibmt`);  // Open the URL in a new tab
                 
             });
         }

@@ -156,7 +156,17 @@ def get_data(filters):
 # ----------------------------------------------
 def get_html_summary(filters):
     where_clause, query_filters = get_common_conditions(filters)
-    print("sssssssssssssssssssssssssssssssssssssssssssssss", where_clause,query_filters)
+    print("DEBUG: where_clause:", where_clause, query_filters)
+    
+    # Debug: print the count of exam records in this date range
+    debug_query = f"""
+        SELECT COUNT(*) AS exam_count
+        FROM `tabStudent Results` sr
+        {where_clause}
+    """
+    debug_result = frappe.db.sql(debug_query, query_filters, as_dict=True)[0]
+    print("DEBUG: Total exam records in date range:", debug_result["exam_count"])
+    
     summary_query = f"""
         SELECT 
             COUNT(DISTINCT sr.exam_title_name) AS total_exams,
@@ -164,11 +174,11 @@ def get_html_summary(filters):
         FROM `tabStudent Results` sr
         {where_clause}
     """
-    print("Query", summary_query)
+    print("DEBUG: Summary Query", summary_query)
     result = frappe.db.sql(summary_query, query_filters, as_dict=True)[0]
 
-    total_exams = format_indian_number(result.total_exams)
-    unique_students = format_indian_number(result.unique_students)
+    total_exams = format_indian_number(result["total_exams"])
+    unique_students = format_indian_number(result["unique_students"])
 
     html = f"""
     <div style="display: flex; gap: 20px; margin: 20px 0;">
@@ -183,6 +193,7 @@ def get_html_summary(filters):
     </div>
     """
     return html
+
 
 # ----------------------------------------------
 # Common Filtering Logic
