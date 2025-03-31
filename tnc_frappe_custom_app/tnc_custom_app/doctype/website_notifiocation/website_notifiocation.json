@@ -1,0 +1,63 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-03-31 12:24:18.869938",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "notification_text",
+  "hyperlink",
+  "show_new",
+  "is_active",
+  "priority"
+ ],
+ "fields": [
+  {
+   "fieldname": "notification_text",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Notification Text"
+  },
+  {
+   "fieldname": "hyperlink",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hyperlink"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_new",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Show New"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is Active"
+  },
+  {
+   "fieldname": "priority",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Priority",
+   "options": "1\n2\n3\n4\n5\n6\n7\n8\n9"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-03-31 12:26:38.174913",
+ "modified_by": "Administrator",
+ "module": "TNC Custom App",
+ "name": "Website Notifiocation",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

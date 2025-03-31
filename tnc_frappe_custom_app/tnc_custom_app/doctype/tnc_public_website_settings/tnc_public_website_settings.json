@@ -1,0 +1,74 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-03-31 12:12:14.233010",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "banner_list",
+  "youtube_thumbails",
+  "testimonials",
+  "notifications",
+  "section_break_pzpv",
+  "about_us"
+ ],
+ "fields": [
+  {
+   "fieldname": "banner_list",
+   "fieldtype": "Table",
+   "label": "Banner List",
+   "options": "Website Banners"
+  },
+  {
+   "fieldname": "youtube_thumbails",
+   "fieldtype": "Table",
+   "label": "Youtube Thumbails",
+   "options": "Website Youtube Thumbails"
+  },
+  {
+   "fieldname": "testimonials",
+   "fieldtype": "Table",
+   "label": "Testimonials",
+   "options": "Website Testimonials"
+  },
+  {
+   "fieldname": "notifications",
+   "fieldtype": "Table",
+   "label": "Notifications",
+   "options": "Website Notifiocation"
+  },
+  {
+   "fieldname": "section_break_pzpv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "about_us",
+   "fieldtype": "Text Editor",
+   "label": "About Us"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-03-31 12:59:56.823040",
+ "modified_by": "Administrator",
+ "module": "TNC Custom App",
+ "name": "TNC Public Website Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

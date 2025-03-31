@@ -1,0 +1,47 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-03-31 12:17:37.510472",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "youtube_url",
+  "is_public"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Title"
+  },
+  {
+   "fieldname": "youtube_url",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Youtube URL"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_public",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is Public"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-03-31 12:20:36.542083",
+ "modified_by": "Administrator",
+ "module": "TNC Custom App",
+ "name": "Website Youtube Thumbails",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,389 @@
+
+{% extends "templates/custom_base/base.html" %}
+{% block content %}
+
+
+    <style>
+        .slider {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        max-width: 100%;
+        height: auto; /* Maintain height based on aspect ratio */
+        aspect-ratio: 1920 / 550;
+    }
+    
+    .slides {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+    }
+    
+    .slides img {
+        width: 1920px;
+        height: auto;
+        object-fit: cover;
+    }
+    
+    button.prev, button.next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        padding: 1rem;
+        cursor: pointer;
+        font-size: 1.5rem;
+        z-index: 1;
+    }
+    
+    button.prev {
+        left: 1rem;
+    }
+    
+    button.next {
+        right: 1rem;
+    }
+    
+    .pagination {
+        position: absolute;
+        bottom: 10px; /* Adjust based on your preference */
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: center;
+    }
+    
+    .dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        margin: 0 5px;
+        background-color: #bababa;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .dot.active {
+        background-color: #f80300;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        button.prev, button.next {
+            padding: 0.5rem;
+            font-size: 1rem;
+        }
+    
+        button.prev {
+            left: 0.5rem;
+        }
+    
+        button.next {
+            right: 0.5rem;
+        }
+    
+        .dot {
+            width: 10px;
+            height: 10px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        button.prev, button.next {
+            padding: 0.3rem;
+            font-size: 0.8rem;
+        }
+    
+        button.prev {
+            left: 0.3rem;
+        }
+    
+        button.next {
+            right: 0.3rem;
+        }
+    
+        .dot {
+            width: 8px;
+            height: 8px;
+        }
+    }
+        </style>
+
+
+    <!-- main-area -->
+    <main class="main-area fix">
+
+        <div class="slider">
+            <div class="slides">
+                <img src="assets/tnc_frappe_custom_app/tnc_website/img/Course-slider.jpg" alt="Image 1">
+                <img src="assets/tnc_frappe_custom_app/tnc_website/img/Course-slider-1.jpg" alt="Image 2">
+                <img src="assets/tnc_frappe_custom_app/tnc_website/img/TNC.jpg" alt="Image 3">
+            </div>
+            <div class="pagination">
+                <span class="dot" onclick="goToSlide(0)"></span>
+                <span class="dot" onclick="goToSlide(1)"></span>
+                <span class="dot" onclick="goToSlide(2)"></span>
+            </div>
+        </div>
+
+        <!-- all-courses -->
+        <section class="all-courses-area section-py-120">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="courses-top-wrap courses-top-wrap">
+                            <div class="row align-items-center">
+                                <div class="col-md-5">
+                                    <div class="courses-top-left">
+                                        <!-- <p>Showing 250 total results</p> -->
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="d-flex justify-content-center justify-content-md-end align-items-center flex-wrap">
+                                        <div class="courses-top-right m-0 ms-md-auto">
+                                            <span class="sort-by">Sort By:</span>
+                                            <div class="courses-top-right-select">
+                                                <select name="orderby" class="orderby">
+                                                    <option value="Most Popular">Most Popular</option>
+                                                    <option value="popularity">popularity</option>
+                                                    <option value="average rating">average rating</option>
+                                                    <option value="latest">latest</option>
+                                                    <option value="latest">latest</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-content" id="myTabContent" data-aos="fade-up" data-aos-delay="200">
+                            <div class="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab">
+                                <div class="row courses__list-wrap row-cols-1">
+                                    <div class="col" data-aos="fade-up" data-aos-delay="250">
+                                        <div class="courses__item courses__item-three shine__animate-item">
+                                            <div class="courses__item-thumb">
+                                                <a class='shine__animate-link' href='course-details.html'>
+                                                    <img src="assets/tnc_frappe_custom_app/tnc_website/img/courses/course_thumb01.jpg" alt="img">
+                                                </a>
+                                            </div>
+                                            <div class="courses__item-content">
+                                                <ul class="courses__item-meta list-wrap">
+                                                    <li class="courses__item-tag">
+                                                        <a href="course.html">NORCET</a>
+                                                        <!-- <div class="avg-rating">
+                                                            <i class="fas fa-star"></i> (4.8 Reviews)
+                                                        </div> -->
+                                                    </li>
+                                                    <li class="price"><del>₹18,000</del>₹15,000</li>
+                                                </ul>
+                                                <h5 class="title"><a href='course-details.html'>NORCET Preparation Course 2024</a></h5>
+                                                <p class="info">The NORCET Preparation Course 2024 equips nursing students with essential knowledge and skills to excel in the Nursing Officer Recruitment Common Eligibility Test (NORCET).</p>
+                                                <div class="courses__item-bottom">
+                                                    <div class="button">
+                                                        <a href='course-details.html'>
+                                                            <span class="text">Enroll Now</span>
+                                                            <i class="flaticon-arrow-right"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col" data-aos="fade-up" data-aos-delay="300">
+                                        <div class="courses__item courses__item-three shine__animate-item">
+                                            <div class="courses__item-thumb">
+                                                <a class='shine__animate-link' href='course-details.html'>
+                                                    <img src="assets/tnc_frappe_custom_app/tnc_website/img/courses/course_thumb02.jpg" alt="img">
+                                                </a>
+                                            </div>
+                                            <div class="courses__item-content">
+                                                <ul class="courses__item-meta list-wrap">
+                                                    <li class="courses__item-tag">
+                                                        <a href="course.html">RRB Staff Nursing</a>
+                                                    </li>
+                                                    <li class="price">₹15,000</li>
+                                                </ul>
+                                                <h5 class="title"><a href='course-details.html'>RRB Staff Nursing Exam 2024 Preparation</a></h5>
+                                                <!-- <p class="author">By <a href="#">Jenny Wilson</a></p> -->
+                                                <p class="info">The RRB Staff Nursing Exam 2024 Preparation course equips students with essential knowledge and skills to excel in the exam, focusing on nursing theory and practical applications.</p>
+                                                <div class="courses__item-bottom">
+                                                    <div class="button">
+                                                        <a href='course-details.html'>
+                                                            <span class="text">Enroll Now</span>
+                                                            <i class="flaticon-arrow-right"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col" data-aos="fade-up" data-aos-delay="350">
+                                        <div class="courses__item courses__item-three shine__animate-item">
+                                            <div class="courses__item-thumb">
+                                                <a class='shine__animate-link' href='course-details.html'>
+                                                    <img src="assets/tnc_frappe_custom_app/tnc_website/img/courses/course_thumb03.jpg" alt="img">
+                                                </a>
+                                            </div>
+                                            <div class="courses__item-content">
+                                                <ul class="courses__item-meta list-wrap">
+                                                    <li class="courses__item-tag">
+                                                        <a href="course.html">KGMU EXAM</a>
+                                                    </li>
+                                                    <li class="price">₹15,000</li>
+                                                </ul>
+                                                <h5 class="title"><a href='course-details.html'>KGMU Nursing Exam Preparation 2024</a></h5>
+                                                <p class="info">The KGMU Nursing Exam Preparation course equips students with essential knowledge and skills to excel in the KGMU nursing entrance exam, enhancing their chances of success.</p>
+                                                <div class="courses__item-bottom">
+                                                    <div class="button">
+                                                        <a href='course-details.html'>
+                                                            <span class="text">Enroll Now</span>
+                                                            <i class="flaticon-arrow-right"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col" data-aos="fade-up" data-aos-delay="400">
+                                        <div class="courses__item courses__item-three shine__animate-item">
+                                            <div class="courses__item-thumb">
+                                                <a class='shine__animate-link' href='course-details.html'>
+                                                    <img src="assets/tnc_frappe_custom_app/tnc_website/img/courses/course_thumb04.jpg" alt="img">
+                                                </a>
+                                            </div>
+                                            <div class="courses__item-content">
+                                                <ul class="courses__item-meta list-wrap">
+                                                    <li class="courses__item-tag">
+                                                        <a href="course.html">Nursing Exams</a>
+                                                    </li>
+                                                    <li class="price">₹20,000</li>
+                                                </ul>
+                                                <h5 class="title"><a href='course-details.html'>State Level Nursing Exam Preparation 2024</a></h5>
+                                                <p class="info">The State Level Nursing Exam Preparation course for 2024 equips students with essential knowledge and skills to excel in state-specific nursing exams, including comprehensive study materials, practice tests, and expert guidance.</p>
+                                                <div class="courses__item-bottom">
+                                                    <div class="button">
+                                                        <a href='course-details.html'>
+                                                            <span class="text">Enroll Now</span>
+                                                            <i class="flaticon-arrow-right"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col" data-aos="fade-up" data-aos-delay="450">
+                                        <div class="courses__item courses__item-three shine__animate-item">
+                                            <div class="courses__item-thumb">
+                                                <a class='shine__animate-link' href='course-details.html'>
+                                                    <img src="assets/tnc_frappe_custom_app/tnc_website/img/courses/course_thumb01.jpg" alt="img">
+                                                </a>
+                                            </div>
+                                            <div class="courses__item-content">
+                                                <ul class="courses__item-meta list-wrap">
+                                                    <li class="courses__item-tag">
+                                                        <a href="course.html">NORCET</a>
+                                                        <!-- <div class="avg-rating">
+                                                            <i class="fas fa-star"></i> (4.8 Reviews)
+                                                        </div> -->
+                                                    </li>
+                                                    <li class="price"><del>₹18,000</del>₹15,000</li>
+                                                </ul>
+                                                <h5 class="title"><a href='course-details.html'>NORCET Preparation Course 2024</a></h5>
+                                                <p class="info">The NORCET Preparation Course 2024 equips nursing students with essential knowledge and skills to excel in the Nursing Officer Recruitment Common Eligibility Test (NORCET).</p>
+                                                <div class="courses__item-bottom">
+                                                    <div class="button">
+                                                        <a href='course-details.html'>
+                                                            <span class="text">Enroll Now</span>
+                                                            <i class="flaticon-arrow-right"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col" data-aos="fade-up" data-aos-delay="500">
+                                        <div class="courses__item courses__item-three shine__animate-item">
+                                            <div class="courses__item-thumb">
+                                                <a class='shine__animate-link' href='course-details.html'>
+                                                    <img src="assets/tnc_frappe_custom_app/tnc_website/img/courses/course_thumb02.jpg" alt="img">
+                                                </a>
+                                            </div>
+                                            <div class="courses__item-content">
+                                                <ul class="courses__item-meta list-wrap">
+                                                    <li class="courses__item-tag">
+                                                        <a href="course.html">RRB Staff Nursing</a>
+                                                    </li>
+                                                    <li class="price">₹15,000</li>
+                                                </ul>
+                                                <h5 class="title"><a href='course-details.html'>RRB Staff Nursing Exam 2024 Preparation</a></h5>
+                                                <!-- <p class="author">By <a href="#">Jenny Wilson</a></p> -->
+                                                <p class="info">The RRB Staff Nursing Exam 2024 Preparation course equips students with essential knowledge and skills to excel in the exam, focusing on nursing theory and practical applications.</p>
+                                                <div class="courses__item-bottom">
+                                                    <div class="button">
+                                                        <a href='course-details.html'>
+                                                            <span class="text">Enroll Now</span>
+                                                            <i class="flaticon-arrow-right"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <nav class="pagination__wrap mt-30">
+                                    <ul class="list-wrap">
+                                        <li class="active"><a href="#">1</a></li>
+                                        <li><a href='courses.html'>2</a></li>
+                                        <li><a href='courses.html'>3</a></li>
+                                        <li><a href='courses.html'>4</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- all-courses-end -->
+
+    </main>
+    <!-- main-area-end -->
+
+        <script>
+            let currentIndex = 0;
+            
+            function moveSlide(direction) {
+                const slides = document.querySelector('.slides');
+                const totalSlides = slides.children.length;
+                currentIndex = (currentIndex + direction + totalSlides) % totalSlides;
+                updateSlider();
+            }
+            
+            function goToSlide(index) {
+                currentIndex = index;
+                updateSlider();
+            }
+            
+            function updateSlider() {
+                const slides = document.querySelector('.slides');
+                const totalSlides = slides.children.length;
+                const newTranslateValue = -currentIndex * 100;
+                slides.style.transform = `translateX(${newTranslateValue}%)`;
+            
+                // Update pagination
+                const dots = document.querySelectorAll('.dot');
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentIndex);
+                });
+            }
+            
+            // Auto slide every 5 seconds (optional)
+            setInterval(() => {
+                moveSlide(1);
+            }, 5000);
+            
+                </script>
+
+{% endblock content %}

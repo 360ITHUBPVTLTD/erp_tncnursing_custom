@@ -1,0 +1,84 @@
+{% extends "templates/custom_base/base.html" %}
+{% block content %}
+
+
+<section class="pyq-accordion-section">
+    <div class="pyq-container">
+        <h2 class="pyq-title">Previous Year Questions</h2>
+        <div class="pyq-accordion">
+            {% set unique_exams = [] %}
+            {% set exam_counter = namespace(value=1) %}
+            {% for pyq in public_website_settings.pyqs %}
+                {% if pyq.exam_type not in unique_exams %}
+                    {% set _ = unique_exams.append(pyq.exam_type) %}
+                    <!-- Accordion Item {{ exam_counter.value }} -->
+                    <div class="pyq-accordion-item">
+                        <button class="pyq-accordion-header" data-target="table{{ exam_counter.value }}">
+                            <span class="pyq-question">{{ pyq.exam_type }}</span>
+                            <span class="pyq-icon">+</span>
+                        </button>
+                        <div class="pyq-accordion-body" id="table{{ exam_counter.value }}">
+                            <table class="pyq-table">
+                                <thead>
+                                    <tr>
+                                        <th>Subject Name</th>
+                                        <th>Download</th>
+                                        <th>File Type</th>
+                                        <th>File Size</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for subject_pyq in public_website_settings.pyqs if subject_pyq.exam_type == pyq.exam_type %}
+                                    <tr>
+                                        <td>{{ subject_pyq.subject }}</td>
+                                        <td><a href="{{ subject_pyq.file }}" class="pyq-download-link">Download</a></td>
+                                        <td>PDF</td>
+                                        <td>2MB</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% set exam_counter.value = exam_counter.value + 1 %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const headers = document.querySelectorAll(".pyq-accordion-header");
+
+            headers.forEach((header) => {
+                header.addEventListener("click", () => {
+                    const body = document.getElementById(header.getAttribute("data-target"));
+                    const icon = header.querySelector(".pyq-icon");
+
+                    if (body.classList.contains("open")) {
+                        body.classList.remove("open");
+                        icon.textContent = "+";
+                    } else {
+                        // Close all other open accordions
+                        document.querySelectorAll(".pyq-accordion-body").forEach((item) => {
+                            item.classList.remove("open");
+                        });
+                        document.querySelectorAll(".pyq-icon").forEach((icon) => {
+                            icon.textContent = "+";
+                        });
+
+                        // Open the selected accordion
+                        body.classList.add("open");
+                        icon.textContent = "-";
+                    }
+                });
+            });
+        });
+
+    </script>
+
+
+{% endblock content %}

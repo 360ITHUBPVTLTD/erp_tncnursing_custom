@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-03-31 13:05:38.544080",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "exam_type",
+  "subject",
+  "file",
+  "file_size",
+  "file_type"
+ ],
+ "fields": [
+  {
+   "fieldname": "exam_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Exam Type"
+  },
+  {
+   "fieldname": "subject",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Subject"
+  },
+  {
+   "fieldname": "file",
+   "fieldtype": "Attach",
+   "in_list_view": 1,
+   "label": "File"
+  },
+  {
+   "fieldname": "file_size",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "File Size"
+  },
+  {
+   "fieldname": "file_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "File Type"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-03-31 13:07:06.042797",
+ "modified_by": "Administrator",
+ "module": "TNC Custom App",
+ "name": "Website PYQs",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

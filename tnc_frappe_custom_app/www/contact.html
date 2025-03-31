@@ -1,0 +1,228 @@
+
+{% extends 'templates/custom_base/base.html' %}
+{% block content %}
+
+    <!-- main-area -->
+    <main class="main-area fix">
+        
+        <!-- contact-area -->
+        <section class="contact-area section-py-120" data-aos="fade-up" data-aos-delay="200">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="contact-info-wrap">
+                            <ul class="list-wrap">
+                                <li>
+                                    <div class="icon">
+                                        <img src="/assets/tnc_frappe_custom_app/tnc_website/img/icons/map.svg" alt="Location" class="injectable">
+                                    </div>
+                                    <div class="content">
+                                        <h4 class="title">Address</h4>
+                                        <p>Near Bharat petrol pump, Golumber, Anisabad, Patna, Bihar 800002</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="icon">
+                                        <img src="/assets/tnc_frappe_custom_app/tnc_website/img/icons/contact_phone.svg" alt="Phone" class="injectable">
+                                    </div>
+                                    <div class="content">
+                                        <h4 class="title">Phone</h4>
+                                        <a href="tel:+917484999051">(+91) 74849 99051</a>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="icon">
+                                        <img src="/assets/tnc_frappe_custom_app/tnc_website/img/icons/email.svg" alt="Email" class="injectable">
+                                    </div>
+                                    <div class="content">
+                                        <h4 class="title">E-mail Address</h4>
+                                        <a href="mailto:tncnursing@gmail.com">tncnursing@gmail.com</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="contact-form-wrap">
+                            <h4 class="title">Send Us a Message</h4>
+                            <p>Your email address will not be published. Required fields are marked.</p>
+                            <!-- <form class="contact-form" id="contact-form" action="" method="post">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <input name="name" type="text" placeholder="Name" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <input name="email" type="email" placeholder="E-mail" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <input name="mobile" type="tel" placeholder="Mobile" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-grp">
+                                    <textarea name="message" placeholder="Message" required></textarea>
+                                </div>
+                                <button type="submit"  class="submit-btn">Submit Now <img src="/assets/tnc_frappe_custom_app/tnc_website/img/icons/right_arrow.svg" alt="Submit" class="injectable"></button>
+                            </form> -->
+                            <form class="contact-form" id="popdemoForm">
+                                <h2>Book a Demo </h2>
+                                <div class="input-group">
+                                    <input type="text" name="name" placeholder="Enter Your Name" required>
+                                </div>
+                                <div class="input-group">
+                                    <input type="email" name="email" placeholder="Email Address" required>
+                                    <input type="text" name="phone" placeholder="phone No.">
+                                </div>
+                                <textarea rows="5" name="message" placeholder="Write your message"
+                                    required></textarea>
+                                    <div class="form-group">
+                                        <button type="submit" name="send" id="demosubmitbutton" class="submit-btn">
+                                            SUBMIT</button>
+                                <!-- <button type="submit" class="submit-btn">SUBMIT</button> -->
+                                    </div>
+                                <div class="input-group">
+                                    <!-- <input type="submit" class="btn btn-primary" /> -->
+                                    <div id="successMessage1" style="display: none" class="badge bg-success">
+                                        Message sent successfully!
+                                    </div>
+                                    <div id="errorMessage1" style="display: none" class="badge bg-danger">
+                                        There is something wrong, please try again later
+                                    </div>
+                                </div>
+                            </form>
+                            <p class="ajax-response mb-0" id="response-message"></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- contact-map -->
+                <div class="contact-map" data-aos="fade-up" data-aos-delay="300">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14394.677083458915!2d85.097273!3d25.5826678!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f2a94bb6938537%3A0x30ffa69f899712b0!2sTNC%20NURSING%20CLASSES!5e0!3m2!1sen!2sin!4v1727941905511!5m2!1sen!2sin" style="border:0;" allowfullscreen loading="lazy"></iframe>
+                </div>
+                <!-- contact-map-end -->
+            </div>
+        </section>
+        <!-- contact-area-end -->
+    </main>
+    <script>
+        window.frappe = {};
+        frappe.ready_events = [];
+        frappe.ready = function(fn) {
+            frappe.ready_events.push(fn);
+        }
+        window.dev_server = {{ dev_server }};
+        window.socketio_port = {{ (frappe.socketio_port or 9000) }};
+        window.show_language_picker = {{ show_language_picker or 'false' }};
+    </script>
+    
+    {% block base_scripts %}
+    <!-- js should be loaded in body! -->
+    <script>
+        frappe.boot = {{ boot }}
+        // for backward compatibility of some libs
+        frappe.sys_defaults = frappe.boot.sysdefaults;
+    </script>
+    {{ include_script('frappe-web.bundle.js') }}
+    {% endblock %}
+     
+    {%- for link in web_include_js %}
+    {{ include_script(link) }}
+    {%- endfor -%}
+     
+    {%- block script %}
+        {% if colocated_js -%}
+            <script>{{ colocated_js }}</script>
+        {%- endif %}
+    {%- endblock %}
+    <!-- csrf_token -->
+    {%- block body_include %}{{ body_include or "" }}{% endblock -%}
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script>
+
+
+$(document).ready(function() {
+        $("#popdemoForm").submit(function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+            var submitButton = $("#demosubmitbutton"); // Adjust this to match your button ID or class
+            submitButton.prop("disabled", true);
+            submitButton.html('<i class="fa fa-spinner fa-spin"></i> Submitting...');
+            // Serialize the form data
+            var formData = $(this).serialize();
+            var url = window.location.href;
+            // Send the data to the server-side method using Frappe's AJAX API (frappe.call)
+            frappe.call({
+                method: "tnc_frappe_custom_app.tnc_custom_app.doctype.public_website_settings.public_website_settings.process_form_data",
+                args: {
+                    form_data: formData
+                },
+                
+                callback: function(response) {
+                    submitButton.prop("disabled", false);
+                    submitButton.html('Submit'); 
+                    if (!response.exc) {
+                        
+
+                        $("#popdemoForm")[0].reset();
+                        Swal.fire("Success!", "Form submitted successfully", "success")
+                        .then(function() {
+                            // Reload the page after the SweetAlert is closed
+                            location.reload();
+                        });
+
+                    } else {
+                        Swal.fire("Error", "Error submitting form data: " + response.exc, "error");
+                    }
+                }
+            });
+        });
+    });
+
+
+        // $(document).ready(function() {
+        //     $("#contact-form").submit(function(event) {
+        //         event.preventDefault();
+        //         // Disable the submit button and show loading text
+        //         var submitButton = $("#contact-form button[type=submit]");
+        //         submitButton.prop("disabled", true);
+        //         submitButton.html('<i class="fa fa-spinner fa-spin"></i> Submitting...');
+        //         // Serialize the form data
+        //         var formData = $(this).serialize();
+        //         // Send the data to the server-side method using Frappe's AJAX API (frappe.call)
+        //         frappe.call({
+        //             method: "tnc_frappe_custom_app.tnc_custom_app.doctype.public_website_settings.public_website_settings.process_form_data",
+        //             args: {
+        //                 form_data: formData,
+        //             },
+        //             callback: function(response) {
+        //                 // Re-enable the submit button and reset its text after the request is complete
+        //                 submitButton.prop("disabled", false);
+        //                 submitButton.html('Submit');
+        //                 if (!response.exc) {
+        //                     // Reset the form
+        //                     $("#contact-form")[0].reset();
+        //                     // Use SweetAlert for a user-friendly notification
+        //                     Swal.fire("Success!", "Form submitted successfully", "success");
+        //                 } else {
+        //                     // Display error using SweetAlert
+        //                     Swal.fire("Error", "Error submitting form data: " + response.exc, "error");
+        //                 }
+        //             },
+        //             error: function(error) {
+        //                 // Handle any errors that might occur during the AJAX call
+        //                 submitButton.prop("disabled", false);
+        //                 submitButton.html('Submit');
+        //                 Swal.fire("Error", "Something went wrong. Please try again.", "error");
+        //             }
+        //         });
+        //     });
+        // });
+    </script>
+    
+{% endblock %}
