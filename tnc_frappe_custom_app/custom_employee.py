@@ -88,7 +88,7 @@ def allocate_weekly_leaves(custom_date=None):
                         # Frappe HRMS will handle carry forward automatically
                         # "status": "Approved"  # Uncomment if your workflow requires it
                     })
-                    print(week)
+                    # print(week)
 
                     allocation.insert(ignore_permissions=True)
                     # Optionally submit the allocation if required
