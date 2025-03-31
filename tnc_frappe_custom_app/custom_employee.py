@@ -1,4 +1,4 @@
-import frappe
+import frappe,traceback
 from frappe.utils import get_first_day, get_last_day, getdate
 from datetime import timedelta, date, datetime
 import logging
@@ -40,68 +40,70 @@ def allocate_weekly_leaves(custom_date=None):
             sunady_month_start_leaves = 0
             
             for week in weeks:
-                if week[0] == week[1]:
-                    sunady_month_start_leaves = 1
-                    continue
-                # Prevent duplicate allocations
-                existing_allocation = frappe.get_all("Leave Allocation",
-                                                     filters={
-                                                         "employee": employee.name,
-                                                         "from_date": week[0],
-                                                         "to_date": week[1]
-                                                     },
-                                                     fields=["name"])
-                if existing_allocation:
-                    logger.info(f"Leave Allocation already exists for {employee.name} from {week[0]} to {week[1]}")
-                    continue  # Skip to prevent duplicate allocations
+                try:
+                    if week[0] == week[1]:
+                        sunady_month_start_leaves = 1
+                        continue
+                    # Prevent duplicate allocations
+                    existing_allocation = frappe.get_all("Leave Allocation",
+                                                        filters={
+                                                            "employee": employee.name,
+                                                            "from_date": week[0],
+                                                            "to_date": week[1]
+                                                        },
+                                                        fields=["name"])
+                    if existing_allocation:
+                        logger.info(f"Leave Allocation already exists for {employee.name} from {week[0]} to {week[1]}")
+                        continue  # Skip to prevent duplicate allocations
 
-                # Fetch the Leave Type configuration
-                # leave_type = frappe.get_value("Leave Allocation", {"employee": employee.name, "from_date": week['from_date'], "to_date": week['to_date']}, "leave_type")
-                # if not leave_type:
-                leave_type = "Privilege Leave"  # Default or fetch based on your logic
+                    # Fetch the Leave Type configuration
+                    # leave_type = frappe.get_value("Leave Allocation", {"employee": employee.name, "from_date": week['from_date'], "to_date": week['to_date']}, "leave_type")
+                    # if not leave_type:
+                    leave_type = "Privilege Leave"  # Default or fetch based on your logic
 
-                # Check if the Leave Type allows carry forward
-                leave_type_doc = frappe.get_doc("Leave Type", leave_type)
-                
-                
-                new_leaves_allocated = 1
-                if sunady_month_start_leaves: 
-                    new_leaves_allocated = new_leaves_allocated + sunady_month_start_leaves
-                    sunady_month_start_leaves = 0
-                
-                carry_forward = 1
-                if week[0].day == 1 and not sunady_month_start_leaves:
-                    carry_forward = 0
+                    # Check if the Leave Type allows carry forward
+                    leave_type_doc = frappe.get_doc("Leave Type", leave_type)
+                    
+                    
+                    new_leaves_allocated = 1
+                    if sunady_month_start_leaves: 
+                        new_leaves_allocated = new_leaves_allocated + sunady_month_start_leaves
+                        sunady_month_start_leaves = 0
+                    
+                    carry_forward = 1
+                    if week[0].day == 1 and not sunady_month_start_leaves:
+                        carry_forward = 0
 
-                # Create a new Leave Allocation
-                print(new_leaves_allocated)
-                allocation = frappe.get_doc({
-                    "doctype": "Leave Allocation",
-                    "employee": employee.name,
-                    "leave_type": leave_type,  # Ensure this leave type exists
-                    "from_date": week[0],
-                    "to_date": week[1],
-                    "carry_forward": carry_forward,
-                    "new_leaves_allocated": new_leaves_allocated,
-                    # Do not modify 'new_leaves_allocated' based on unused leaves
-                    # Frappe HRMS will handle carry forward automatically
-                    # "status": "Approved"  # Uncomment if your workflow requires it
-                })
-                print(week)
+                    # Create a new Leave Allocation
+                    print(new_leaves_allocated)
+                    allocation = frappe.get_doc({
+                        "doctype": "Leave Allocation",
+                        "employee": employee.name,
+                        "leave_type": leave_type,  # Ensure this leave type exists
+                        "from_date": week[0],
+                        "to_date": week[1],
+                        "carry_forward": carry_forward,
+                        "new_leaves_allocated": new_leaves_allocated,
+                        # Do not modify 'new_leaves_allocated' based on unused leaves
+                        # Frappe HRMS will handle carry forward automatically
+                        # "status": "Approved"  # Uncomment if your workflow requires it
+                    })
+                    print(week)
 
-                allocation.insert(ignore_permissions=True)
-                # Optionally submit the allocation if required
-                allocation.submit()
-                frappe.db.commit()
+                    allocation.insert(ignore_permissions=True)
+                    # Optionally submit the allocation if required
+                    allocation.submit()
+                    frappe.db.commit()
 
-                logger.info(f"Allocated 1 leave to {employee.name} from {week[0]} to {week[1]} with carry_forward={allocation.carry_forward}")
-
+                    logger.info(f"Allocated 1 leave to {employee.name} from {week[0]} to {week[1]} with carry_forward={allocation.carry_forward}")
+                except Exception as e:
+                    frappe.log_error(message = f"Error in allocating weekly leaves: {e},{traceback.format_exc()}", title = f"Leave Allocation Error for {employee.name} date:  {getdate()}")
         frappe.db.commit()
         frappe.msgprint(("Weekly leave allocations have been successfully processed."))
 
     except Exception as e:
         # logger.error(f"Error in allocating weekly leaves: {e}")
-        frappe.log_error(f"Error in allocating weekly leaves: {e}", "Leave Allocation Error for date:  {}")
+        frappe.log_error(message = f"Error in allocating weekly leaves: {e},{traceback.format_exc()}", title = f"Leave Allocation Error for date:  {getdate()}")
         frappe.throw(("An error occurred while allocating weekly leaves: {0}").format(str(e)))
 
 
