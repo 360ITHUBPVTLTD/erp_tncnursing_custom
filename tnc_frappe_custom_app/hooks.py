@@ -84,18 +84,18 @@ scheduler_events = {
     # "all": [
     #   "lsa.tasks.all"
     # ],
-    # "daily": [
-    #   "lsa.tasks.daily"
-    # ],
+    "daily": [
+      "tnc_frappe_custom_app.custom_employee.allocate_weekly_leaves"
+    ],
     # "hourly": [
     #   "lsa.tasks.hourly"
     # ],
     # "weekly": [
     #   "lsa.tasks.weekly"
     # ],
-    "monthly": [
-      "tnc_frappe_custom_app.custom_employee.allocate_weekly_leaves"
-    ],
+    # "monthly": [
+    #   "tnc_frappe_custom_app.custom_employee.allocate_weekly_leaves"
+    # ],
 }
 
 # add methods and filters to jinja environment
