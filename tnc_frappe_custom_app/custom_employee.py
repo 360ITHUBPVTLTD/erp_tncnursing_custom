@@ -20,8 +20,9 @@ def allocate_weekly_leaves(custom_date=None):
             #     frappe.throw(("Invalid date format for custom_date. Please use YYYY-MM-DD."))
         else:
             current_date = getdate()
-        current_date = getdate()
-        if current_date.day != 10:
+
+
+        if current_date.day != 1:
             return
         # current_date = date(2024, 3, 1)
 
