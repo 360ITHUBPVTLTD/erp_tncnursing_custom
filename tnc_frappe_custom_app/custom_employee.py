@@ -32,7 +32,10 @@ def allocate_weekly_leaves(custom_date=None):
         logger.info(f"Generated weeks: {weeks}")
 
         # Fetch all active employees
-        employees = frappe.get_all("Employee", filters={"status": "Active","name":"HR-EMP-00002"}, fields=["name"])
+        employees = frappe.get_all("Employee", filters={
+                                                        "status": "Active",
+                                                        # "name":"HR-EMP-00002"
+                                                        }, fields=["name"])
         
         for employee in employees:
             # if employee.name != "HR-EMP-00002":
