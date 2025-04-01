@@ -150,6 +150,7 @@ def process_students_in_background(name):
     
     try:
         students_exam_doc = frappe.get_doc('Student Exam', name)
+        exam_docname = students_exam_doc.name
         students_master_data = frappe.get_all('Students Master Data', filters={
             'imported': 0, 'exam_id': name
         }, fields=['name', 'student_name', 'mobile', 'state', 'rank', 'total_marks', 'district', 
@@ -176,6 +177,8 @@ def process_students_in_background(name):
         students_exam_doc.last_rank = master_data_highest_rank
         students_exam_doc.save()
         
+        frappe.db.commit()
+        assign_colors(exam_docname)
         frappe.db.commit()
         # print("Data Processing completed Successfullt!!")
     
