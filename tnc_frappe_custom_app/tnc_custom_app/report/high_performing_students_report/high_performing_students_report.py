@@ -298,3 +298,105 @@ def format_indian_number(n):
     else:
         r = s
     return r
+##################################### Below whatsApp functionality will be started ########################
+@frappe.whitelist()
+def send_whatsapp_from_reports_using_rq(filters):
+    if isinstance(filters, str):
+        filters = json.loads(filters)  # Convert to dictionary if passed as string
+
+    # Enqueue the WhatsApp sending process in the background
+    frappe.enqueue(
+        method="tnc_frappe_custom_app.tnc_custom_app.report.high_performing_students_report.high_performing_students_report.send_whatsapp",
+        queue="long",
+        timeout=600,
+        job_id="Send WhatsApp Bulk Messages",
+        filters=filters
+    )
+    
+    return {"status": "Queued", "message": "WhatsApp message sending is scheduled in the background."}
+
+################### Above code is to schedule the RQ Job #############################
+
+import json
+import frappe
+import requests
+from frappe import _
+
+@frappe.whitelist()
+def send_whatsapp(filters):
+    if isinstance(filters, str):
+        filters = json.loads(filters)  # Convert JSON string to dict
+
+    filters = frappe._dict(filters or {})
+
+    student_data = get_data(filters)
+    # ✅ Correct function: frappe.log_error
+    frappe.log_error(title="Filtered Student Data", message=frappe.as_json(student_data))
+
+    # ✅ Convert length to string before logging
+    frappe.log_error(title="Length of Student Data", message=str(len(student_data)))
+    # print("sWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",len(student_data))
+
+# #     if not student_data:
+# #         return {"status": "No students found", "success": False}
+
+# #     try:
+# #         wa_config = frappe.get_doc('WhatsApp Message Configuration', 'WA-Config-01')
+# #     except frappe.DoesNotExistError:
+# #         frappe.log_error("WA Config not found", "WhatsApp Send Error")
+# #         return {"status": "WhatsApp config missing", "success": False}
+
+
+# #     api_url = f"{wa_config.wa_server}/send"
+# #     headers = {
+# #         "apikey": wa_config.get_password('api_key'),
+# #         "Content-Type": "application/json"
+# #     }
+
+    
+# #     failed =[]
+# #     count = 0
+# #     for student in student_data:
+# #         mobile = student.get("student_mobile")
+# #         student_name = student.get("student_name")
+        
+# #         if not mobile:
+# #             frappe.log_error(f"Missing mobile number for {student_name}", "WhatsApp Skipped")
+# #             failed.append(student.get("student_id"))
+# #             continue  # Skip this iteration
+
+# #         wa_message = f"""Dear {student_name},
+
+# # Please check your results summary
+
+# # Best regards,
+# # TNC Administration"""
+
+# #         payload = {
+# #             "userid": wa_config.user_id,
+# #             "msg": wa_message,
+# #             "wabaNumber": wa_config.waba_number,
+# #             "output": "json",
+# #             "mobile": f"91{mobile}",
+# #             "sendMethod": "quick",
+# #             "msgType": "media",
+# #             "mediaType": "document",
+# #             "templateName": "student_sharing_results_template"
+# #         }
+
+# #         try:
+# #             response = requests.post(api_url, json=payload, headers=headers)
+# #             response.raise_for_status()
+# #             frappe.error_log("WhatsApp Sent", f"{student_name} ({mobile}) ✅\nResponse: {response.json()}")
+# #             count += 1  # ✅ Increment only after success
+# #         except requests.exceptions.RequestException as e:
+# #             error_msg = f"Failed to send WhatsApp to {student_name} ({mobile}): {str(e)}"
+# #             frappe.error_log("WhatsApp API Error", error_msg)
+# #             failed.append(student.get("student_id"))
+
+#     return {
+#         "success": True if count > 0 else False,
+#         "sent_count": count,
+#         "failed_ids": failed
+#     }
+
