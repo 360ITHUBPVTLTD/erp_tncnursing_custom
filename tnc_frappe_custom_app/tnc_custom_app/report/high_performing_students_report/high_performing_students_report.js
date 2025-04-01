@@ -40,7 +40,43 @@ frappe.query_reports["High performing Students Report"] = {
 			default: 50
 		}
 		
-	]
+	],
+	"onload": function (report) {
+		report.page.add_inner_button("Send WhatsApp", () => {
+			let filters = report.get_filter_values(true);
+			if (!filters) return;
+	
+			frappe.confirm(
+				"Are you sure you want to send WhatsApp messages to these students?",
+				() => {
+					// Yes - proceed to send
+					frappe.call({
+						method: "tnc_frappe_custom_app.tnc_custom_app.report.high_performing_students_report.high_performing_students_report.send_whatsapp_from_reports_using_rq", // Replace with actual method
+						
+						args: {
+							filters: filters
+						},
+						callback: function (r) {
+							if (r.message && r.message.success) {
+								frappe.msgprint(__('✅ WhatsApp messages sent successfully!'));
+							} else {
+								frappe.msgprint({
+									title: __("Failed"),
+									message: __("❌ Failed to send messages."),
+									indicator: "red"
+								});
+							}
+						}
+					});
+				},
+				() => {
+					// No - cancelled
+					frappe.msgprint(__('Sending cancelled.'));
+				}
+			);
+		});
+	}
+	
 };
 
 

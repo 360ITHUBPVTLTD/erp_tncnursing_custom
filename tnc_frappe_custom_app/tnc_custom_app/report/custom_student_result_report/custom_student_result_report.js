@@ -196,31 +196,28 @@ function checkRankLockStatus(callback) {
 ///////////////////////////////// Below code is Row Selection ///////////////////////////////////////////
 
 
-var previousSelectedRow = null;
- 
 document.addEventListener('click', function(event) {
-    // Check if the clicked element is within a .dt-cell__content element
-    var cellContent = event.target.closest('.dt-cell__content');
- 
-    if (cellContent) {
-        // Get the parent row of the clicked cell
-        var row = cellContent.closest('.dt-row');
- 
-        // If there's a previously selected row, deselect it
-        if (previousSelectedRow) {
-            var cellsInPreviousRow = previousSelectedRow.querySelectorAll('.dt-cell__content');
-            cellsInPreviousRow.forEach(function(cellInRow) {
-                cellInRow.style.backgroundColor = '';
-            });
-        }
- 
-        // Reset the background color of all cells in the new row
-        var cellsInRow = row.querySelectorAll('.dt-cell__content');
-        cellsInRow.forEach(function(cellInRow) {
-            cellInRow.style.backgroundColor = 'skyblue';
+    // Check if the clicked element is a cell
+    var clickedCell = event.target.closest('.dt-cell__content');
+    if (clickedCell) {
+        // Remove highlight from previously highlighted cells
+        var previouslyHighlightedCells = document.querySelectorAll('.highlighted-cell');
+        previouslyHighlightedCells.forEach(function(cell) {
+            cell.classList.remove('highlighted-cell');
+            cell.style.backgroundColor = ''; // Remove background color
+            cell.style.border = ''; // Remove border
+            cell.style.fontWeight = '';
         });
- 
-        // Update the previously selected row
-        previousSelectedRow = row;
+
+        // Highlight the clicked row's cells
+        var clickedRow = event.target.closest('.dt-row');
+        var cellsInClickedRow = clickedRow.querySelectorAll('.dt-cell__content');
+
+        cellsInClickedRow.forEach(function(cell) {
+            cell.classList.add('highlighted-cell');
+            cell.style.backgroundColor = '#d7eaf9'; // Light blue background color
+            cell.style.border = '2px solid #90c9e3'; // Border color
+            cell.style.fontWeight = 'bold';
+        });
     }
 });
