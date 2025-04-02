@@ -218,35 +218,35 @@ frappe.ui.form.on('Student Exam', {
 ////////////////////////// Delete the Particular Exam Student results doctype based on the ID ///////////////////////////
 
 
-frappe.ui.form.on('Student Exam', {
-    refresh: function(frm) {
-        // Add the custom button
-        frm.add_custom_button(__('Delete the Exam'), function() {
-            // Show confirmation prompt
-            frappe.confirm(
-                __('Are you sure you want to delete all student results for this exam?'),
-                function() {
-                    // If confirmed, call the server-side function
-                    frappe.call({
-                        method: "tnc_frappe_custom_app.tnc_custom_app.doctype.student_exam.student_exam.delete_student_results",
-                        args: {
-                            exam_id: frm.doc.name
-                        },
-                        callback: function(r) {
-                            if (r.message) {
-                                frappe.msgprint(r.message);
-                            }
-                        }
-                    });
-                },
-                function() {
-                    // If cancelled, do nothing
-                    // frappe.msgprint(__('Operation cancelled.'));
-                }
-            );
-        });
-    }
-});
+// frappe.ui.form.on('Student Exam', {
+//     refresh: function(frm) {
+//         // Add the custom button
+//         frm.add_custom_button(__('Delete the Exam'), function() {
+//             // Show confirmation prompt
+//             frappe.confirm(
+//                 __('Are you sure you want to delete all student results for this exam?'),
+//                 function() {
+//                     // If confirmed, call the server-side function
+//                     frappe.call({
+//                         method: "tnc_frappe_custom_app.tnc_custom_app.doctype.student_exam.student_exam.delete_student_results",
+//                         args: {
+//                             exam_id: frm.doc.name
+//                         },
+//                         callback: function(r) {
+//                             if (r.message) {
+//                                 frappe.msgprint(r.message);
+//                             }
+//                         }
+//                     });
+//                 },
+//                 function() {
+//                     // If cancelled, do nothing
+//                     // frappe.msgprint(__('Operation cancelled.'));
+//                 }
+//             );
+//         });
+//     }
+// });
 
 
 
