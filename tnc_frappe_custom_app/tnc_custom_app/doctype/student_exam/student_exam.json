@@ -82,7 +82,8 @@
   {
    "fieldname": "actual_candidates",
    "fieldtype": "Data",
-   "label": "Actual Candidates"
+   "label": "Actual Candidates",
+   "read_only": 1
   },
   {
    "fieldname": "status",
@@ -90,7 +91,8 @@
    "in_filter": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "\nPending to Process Data\nIn Queue\nFailed Queue\nData Synced\nRank Generated(step1)\nRank Generated(step2)\nRank Reset"
+   "options": "\nPending to Process Data\nIn Queue\nFailed Queue\nData Synced\nRank Generated(step1)\nRank Generated(step2)\nRank Reset",
+   "read_only": 1
   },
   {
    "default": "0",
@@ -201,7 +203,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-02 10:20:27.620906",
+ "modified": "2025-04-02 12:38:04.203705",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Exam",
