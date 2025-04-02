@@ -108,6 +108,8 @@ class StudentExam(Document):
 
 @frappe.whitelist()
 def student_process_data(name, limit=1):
+    # print("Tesssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+    # frappe.log_error(f"Error processing student resultsRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
     try:
         students_exam_doc = frappe.get_doc('Student Exam', name)
 
@@ -176,7 +178,6 @@ def process_students_in_background(name):
         students_exam_doc.start_rank = 1
         students_exam_doc.last_rank = master_data_highest_rank
         students_exam_doc.save()
-        
         frappe.db.commit()
         assign_colors(exam_docname)
         frappe.db.commit()
