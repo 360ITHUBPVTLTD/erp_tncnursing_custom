@@ -72,7 +72,8 @@
   {
    "fieldname": "last_rank",
    "fieldtype": "Data",
-   "label": "Last Rank"
+   "label": "Last Rank",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_atbx",
@@ -90,7 +91,7 @@
    "in_standard_filter": 1,
    "label": "Status",
    "options": "\nPending to Process Data\nIn Queue\nFailed Queue\nData Synced\nRank Generated(step1)\nRank Generated(step2)\nRank Reset",
-   "permlevel": 1
+   "read_only": 1
   },
   {
    "default": "0",
@@ -189,7 +190,8 @@
   {
    "fieldname": "start_rank",
    "fieldtype": "Data",
-   "label": "Start Rank"
+   "label": "Start Rank",
+   "read_only": 1
   },
   {
    "fieldname": "unimported_logs_section",
@@ -200,7 +202,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-19 14:35:13.458319",
+ "modified": "2025-04-02 09:45:16.955531",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Exam",

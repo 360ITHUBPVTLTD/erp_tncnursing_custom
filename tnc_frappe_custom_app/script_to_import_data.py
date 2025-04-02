@@ -1,58 +1,253 @@
-
-
 import frappe
+import os
+from datetime import datetime
+from tnc_frappe_custom_app.tnc_custom_app.doctype.student_exam.student_exam import student_process_data
 import pandas as pd
-
-@frappe.whitelist()
-def import_online_students():
-    """
-    Import data from a CSV file into the 'Online Student' Doctype.
-    """
+def process_excel_to_create_a_student_exam(file_path, batch_size=5000):
     try:
-        file_path = "/home/pankaj/Documents/Book1(Onlinie student test).xlsx"
+        # Read CSV file into DataFrame
+        df = pd.read_csv(file_path)
+
+        if df.empty:
+            frappe.throw("Uploaded CSV file is empty.")
+
+        # Extract exam details
+        exam_name = df.iloc[0]['Exam Name']  # Assume same exam name for all rows
+        exam_date = datetime.today().strftime('%Y-%m-%d')  # Set today's date
+
+        # Extract filename without extension for exam title
+        exam_title_name = os.path.splitext(os.path.basename(file_path))[0]
+
+        # Check if Student Exam already exists
+        existing_exam = frappe.db.exists('Student Exam', {'exam_title_name': exam_title_name})
+        if existing_exam:
+            frappe.throw(f"Student Exam with title '{exam_title_name}' already exists.")
         
-        # Load the CSV file
-        data = pd.read_excel(file_path)
-
-        # Replace NaN values with None (or another default value if necessary)
-        data = data.apply(lambda x: x.map(lambda v: None if isinstance(v, float) and pd.isna(v) else v))
-        count = 0
-        # Iterate over rows in the dataframe
-        for _, row in data.iterrows():
-            # Check if 'student_name' or 'mobile' is missing, and skip the row if necessary
-            # if pd.isna(row.get("Student Name")) or pd.isna(row.get("Mobile")):
-            #     # Log or skip the row if mandatory fields are missing
-            #     frappe.log_error(f"Skipping record due to missing mandatory fields: {row}")
-            #     continue  # Skipping the row with missing fields
-
-            # Create a new record in the 'Online Student' Doctype
-            doc = frappe.get_doc({
-                "doctype": "Online Student",
-                "docname": row.get("ID"),
-                "student_name": row.get("Student Name"),
-                "mobile": row.get("Mobile"),
-                "state": row.get("State"),
-                "district": row.get("District"),
-                "exam_id": row.get("Exam ID"),
-                "total_exams": row.get("Total Exams"),
-                "system_imported": row.get("System Imported"),
-                "payment_link": row.get("Payment Link")
-            })
-
-            # Insert the record into the database
-            
-            doc.insert()
-            count += 1
-            print("Student",count,row.get("ID"))
-
-        # Commit changes to the database
+        # Create Student Exam document
+        student_exam = frappe.get_doc({
+            'doctype': 'Student Exam',
+            'exam_name': exam_name,
+            'exam_title_name': exam_title_name,  # Corrected filename extraction
+            'exam_date': exam_date,
+        })
+        student_exam.insert()
         frappe.db.commit()
-        return "Data imported successfully!"
+
+        # Get newly created Student Exam ID (docname)
+        student_exam_id = student_exam.name
+
+        # Update the 'Exam ID' column for all rows that have data
+        df['Exam ID'] = student_exam_id
+
+        # Clean the data by replacing NaN values with defaults
+        numeric_columns = ['Rank', 'Total Marks', 'Percentage', 'Total Right', 'Total Wrong', 'Total Skip']
+        for column in numeric_columns:
+            df[column] = pd.to_numeric(df[column], errors='coerce').fillna(0)  # Replace NaN with 0 for numeric columns
+
+        text_columns = ['Student Name', 'Mobile', 'District', 'State']
+        for column in text_columns:
+            df[column] = df[column].fillna("")  # Replace NaN with empty string for text columns
+
+        # Iterate over the rows and insert data into Student Master Data doctype
+        for index, row in df.iterrows():
+            student_master_data = frappe.get_doc({
+                'doctype': 'Students Master Data',
+                'exam_id': student_exam_id,
+                'student_name': row['Student Name'],
+                'mobile': row['Mobile'],
+                'district': row['District'],
+                'state': row['State'],
+                'rank': row['Rank'],
+                'total_marks': row['Total Marks'],
+                'total_right': row['Total Right'],
+                'total_wrong': row['Total Wrong'],
+                'total_skip': row['Total Skip'],
+                'percentage': row['Percentage'],
+            })
+            student_master_data.insert()
+
+        frappe.db.commit()
+
+        # Optional: Save the modified DataFrame back to a CSV (for debugging purposes)
+        modified_file_path = file_path.replace(".csv", "_modified.csv")
+        df.to_csv(modified_file_path, index=False)
+
+        # Optionally, enqueue a function to process the data after insertion
+        student_process_data(student_exam_id, limit=1)
+
+        return f"Student Exam '{exam_title_name}' created and data inserted successfully."
 
     except Exception as e:
-        # Rollback changes in case of any errors
-        frappe.db.rollback()
-        frappe.throw(f"An error occurred: {e}")
+        # Log the error in case of failure
+        frappe.log_error(f"Error processing student results: {str(e)}")
+        raise e
+
+
+
+
+@frappe.whitelist()
+def process_excel_to_create_a_student_exam_from_client_script(file_id):
+    try:
+        # Fetch file document
+        file_doc = frappe.get_doc("File", file_id)
+        file_url = file_doc.file_url.strip('/')  # Remove leading/trailing slashes
+        print("File URL:", file_url)  # Debugging
+
+        # Determine file path
+        if file_url.startswith("files/"):
+            file_path = frappe.get_site_path("public", "files", os.path.basename(file_url))
+        elif file_url.startswith("private/files/"):
+            file_path = frappe.get_site_path("private", "files", os.path.basename(file_url))
+        else:
+            raise FileNotFoundError(f"Invalid file URL: {file_url}")
+
+        print("Resolved File Path:", file_path)  # Debugging
+
+        # Check if file exists before processing
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"File not found at {file_path}")
+
+        # Enqueue background job
+        enqueue(
+            process_excel_to_create_a_student_exam,
+            queue="long",
+            timeout=6000,
+            job_name="process_student_results",
+            file_path=file_path,
+            batch_size=5000
+        )
+        return "Data processing started. Check the Job logs for updates."
+
+    except Exception as e:
+        frappe.log_error(f"Error in import_student_results_sql_student_master_data: {str(e)}")
+        raise e
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -468,3 +663,12 @@ def import_student_results_sql_student_results(file_id):
         frappe.log_error(f"Error in import_student_results_sql: {str(e)}")
         raise e
     
+
+
+
+
+
+
+
+
+
