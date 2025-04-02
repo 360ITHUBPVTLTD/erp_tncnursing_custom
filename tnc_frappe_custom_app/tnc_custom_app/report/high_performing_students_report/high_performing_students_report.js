@@ -51,18 +51,29 @@ frappe.query_reports["High performing Students Report"] = {
 				() => {
 					// Yes - proceed to send
 					frappe.call({
-						method: "tnc_frappe_custom_app.tnc_custom_app.report.high_performing_students_report.high_performing_students_report.send_whatsapp_from_reports_using_rq", // Replace with actual method
-						
+						method: "tnc_frappe_custom_app.tnc_custom_app.report.high_performing_students_report.high_performing_students_report.send_whatsapp_from_reports_using_rq", 
 						args: {
 							filters: filters
 						},
 						callback: function (r) {
-							if (r.message && r.message.success) {
-								frappe.msgprint(__('✅ WhatsApp messages sent successfully!'));
+							if (r.message) {
+								if (r.message.success) {
+									frappe.msgprint({
+										title: __("✅ Success"),
+										message: `🎉 WhatsApp messages sent successfully! <br> ✅ Sent: ${r.message.sent_count} <br> ❌ Failed: ${r.message.failed_count}`,
+										indicator: "green"
+									});
+								} else {
+									frappe.msgprint({
+										title: __("⚠️ Partial Success"),
+										message: `✅ Sent: ${r.message.sent_count} <br> ❌ Failed: ${r.message.failed_count} <br> 🔍 Check logs for details.`,
+										indicator: "orange"
+									});
+								}
 							} else {
 								frappe.msgprint({
-									title: __("Failed"),
-									message: __("❌ Failed to send messages."),
+									title: __("❌ Failed"),
+									message: "WhatsApp messages could not be sent.",
 									indicator: "red"
 								});
 							}
@@ -76,6 +87,7 @@ frappe.query_reports["High performing Students Report"] = {
 			);
 		});
 	}
+	
 	
 };
 
