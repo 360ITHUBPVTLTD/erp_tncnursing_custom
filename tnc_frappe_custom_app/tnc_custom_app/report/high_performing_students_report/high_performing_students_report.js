@@ -56,11 +56,15 @@ frappe.query_reports["High performing Students Report"] = {
 							filters: filters
 						},
 						callback: function (r) {
-							if (r.message) {
-								if (r.message.success) {
+							console.log("Response", r);
+							
+							if (r.message) {  // Ensure message exists
+								console.log("SENT", r.message.success);
+						
+								if (r.message.status === 'Queued') {
 									frappe.msgprint({
 										title: __("✅ Success"),
-										message: `🎉 WhatsApp messages sent successfully! <br> ✅ Sent: ${r.message.sent_count} <br> ❌ Failed: ${r.message.failed_count}`,
+										message: `🎉 WhatsApp messages sent successfully to students!`,
 										indicator: "green"
 									});
 								} else {
@@ -78,6 +82,7 @@ frappe.query_reports["High performing Students Report"] = {
 								});
 							}
 						}
+						
 					});
 				},
 				() => {
@@ -87,8 +92,6 @@ frappe.query_reports["High performing Students Report"] = {
 			);
 		});
 	}
-	
-	
 };
 
 

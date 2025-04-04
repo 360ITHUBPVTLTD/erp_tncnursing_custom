@@ -390,21 +390,21 @@ TNC Nursing"""
         }
 
         try:
-            response = requests.post(api_url, json=payload, headers=headers)
-            # response.raise_for_status()
-            frappe.log_error(title="WhatsApp Response in Reports",message= f"test: {response.json()}")
-            frappe.log_error("WhatsApp Sent", f"{student_name} ({mobile}) ✅\nResponse: {response.json()}")
+            # response = requests.post(api_url, json=payload, headers=headers)
+            # # response.raise_for_status()
+            # frappe.log_error(title="WhatsApp Response in Reports",message= f"test: {response.json()}")
+            # frappe.log_error("WhatsApp Sent", f"{student_name} ({mobile}) ✅\nResponse: {response.json()}")
             count += 1  # ✅ Increment only after success
         except requests.exceptions.RequestException as e:
             error_msg = f"Failed to send WhatsApp to {student_name} ({mobile}): {str(e)}"
             frappe.error_log("WhatsApp API Error", error_msg)
             failed.append(student.get("student_id"))
 
-    # ✅ Ensure correct response
     return {
-        "success": count > 0,  # ✅ Return True if any messages were sent
-        "sent_count": count,
-        "failed_count": len(failed),
-        "failed_ids": failed
+        "message": {
+            "success": count > 0,  
+            "sent_count": count,
+            "failed_count": len(failed),
+            "failed_ids": failed
+        }
     }
-

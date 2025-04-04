@@ -107,26 +107,27 @@ class StudentExam(Document):
 
 
 @frappe.whitelist()
-def student_process_data(name, limit=1):
-    # print("Tesssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
-    # frappe.log_error(f"Error processing student resultsRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
+def student_process_data(name, limit=1,bulk_file_read=False):
+    print("Tesssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+    frappe.log_error(f"Start processing student results bulk_file_read {bulk_file_read}")
     try:
         students_exam_doc = frappe.get_doc('Student Exam', name)
 
         rq_job_for_student_exam = frappe.get_all("RQ Job",filters={"status":("in",["started","queued"])},fields=["arguments","name"])
         
-        for job in rq_job_for_student_exam:
-            if students_exam_doc.name in job.arguments:
-                base_url = frappe.utils.get_url()
-                job_url = f"{base_url}/app/rq-job/{job.name}"
-                job_anchor_tag=f'<a href="{ base_url }/app/rq-job/{ job.name }">{ job.name }</a>'
-                return {"status":False, "msg":f"Data processing is already in Queue {job_anchor_tag}. . . the operation will be finished in 10 minutes, Please wait for the operation to complete"}
+        if bulk_file_read != True:
+            for job in rq_job_for_student_exam:
+                if students_exam_doc.name in job.arguments:
+                    base_url = frappe.utils.get_url()
+                    job_url = f"{base_url}/app/rq-job/{job.name}"
+                    job_anchor_tag=f'<a href="{ base_url }/app/rq-job/{ job.name }">{ job.name }</a>'
+                    return {"status":False, "msg":f"Data processing is already in Queue {job_anchor_tag}. . . the operation will be finished in 10 minutes, Please wait for the operation to complete"}
         
         total_records = frappe.db.count('Students Master Data', filters={'imported': 0, 'exam_id': name})
         if not total_records:
             return {"status": False, "msg": f"No Student Master Data to process for this Exam {name}"}
             
-        elif total_records > limit:
+        elif total_records >= limit:
             # Enqueue the background job
             frappe.enqueue('tnc_frappe_custom_app.tnc_custom_app.doctype.student_exam.student_exam.process_students_in_background', 
                         queue='long', 
@@ -143,6 +144,7 @@ def student_process_data(name, limit=1):
             return response_realtime_data_processing
 
     except Exception as e:
+        frappe.log_error(message=frappe.get_traceback(), title="Error in background sync")
         return {"status": False, "msg": str(e)}
     # process_students_in_background(name, start, limit)
 
@@ -164,6 +166,7 @@ def process_students_in_background(name):
     
         for student_data in students_master_data:
             student_and_result_validation_and_creation(student_data)
+            # break
 
         actual_candidates = len(students_master_data)
 
@@ -183,7 +186,7 @@ def process_students_in_background(name):
     except Exception as e:
         frappe.db.set_value("Student Exam", name, "status", "Failed Queue")
         frappe.db.commit()
-        frappe.log_error(frappe.get_traceback(), "Error in background sync")
+        frappe.log_error(message=frappe.get_traceback(), title="Error in background sync")
         return {"status": False, "msg": f"Error in Background Processing Data: {str(e)}"}
 
 # def process_students_in_background(name):
@@ -333,8 +336,8 @@ def student_and_result_validation_and_creation(student_data):
                     'percentage': student_data.get('percentage'),
                     'student_master_data_id': student_data['name'],
                 }).insert()
-                
-                frappe.log_error(frappe.get_traceback(), f"Error in creating Student: {str(e)}")
+
+                frappe.log_error(message=f"{frappe.get_traceback()},{{str(e)}}", title=f"Error in creating Student:")
                 return
 
         else:
@@ -386,11 +389,11 @@ def student_and_result_validation_and_creation(student_data):
                     # 'student_id': student_id if student_id else None,
                 }).insert()
 
-            frappe.log_error(frappe.get_traceback(), f"Error in creating Student Results: {str(e)}")
+            frappe.log_error(message=frappe.get_traceback(), title= f"Error in creating Student Results")
 #    frappe.log_error(frappe.get_traceback(), f"Error syncing student master data {student_data['name']} in Student Exam {student_data['exam_id']} for student name {student_data['student_name']} with mobile number {student_data['mobile']}.")
     except Exception as e:
         # General error logging
-        frappe.log_error(frappe.get_traceback(), f"Error syncing student master data {student_data['name']} in Student Exam {student_data['exam_id']} for student name {student_data['student_name']} with mobile number {student_data['mobile']}.")
+        frappe.log_error(message=frappe.get_traceback(), title=f"Error syncing student master data {student_data['name']} in Student Exam {student_data['exam_id']} for student name {student_data['student_name']} with mobile number {student_data['mobile']}.")
 
 
 
