@@ -17,6 +17,7 @@
   "last_regularised_ranks",
   "last_rank",
   "actual_candidates",
+  "processed_candidates",
   "section_break_lftw",
   "green",
   "yellow",
@@ -197,12 +198,16 @@
    "fieldname": "unimported_logs_section",
    "fieldtype": "Section Break",
    "label": "UnImported Logs"
+  },
+  {
+   "fieldname": "processed_candidates",
+   "fieldtype": "Int",
+   "label": "Processed Candidates"
   }
  ],
- "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-02 14:56:18.772031",
+ "modified": "2025-04-05 15:21:05.362941",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Exam",
