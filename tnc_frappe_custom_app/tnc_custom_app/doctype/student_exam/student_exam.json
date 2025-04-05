@@ -10,6 +10,7 @@
   "exam_title_name",
   "exam_date",
   "status",
+  "import_status",
   "lock_ranks",
   "column_break_atbx",
   "start_rank",
@@ -202,12 +203,22 @@
   {
    "fieldname": "processed_candidates",
    "fieldtype": "Int",
-   "label": "Processed Candidates"
+   "label": "Processed Candidates",
+   "read_only": 1
+  },
+  {
+   "fieldname": "import_status",
+   "fieldtype": "Select",
+   "in_filter": 1,
+   "in_standard_filter": 1,
+   "label": "Import Status",
+   "options": "\nNot Imported\nImported",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-05 15:21:05.362941",
+ "modified": "2025-04-05 17:50:35.706043",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Exam",

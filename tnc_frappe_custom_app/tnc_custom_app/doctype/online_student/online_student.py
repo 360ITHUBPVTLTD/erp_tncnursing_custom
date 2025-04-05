@@ -10,15 +10,15 @@ class OnlineStudent(Document):
     # def validate(self):
     # def before_insert(self):
     #     self.check_duplicate_mobile()
-
-    def check_duplicate_mobile(self):
-        if self.mobile:
-            # Check if any other online_student has the same mobile number
-            existing_online_student = frappe.db.exists("Online Student", {"mobile": self.mobile, "name": ["!=", self.name]})
+    pass
+    # def check_duplicate_mobile(self):
+    #     if self.mobile:
+    #         # Check if any other online_student has the same mobile number
+    #         existing_online_student = frappe.db.exists("Online Student", {"mobile": self.mobile, "name": ["!=", self.name]})
             
-            if existing_online_student:
-                # Raise an error if a duplicate is found
-                frappe.throw(f"Mobile number {self.mobile} is already registered with another online_student.")
+    #         if existing_online_student:
+    #             # Raise an error if a duplicate is found
+    #             frappe.throw(f"Mobile number {self.mobile} is already registered with another online_student.")
 
 
 ######################################## Send bulk whatsapp results sharing to Students ####################################################################
