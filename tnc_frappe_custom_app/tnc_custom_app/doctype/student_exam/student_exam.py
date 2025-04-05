@@ -209,7 +209,9 @@ def process_students_in_background(name, batch_size=100):
             'exam_id': name
         })
         
+
         batch_size = total_records
+
         if not total_records:
             frappe.db.set_value("Student Exam", name, "status", "No Records")
             return
