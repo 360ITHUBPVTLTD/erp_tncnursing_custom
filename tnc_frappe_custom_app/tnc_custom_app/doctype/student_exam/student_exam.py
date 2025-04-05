@@ -201,12 +201,13 @@ def student_process_data(name, limit=1):
  
  
  
-def process_students_in_background(name, batch_size=1000):
+def process_students_in_background(name, batch_size=100):
     try:
         total_records = frappe.db.count('Students Master Data', {
             'imported': 0,
             'exam_id': name
         })
+        
         # batch_size = total_records
         if not total_records:
             frappe.db.set_value("Student Exam", name, "status", "No Records")
