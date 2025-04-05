@@ -177,10 +177,11 @@ def student_process_data(name, limit=1):
             frappe.enqueue(
                 method='tnc_frappe_custom_app.tnc_custom_app.doctype.student_exam.student_exam.process_students_in_background',
                 queue='long',
-                timeout=10800,  # 3 hours
+                timeout=18000,  # 3 hours
                 is_async=True,
                 name=name
             )
+            # process_students_in_background(name)
             students_exam_doc.status = "In Queue"
             students_exam_doc.save(ignore_permissions=True)
             frappe.db.commit()
@@ -208,7 +209,9 @@ def process_students_in_background(name, batch_size=100):
             'exam_id': name
         })
         
-        # batch_size = total_records
+
+        batch_size = total_records
+
         if not total_records:
             frappe.db.set_value("Student Exam", name, "status", "No Records")
             return
@@ -246,7 +249,7 @@ def process_students_in_background(name, batch_size=100):
         frappe.msgprint(f"✅ Processed {processed_count} records for Exam {name}")
  
     except Exception as e:
-        frappe.log_error(frappe.get_traceback(), f"❌ Error in processing students for exam {name}")
+        frappe.log_error(message=frappe.get_traceback(), title=f"❌ Error in processing students for exam {name}")
         frappe.db.set_value("Student Exam", name, "status", "Failed")
 
 
