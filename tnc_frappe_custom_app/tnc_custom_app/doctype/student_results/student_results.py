@@ -126,52 +126,53 @@ from frappe.model.document import Document
 from frappe import _
 
 class StudentResults(Document):
-    def before_insert(self):
-        self.check_duplicate_entry()
-        self.ensure_student_exists()
+    pass
+    # def before_insert(self):
+    #     self.check_duplicate_entry()
+    #     self.ensure_student_exists()
 
-    def check_duplicate_entry(self):
-        # Check if a record with the same exam_name, exam_date, and student_mobile already exists
-        duplicate_entry = frappe.db.exists('Student Results', {
-            # 'exam_name': self.exam_name,
-            # 'exam_date': self.exam_date,
-            # 'exam_id': self.exam_id,
-            'student_id': self.student_id,
-            'exam_id': self.exam_id,
-            # 'exam_title_name': self.exam_title_name,
-            # 'student_mobile': self.student_mobile,
-            # 'name': ['!=', self.name]  # Exclude the current document from the check
-        })
+    # def check_duplicate_entry(self):
+    #     # Check if a record with the same exam_name, exam_date, and student_mobile already exists
+    #     duplicate_entry = frappe.db.exists('Student Results', {
+    #         # 'exam_name': self.exam_name,
+    #         # 'exam_date': self.exam_date,
+    #         # 'exam_id': self.exam_id,
+    #         'student_id': self.student_id,
+    #         'exam_id': self.exam_id,
+    #         # 'exam_title_name': self.exam_title_name,
+    #         # 'student_mobile': self.student_mobile,
+    #         # 'name': ['!=', self.name]  # Exclude the current document from the check
+    #     })
 
-        if duplicate_entry:
-            frappe.log_error(f"Bulk Sync fail.{self.exam_name}{self.exam_date}{self.student_mobile}")
-            frappe.throw(_("A record with the same Exam Name, Exam Date, and Student Mobile already exists."))
+    #     if duplicate_entry:
+    #         frappe.log_error(f"Bulk Sync fail.{self.exam_name}{self.exam_date}{self.student_mobile}")
+    #         frappe.throw(_("A record with the same Exam Name, Exam Date, and Student Mobile already exists."))
 
-    def ensure_student_exists(self):
-        # Ensure that the student_mobile is provided
-        if self.student_mobile:
-            # Check if the student already exists based on the mobile number
-            student_exists = frappe.db.exists('Online Student', {'mobile': self.student_mobile})
+    # def ensure_student_exists(self):
+    #     # Ensure that the student_mobile is provided
+    #     if self.student_mobile:
+    #         # Check if the student already exists based on the mobile number
+    #         student_exists = frappe.db.exists('Online Student', {'mobile': self.student_mobile})
             
-            if not student_exists:
-                # If the student does not exist, create a new Student record
-                new_student = frappe.get_doc({
-                    'doctype': 'Online Student',
-                    'student_name': self.student_name,
-                    'mobile': self.student_mobile,
-                    # 'district': self.district,  # Add other fields if necessary
-                    # 'state': self.state
-                })
-                new_student.insert(ignore_permissions=True)
-                # Log the creation of the new student
-                frappe.msgprint(f"New Student created: {self.student_name}")
-                # Link the new student's ID to the Student Results record
-                self.student_id = new_student.name
-            else:
-                # If the student exists, fetch the student ID and update the Student Results record
-                self.student_id = frappe.get_value('Online Student', {'mobile': self.student_mobile}, 'name')
-        else:
-            frappe.throw(_("Student Mobile is required to create or link a Student record."))
+    #         if not student_exists:
+    #             # If the student does not exist, create a new Student record
+    #             new_student = frappe.get_doc({
+    #                 'doctype': 'Online Student',
+    #                 'student_name': self.student_name,
+    #                 'mobile': self.student_mobile,
+    #                 # 'district': self.district,  # Add other fields if necessary
+    #                 # 'state': self.state
+    #             })
+    #             new_student.insert(ignore_permissions=True)
+    #             # Log the creation of the new student
+    #             frappe.msgprint(f"New Student created: {self.student_name}")
+    #             # Link the new student's ID to the Student Results record
+    #             self.student_id = new_student.name
+    #         else:
+    #             # If the student exists, fetch the student ID and update the Student Results record
+    #             self.student_id = frappe.get_value('Online Student', {'mobile': self.student_mobile}, 'name')
+    #     else:
+    #         frappe.throw(_("Student Mobile is required to create or link a Student record."))
 
     # def after_delete(doc):
     #     student_id = doc.student_id
