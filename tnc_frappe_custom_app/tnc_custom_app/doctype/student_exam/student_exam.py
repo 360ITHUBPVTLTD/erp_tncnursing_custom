@@ -149,7 +149,7 @@ class StudentExam(Document):
 @frappe.whitelist()
 def student_process_data(name, limit=1):
     try:
-        print("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFunction triggered")
+        # print("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFunction triggered")
         students_exam_doc = frappe.get_doc('Student Exam', name)
  
         # Avoid duplicate queueing
@@ -162,18 +162,32 @@ def student_process_data(name, limit=1):
                     "status": False,
                     "msg": f"⏳ Already in queue as {job_anchor}. Please wait for completion."
                 }
+        total_records = frappe.db.count('Students Master Data', {
+            # 'imported': 0,
+            'exam_id': name
+        })
+        if not total_records:
+            frappe.db.set_value("Student Exam", name, "import_status", "Not Imported")
+            frappe.db.commit()
+            return{
+                "status": False,
+                "msg": f"Data not imported for this Exam: {students_exam_doc.exam_title_name}({name})"
+            }
  
         # Count total unprocessed records
-        total_records = frappe.db.count('Students Master Data', {
+        total_unprocessed_records = frappe.db.count('Students Master Data', {
             'imported': 0,
             'exam_id': name
         })
  
-        if not total_records:
+        if not total_unprocessed_records:
+            frappe.db.set_value("Student Exam", name, "status", "Data Synced")
+            frappe.db.commit()
+
             return {"status": False, "msg": f"✅ No records left to process for Exam {name}"}
  
         # For 10,000+ records, enqueue is preferred
-        if total_records >= limit:
+        if total_unprocessed_records >= limit:
             frappe.enqueue(
                 method='tnc_frappe_custom_app.tnc_custom_app.doctype.student_exam.student_exam.process_students_in_background',
                 queue='long',
@@ -182,7 +196,10 @@ def student_process_data(name, limit=1):
                 name=name
             )
             # process_students_in_background(name)
+            students_exam_doc.import_status = "Imported"
             students_exam_doc.status = "In Queue"
+            students_exam_doc.actual_candidates = str(total_records)
+            students_exam_doc.processed_candidates = int(total_records) - total_unprocessed_records
             students_exam_doc.save(ignore_permissions=True)
             frappe.db.commit()
             return {
@@ -190,7 +207,8 @@ def student_process_data(name, limit=1):
                 "enqueued": True,
                 "msg": f"🚀 {total_records} records enqueued successfully!"
             }
- 
+
+            # process_students_in_background(name)
         # For small datasets
         return process_data_realtime(name)
  
@@ -211,7 +229,7 @@ def process_students_in_background(name, batch_size=100):
         
         batch_size = total_records
         if not total_records:
-            frappe.db.set_value("Student Exam", name, "status", "No Records")
+            frappe.db.set_value("Student Exam", name, "import_status", "Not Imported")
             return
  
         processed_count = 0
@@ -243,7 +261,8 @@ def process_students_in_background(name, batch_size=100):
                 message={'processed': processed_count, 'total': total_records}
             )
  
-        frappe.db.set_value("Student Exam", name, "status", "Completed")
+        frappe.db.set_value("Student Exam", name, "status", "Data Synced")
+        frappe.db.commit()
         frappe.msgprint(f"✅ Processed {processed_count} records for Exam {name}")
  
     except Exception as e:
@@ -400,12 +419,12 @@ def process_data_realtime(name):
         return {"status": False, "msg": f"Error in Processing Data: {str(e)}"}
 
 ###########################################Vatsal's Modified code for % based progress publish and exception handling end#######
-
+import traceback
 
 def student_and_result_validation_and_creation(student_data):
     try:
         existing_student = frappe.db.exists('Online Student', {'mobile': student_data['mobile']})
-        student_id = None
+        student_id = existing_student
         if not existing_student:
             try:
                 new_student = frappe.get_doc({
@@ -418,8 +437,12 @@ def student_and_result_validation_and_creation(student_data):
                     'exam_id': student_data['exam_id'],
                     'total_exams':1,
                 })
-                new_student.insert()
+                resp = new_student.insert()
+                print("student created response ", resp)
+                print("resp.name ", resp.name)
+                print("new_student.name", new_student.name)
                 student_id = new_student.name
+                print(f"New student created: {student_id}")
             except Exception as e:
                 frappe.get_doc({
                     'doctype': 'Not Imported Logs',
@@ -436,17 +459,19 @@ def student_and_result_validation_and_creation(student_data):
                     'total_skip': student_data.get('total_skip'),
                     'percentage': student_data.get('percentage'),
                     'student_master_data_id': student_data['name'],
+                    "error_message":f"Error in creating Student: {str(e)} \n {traceback.format_exc()}",
                 }).insert()
+                print(f"Error in creating Student: {str(e)}")
                 
-                frappe.log_error(frappe.get_traceback(), f"Error in creating Student: {str(e)}")
+                frappe.log_error(message=f"{frappe.get_traceback()},  {e}", title= f"Error in creating Student: ")
                 return
+        # else:
+        #     # student_doc = frappe.get_doc('Online Student', existing_student )
+        #     # total_exams = frappe.db.count('Student Results', filters={"student_id": existing_student})
+        #     # student_doc.total_exams=total_exams+1
+        #     # student_doc.save()
+        #     student_id = student_doc.name
 
-        else:
-            student_doc = frappe.get_doc('Online Student', existing_student )
-            old_test_series_results = frappe.get_all('Student Results',filters={"student_id":existing_student})
-            student_doc.total_exams=len(old_test_series_results)+1
-            student_doc.save()
-            student_id = student_doc.name
         try:
             new_test_series_result = frappe.get_doc({
                 'doctype': 'Student Results',
@@ -466,10 +491,12 @@ def student_and_result_validation_and_creation(student_data):
             new_test_series_result.insert()
 
             frappe.db.set_value('Students Master Data', student_data['name'], 'imported', 1)
-            print('Student Result Created')
+            
+            print('Student Result Created',student_data['name'])
             # print(completed_records)
+            
 
-        except Exception as e:
+        except Exception as er:
             # print(e)
             frappe.get_doc({
                     'doctype': 'Not Imported Logs',
@@ -487,14 +514,17 @@ def student_and_result_validation_and_creation(student_data):
                     'total_skip': student_data.get('total_skip'),
                     'percentage': student_data.get('percentage'),
                     'student_master_data_id': student_data['name'],
+                    "error_message":f"Error in creating Student: {str(er)} \n {traceback.format_exc()}",
                     # 'student_id': student_id if student_id else None,
                 }).insert()
+            print(f"Error in creating Student Results: {str(er)}")
 
-            frappe.log_error(frappe.get_traceback(), f"Error in creating Student Results: {str(e)}")
+            frappe.log_error(message=f"{frappe.get_traceback()},  {er}", title=f"Error in creating Student Results: {str(er)}")
 #    frappe.log_error(frappe.get_traceback(), f"Error syncing student master data {student_data['name']} in Student Exam {student_data['exam_id']} for student name {student_data['student_name']} with mobile number {student_data['mobile']}.")
-    except Exception as e:
+    except Exception as err:
         # General error logging
-        frappe.log_error(frappe.get_traceback(), f"Error syncing student master data {student_data['name']} in Student Exam {student_data['exam_id']} for student name {student_data['student_name']} with mobile number {student_data['mobile']}.")
+        print(f"Error syncing student master data {student_data['name']} in Student Exam {student_data['exam_id']} for student name {student_data['student_name']} with mobile number {student_data['mobile']}.")
+        frappe.log_error(message=f"{frappe.get_traceback()},  {err}", title=f"Error syncing student master data {student_data['name']} in Student Exam {student_data['exam_id']} for student name {student_data['student_name']} with mobile number {student_data['mobile']}.")
 
 
 
