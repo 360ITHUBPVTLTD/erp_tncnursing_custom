@@ -106,85 +106,187 @@ class StudentExam(Document):
 ####################################Vatsal's Working Modified code for enqueing bulk operations start #########################
 
 
+# @frappe.whitelist()
+# def student_process_data(name, limit=1):
+#     # print("Tesssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+#     # frappe.log_error(f"Error processing student resultsRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
+#     try:
+#         students_exam_doc = frappe.get_doc('Student Exam', name)
+
+#         rq_job_for_student_exam = frappe.get_all("RQ Job",filters={"status":("in",["started","queued"])},fields=["arguments","name"])
+        
+#         for job in rq_job_for_student_exam:
+#             if students_exam_doc.name in job.arguments:
+#                 base_url = frappe.utils.get_url()
+#                 job_url = f"{base_url}/app/rq-job/{job.name}"
+#                 job_anchor_tag=f'<a href="{ base_url }/app/rq-job/{ job.name }">{ job.name }</a>'
+#                 return {"status":False, "msg":f"Data processing is already in Queue {job_anchor_tag}. . . the operation will be finished in 10 minutes, Please wait for the operation to complete"}
+        
+#         total_records = frappe.db.count('Students Master Data', filters={'imported': 0, 'exam_id': name})
+#         if not total_records:
+#             return {"status": False, "msg": f"No Student Master Data to process for this Exam {name}"}
+            
+#         elif total_records > limit:
+#             # Enqueue the background job
+#             frappe.enqueue('tnc_frappe_custom_app.tnc_custom_app.doctype.student_exam.student_exam.process_students_in_background', 
+#                         queue='long', 
+#                         timeout=7200, 
+#                         name=name, 
+#                         # limit=limit
+#                         )
+#             students_exam_doc.status="In Queue"
+#             students_exam_doc.save()
+#             frappe.db.commit()
+#             return {"status":True,"enqueued":True,"msg":"Data syncing is Enqueued Successfully!"}
+#         else:
+#             response_realtime_data_processing=process_data_realtime(name)
+#             return response_realtime_data_processing
+
+#     except Exception as e:
+#         return {"status": False, "msg": str(e)}
+#     # process_students_in_background(name, start, limit)
+
 @frappe.whitelist()
 def student_process_data(name, limit=1):
-    # print("Tesssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
-    # frappe.log_error(f"Error processing student resultsRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
     try:
+        print("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFunction triggered")
         students_exam_doc = frappe.get_doc('Student Exam', name)
-
-        rq_job_for_student_exam = frappe.get_all("RQ Job",filters={"status":("in",["started","queued"])},fields=["arguments","name"])
-        
-        for job in rq_job_for_student_exam:
-            if students_exam_doc.name in job.arguments:
+ 
+        # Avoid duplicate queueing
+        rq_jobs = frappe.get_all("RQ Job", filters={"status": ("in", ["started", "queued"])}, fields=["arguments", "name"])
+        for job in rq_jobs:
+            if name in job.arguments:
                 base_url = frappe.utils.get_url()
-                job_url = f"{base_url}/app/rq-job/{job.name}"
-                job_anchor_tag=f'<a href="{ base_url }/app/rq-job/{ job.name }">{ job.name }</a>'
-                return {"status":False, "msg":f"Data processing is already in Queue {job_anchor_tag}. . . the operation will be finished in 10 minutes, Please wait for the operation to complete"}
-        
-        total_records = frappe.db.count('Students Master Data', filters={'imported': 0, 'exam_id': name})
-        if not total_records:
-            return {"status": False, "msg": f"No Student Master Data to process for this Exam {name}"}
-            
-        elif total_records > limit:
-            # Enqueue the background job
-            frappe.enqueue('tnc_frappe_custom_app.tnc_custom_app.doctype.student_exam.student_exam.process_students_in_background', 
-                        queue='long', 
-                        timeout=7200, 
-                        name=name, 
-                        # limit=limit
-                        )
-            students_exam_doc.status="In Queue"
-            students_exam_doc.save()
-            frappe.db.commit()
-            return {"status":True,"enqueued":True,"msg":"Data syncing is Enqueued Successfully!"}
-        else:
-            response_realtime_data_processing=process_data_realtime(name)
-            return response_realtime_data_processing
-
-    except Exception as e:
-        return {"status": False, "msg": str(e)}
-    # process_students_in_background(name, start, limit)
-
-
-def process_students_in_background(name):
-    try:
-        students_exam_doc = frappe.get_doc('Student Exam', name)
-        exam_docname = students_exam_doc.name
-        students_master_data = frappe.get_all('Students Master Data', filters={
-            'imported': 0, 'exam_id': name
-        }, fields=['name', 'student_name', 'mobile', 'state', 'rank', 'total_marks', 'district', 
-                   'total_right', 'total_wrong', 'total_skip', 'percentage', 'exam_id'])
-                     
-        master_data_highest_rank = frappe.get_value('Students Master Data', filters={'exam_id': name}, fieldname='rank', order_by='rank desc')
-    
-        if not students_master_data:
-            frappe.log_error(frappe.get_traceback(), f"No Student Master Data To process for Exam {name}")
-            return {"status": False, "msg": f"No Student Master Data To process"}
-    
-        for student_data in students_master_data:
-            student_and_result_validation_and_creation(student_data)
-
-        actual_candidates = len(students_master_data)
-
-        # ✅ Use `frappe.db.set_value()` to avoid timestamp error
-        frappe.db.set_value("Student Exam", name, {
-            "status": "Data Synced",
-            "start_rank": 1,
-            "last_rank": master_data_highest_rank,
-            "actual_candidates": actual_candidates
+                job_anchor = f'<a href="{base_url}/app/rq-job/{job.name}">{job.name}</a>'
+                return {
+                    "status": False,
+                    "msg": f"⏳ Already in queue as {job_anchor}. Please wait for completion."
+                }
+ 
+        # Count total unprocessed records
+        total_records = frappe.db.count('Students Master Data', {
+            'imported': 0,
+            'exam_id': name
         })
-        frappe.db.commit()
-
-        assign_colors(exam_docname)
-        frappe.db.commit()
-    
-        return {"status": True, "msg": f"Data Processed Successfully"}
+ 
+        if not total_records:
+            return {"status": False, "msg": f"✅ No records left to process for Exam {name}"}
+ 
+        # For 10,000+ records, enqueue is preferred
+        if total_records >= limit:
+            frappe.enqueue(
+                method='tnc_frappe_custom_app.tnc_custom_app.doctype.student_exam.student_exam.process_students_in_background',
+                queue='long',
+                timeout=10800,  # 3 hours
+                is_async=True,
+                name=name
+            )
+            students_exam_doc.status = "In Queue"
+            students_exam_doc.save(ignore_permissions=True)
+            frappe.db.commit()
+            return {
+                "status": True,
+                "enqueued": True,
+                "msg": f"🚀 {total_records} records enqueued successfully!"
+            }
+ 
+        # For small datasets
+        return process_data_realtime(name)
+ 
     except Exception as e:
-        frappe.db.set_value("Student Exam", name, "status", "Failed Queue")
-        frappe.db.commit()
-        frappe.log_error(frappe.get_traceback(), "Error in background sync")
-        return {"status": False, "msg": f"Error in Background Processing Data: {str(e)}"}
+        frappe.log_error(frappe.get_traceback(), "Error in student_process_data")
+        return {"status": False, "msg": f"❌ {str(e)}"}
+
+ 
+ 
+ 
+ 
+def process_students_in_background(name, batch_size=1000):
+    try:
+        total_records = frappe.db.count('Students Master Data', {
+            'imported': 0,
+            'exam_id': name
+        })
+        # batch_size = total_records
+        if not total_records:
+            frappe.db.set_value("Student Exam", name, "status", "No Records")
+            return
+ 
+        processed_count = 0
+        start = 0
+ 
+        while processed_count < total_records:
+            batch = frappe.get_all(
+                'Students Master Data',
+                filters={'imported': 0, 'exam_id': name},
+                fields=["*"],
+                limit_page_length=batch_size,
+                limit_start=start
+            )
+ 
+            if not batch:
+                break
+ 
+            for student_data in batch:
+                student_and_result_validation_and_creation(student_data)
+ 
+            # Commit every batch to release locks
+            frappe.db.commit()
+ 
+            processed_count += len(batch)
+            start += batch_size
+ 
+            frappe.publish_realtime(
+                event='student_data_sync_progress',
+                message={'processed': processed_count, 'total': total_records}
+            )
+ 
+        frappe.db.set_value("Student Exam", name, "status", "Completed")
+        frappe.msgprint(f"✅ Processed {processed_count} records for Exam {name}")
+ 
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), f"❌ Error in processing students for exam {name}")
+        frappe.db.set_value("Student Exam", name, "status", "Failed")
+
+
+# def process_students_in_background(name):
+#     try:
+#         students_exam_doc = frappe.get_doc('Student Exam', name)
+#         exam_docname = students_exam_doc.name
+#         students_master_data = frappe.get_all('Students Master Data', filters={
+#             'imported': 0, 'exam_id': name
+#         }, fields=['name', 'student_name', 'mobile', 'state', 'rank', 'total_marks', 'district', 
+#                    'total_right', 'total_wrong', 'total_skip', 'percentage', 'exam_id'])
+                     
+#         master_data_highest_rank = frappe.get_value('Students Master Data', filters={'exam_id': name}, fieldname='rank', order_by='rank desc')
+    
+#         if not students_master_data:
+#             frappe.log_error(frappe.get_traceback(), f"No Student Master Data To process for Exam {name}")
+#             return {"status": False, "msg": f"No Student Master Data To process"}
+    
+#         for student_data in students_master_data:
+#             student_and_result_validation_and_creation(student_data)
+
+#         actual_candidates = len(students_master_data)
+
+#         # ✅ Use `frappe.db.set_value()` to avoid timestamp error
+#         frappe.db.set_value("Student Exam", name, {
+#             "status": "Data Synced",
+#             "start_rank": 1,
+#             "last_rank": master_data_highest_rank,
+#             "actual_candidates": actual_candidates
+#         })
+#         frappe.db.commit()
+
+#         assign_colors(exam_docname)
+#         frappe.db.commit()
+    
+#         return {"status": True, "msg": f"Data Processed Successfully"}
+#     except Exception as e:
+#         frappe.db.set_value("Student Exam", name, "status", "Failed Queue")
+#         frappe.db.commit()
+#         frappe.log_error(frappe.get_traceback(), "Error in background sync")
+#         return {"status": False, "msg": f"Error in Background Processing Data: {str(e)}"}
 
 # def process_students_in_background(name):
     
