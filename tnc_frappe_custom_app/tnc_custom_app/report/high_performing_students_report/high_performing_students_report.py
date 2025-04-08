@@ -435,8 +435,8 @@ Official Number: Call / WhatsApp: 7484999051"""
             "msg": wa_message,
             "wabaNumber": wa_config.waba_number,
             "output": "json",
-            "mobile": f"91{mobile}",
-            # "mobile": "917795194181",
+            # "mobile": f"91{mobile}",
+            "mobile": "917795194181",
             "sendMethod": "quick",
             "msgType": "media",
             # For production, generate a dynamic mediaUrl if needed.
