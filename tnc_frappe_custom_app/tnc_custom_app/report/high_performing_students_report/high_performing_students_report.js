@@ -37,55 +37,119 @@ frappe.query_reports["High performing Students Report"] = {
 			fieldname: "count",
 			label: "Top Students",
 			fieldtype: "Int",
-			default: 50
+			// default: 50
 		}
 		
 	],
 	"onload": function (report) {
+		// Adding a custom inner button to the report page
 		report.page.add_inner_button("Send WhatsApp", () => {
 			let filters = report.get_filter_values(true);
 			if (!filters) return;
-	
-			frappe.confirm(
-				"Are you sure you want to send WhatsApp messages to these students?",
-				() => {
-					// Yes - proceed to send
-					frappe.call({
-						method: "tnc_frappe_custom_app.tnc_custom_app.report.high_performing_students_report.high_performing_students_report.send_whatsapp_from_reports_using_rq", 
-						args: {
-							filters: filters
-						},
-						callback: function (r) {
-							if (r.message) {
-								if (r.message.success) {
-									frappe.msgprint({
-										title: __("✅ Success"),
-										message: `🎉 WhatsApp messages sent successfully! <br> ✅ Sent: ${r.message.sent_count} <br> ❌ Failed: ${r.message.failed_count}`,
-										indicator: "green"
-									});
-								} else {
-									frappe.msgprint({
-										title: __("⚠️ Partial Success"),
-										message: `✅ Sent: ${r.message.sent_count} <br> ❌ Failed: ${r.message.failed_count} <br> 🔍 Check logs for details.`,
-										indicator: "orange"
-									});
-								}
-							} else {
-								frappe.msgprint({
-									title: __("❌ Failed"),
-									message: "WhatsApp messages could not be sent.",
-									indicator: "red"
+			
+			// First, create a Bulk WhatsApp Entry from the report filters.
+			frappe.call({
+				method: "tnc_frappe_custom_app.tnc_custom_app.report.high_performing_students_report.high_performing_students_report.create_bulk_whatsapp_entry_from_report",
+				args: { filters: JSON.stringify(filters) },
+				callback: function(r) {
+					if (r.message && r.message.count !== undefined && r.message.bulk_docname) {
+						const count = r.message.count;
+						const bulk_docname = r.message.bulk_docname;
+						frappe.confirm(
+							`There will be ${count} WhatsApp messages triggered. Do you want to proceed?`,
+							() => {
+								// User confirmed: trigger the background job to send the messages
+								frappe.call({
+									method: "tnc_frappe_custom_app.tnc_custom_app.report.high_performing_students_report.high_performing_students_report.send_whatsapp_from_reports_using_rq",
+									args: { filters: JSON.stringify(filters), bulk_docname: bulk_docname },
+									callback: function(r) {
+										if (r.message) {
+											if (r.message.status === "Queued") {
+												frappe.msgprint({
+													title: __("✅ Success"),
+													message: "🎉 WhatsApp messages scheduled successfully!",
+													indicator: "green"
+												});
+											} else {
+												frappe.msgprint({
+													title: __("⚠️ Partial Success"),
+													message: "Some issues occurred scheduling WhatsApp messages. Check logs for details.",
+													indicator: "orange"
+												});
+											}
+										} else {
+											frappe.msgprint({
+												title: __("❌ Failed"),
+												message: "WhatsApp messages could not be scheduled.",
+												indicator: "red"
+											});
+										}
+									}
+								});
+							},
+							() => {
+								// User cancelled – now cancel the Bulk WhatsApp Entry
+								frappe.call({
+									method: "tnc_frappe_custom_app.tnc_custom_app.report.high_performing_students_report.high_performing_students_report.cancel_bulk_result",
+									args: { bulk_docname: bulk_docname },
+									callback: function() {
+										frappe.msgprint(__('Sending cancelled and bulk entry deleted.'));
+									}
 								});
 							}
-						}
-					});
-				},
-				() => {
-					// No - cancelled
-					frappe.msgprint(__('Sending cancelled.'));
+						);
+					} else {
+						frappe.msgprint(__('Failed to create bulk entry for WhatsApp sharing.'));
+					}
 				}
-			);
+			});
 		});
+
+		
+		// report.page.add_inner_button("Send WhatsApp", () => {
+		// 	let filters = report.get_filter_values(true);
+		// 	if (!filters) return;
+	
+		// 	frappe.confirm(
+		// 		"Are you sure you want to send WhatsApp messages to these students?",
+		// 		() => {
+		// 			// Yes - proceed to send
+		// 			frappe.call({
+		// 				method: "tnc_frappe_custom_app.tnc_custom_app.report.high_performing_students_report.high_performing_students_report.send_whatsapp_from_reports_using_rq", 
+		// 				args: {
+		// 					filters: filters
+		// 				},
+		// 				callback: function (r) {
+		// 					if (r.message) {
+		// 						if (r.message.success) {
+		// 							frappe.msgprint({
+		// 								title: __("✅ Success"),
+		// 								message: `🎉 WhatsApp messages sent successfully! <br> ✅ Sent: ${r.message.sent_count} <br> ❌ Failed: ${r.message.failed_count}`,
+		// 								indicator: "green"
+		// 							});
+		// 						} else {
+		// 							frappe.msgprint({
+		// 								title: __("⚠️ Partial Success"),
+		// 								message: `✅ Sent: ${r.message.sent_count} <br> ❌ Failed: ${r.message.failed_count} <br> 🔍 Check logs for details.`,
+		// 								indicator: "orange"
+		// 							});
+		// 						}
+		// 					} else {
+		// 						frappe.msgprint({
+		// 							title: __("❌ Failed"),
+		// 							message: "WhatsApp messages could not be sent.",
+		// 							indicator: "red"
+		// 						});
+		// 					}
+		// 				}
+		// 			});
+		// 		},
+		// 		() => {
+		// 			// No - cancelled
+		// 			frappe.msgprint(__('Sending cancelled.'));
+		// 		}
+		// 	);
+		// });
 	}
 	
 	
