@@ -13,7 +13,8 @@
   "column_break_amxg",
   "sent",
   "count",
-  "status"
+  "status",
+  "report_filters"
  ],
  "fields": [
   {
@@ -64,12 +65,16 @@
    "fieldname": "exam_title_name",
    "fieldtype": "Data",
    "label": "Exam Title Name"
+  },
+  {
+   "fieldname": "report_filters",
+   "fieldtype": "Small Text",
+   "label": "Report Filters"
   }
  ],
- "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-26 16:32:13.636055",
+ "modified": "2025-04-08 12:49:59.207014",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Bulk whatsapp Sharing Results",
