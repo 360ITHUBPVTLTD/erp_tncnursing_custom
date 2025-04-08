@@ -272,6 +272,10 @@ doc_events = {
     "Data Import": {
         # "on_update": "tnc_frappe_custom_app.data_import_id.handle_data_import_after_save"
     },
+    "Report":{
+        "on_update": "tnc_frappe_custom_app.custom_report_handler.handle_report_before_save"
+        
+    }
     # "Data Import Log": {
     #     # "after_insert": "tnc_frappe_custom_app.data_import_id.handle_data_import_after_save"
     # }
