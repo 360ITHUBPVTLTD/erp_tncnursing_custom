@@ -784,7 +784,7 @@ def enqueue_pdf_generation_for_students_manual_s3():
         count += 1
         if count % 100 == 0: # Log progress every 100 students
              logger.info(f"Enqueued {count}/{total} PDF generation jobs...")
-        break
+        # break
 
     logger.info(f"Finished enqueueing PDF generation for {count} students.")
     print(f"Finished enqueueing PDF generation for {count} students.") # Also print for bench execute
@@ -875,7 +875,7 @@ def generate_and_save_student_pdf_manual_s3(student_name, encryption_key):
 
         # --- Define S3 Key ---
         safe_key_part = ''.join(filter(str.isalnum, encryption_key))
-        s3_key = f"student_results/{safe_key_part}_{student_name.replace(' ', '_')}_test_again.pdf"
+        s3_key = f"student_results_09_04_2025/{student_doc.student_name.lower().replace(' ', '_')}.pdf"
         logger.info(f"Generated S3 key: {s3_key}")
 
         # --- Upload to S3 using BytesIO ---
@@ -921,7 +921,11 @@ def generate_and_save_student_pdf_manual_s3(student_name, encryption_key):
         # --- Update Student Record ---
         # ... (same as before) ...
         try:
-             student_doc.db_set("result_pdf_attachment", presigned_url)
+            #  student_doc.db_set("result_pdf_attachment", presigned_url)
+            student_doc.db_set({
+                "result_pdf_attachment": presigned_url, # The temporary access URL
+                "result_s3_key": s3_key             # The permanent object identifier
+            })
         except Exception as db_update_err:
             # ... error handling ...
             return {'status': 'error', 'message': f"Failed DB update: {db_update_err}"}

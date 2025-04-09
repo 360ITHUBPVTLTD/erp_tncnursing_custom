@@ -18,7 +18,8 @@
   "amount",
   "payment_link",
   "encryption_key",
-  "result_pdf_attachment"
+  "result_pdf_attachment",
+  "result_s3_key"
  ],
  "fields": [
   {
@@ -98,12 +99,19 @@
   {
    "fieldname": "result_pdf_attachment",
    "fieldtype": "Small Text",
-   "label": "Result PDF Attachment"
+   "label": "Result PDF Attachment",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "result_s3_key",
+   "fieldtype": "Small Text",
+   "label": "Result S3 Key",
+   "permlevel": 2
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-09 22:07:43.841550",
+ "modified": "2025-04-10 02:12:18.940121",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Online Student",
