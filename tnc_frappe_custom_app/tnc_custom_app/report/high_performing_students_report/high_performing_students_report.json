@@ -10,7 +10,7 @@
  "is_standard": "Yes",
  "letter_head": "TNC Logo",
  "letterhead": null,
- "modified": "2025-04-09 18:06:37.390157",
+ "modified": "2025-04-09 23:03:41.694566",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "High performing Students Report",
@@ -30,5 +30,5 @@
    "role": "Administrator"
   }
  ],
- "timeout": 600
+ "timeout": 5000
 }
