@@ -377,7 +377,7 @@ def send_whatsapp_from_reports_using_rq(filters, bulk_docname):
     frappe.enqueue(
         method="tnc_frappe_custom_app.tnc_custom_app.report.high_performing_students_report.high_performing_students_report.send_whatsapp",
         queue="long",
-        timeout=600,
+        timeout=25200,
         job_id="Send WhatsApp Bulk Messages " + bulk_docname,
         filters=filters,
         bulk_docname=bulk_docname
@@ -470,6 +470,7 @@ Download Your Result from here 👉🏻
             "wabaNumber": wa_config.waba_number,
             "output": "json",
             # "mobile": f"91{mobile}",
+            # "campaignName": "Vatsal Testing 9 April 2025",
             "mobile": f"919098543046",
             "sendMethod": "quick",
             "msgType": "text",
