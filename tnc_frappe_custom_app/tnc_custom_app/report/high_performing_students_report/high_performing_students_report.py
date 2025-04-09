@@ -496,6 +496,7 @@ Download Your Result from here 👉🏻
         # )
         # break
 
+
     # Update the Bulk WhatsApp doc with the results
     try:
         bulk_doc = frappe.get_doc("Bulk whatsapp Sharing Results", bulk_docname)
