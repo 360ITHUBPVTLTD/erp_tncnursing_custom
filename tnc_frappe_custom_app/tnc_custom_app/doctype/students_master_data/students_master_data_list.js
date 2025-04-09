@@ -13,6 +13,65 @@
 
 frappe.listview_settings['Students Master Data'] = {
     onload: function(listview) {
+
+        // Add a custom menu item to trigger duplicate removal.
+        listview.page.add_inner_button(__('Remove Duplicates'), function() {
+            // Create a dialog to accept the doctype and exam_id
+            let d = new frappe.ui.Dialog({
+                title: 'Remove Duplicate Records',
+                fields: [
+                    {
+                        "fieldname": "doctype",
+                        "fieldtype": "Select",
+                        "label": "Select Doctype",
+                        "options": "\nStudents Master Data\nStudent Results",
+                        "reqd": 1
+                    },
+                    {
+                        "fieldname": "exam_id",
+                        "fieldtype": "Link",
+                        "label": "Exam ID",
+                        "options": "Student Exam",
+                        "reqd": 1
+                    }
+                ]
+            });
+            
+            // Primary action - trigger backend function based on input
+            d.set_primary_action(__('Submit'), function() {
+                let values = d.get_values();
+                if(values) {
+                    let backend_method = "";
+                    
+                    // Determine which backend method to call based on the selected doctype.
+                    if(values.doctype === 'Students Master Data'){
+                        backend_method = "tnc_frappe_custom_app.tnc_custom_app.doctype.students_master_data.students_master_data.remove_duplicate_students_master_data";
+                    } else if(values.doctype === 'Student Results'){
+                        backend_method = "tnc_frappe_custom_app.tnc_custom_app.doctype.students_master_data.students_master_data.remove_duplicate_student_results";
+                    } else {
+                        frappe.msgprint(__("Invalid doctype selected."));
+                        return;
+                    }
+                    
+                    // Call the corresponding backend function with the provided exam_id.
+                    frappe.call({
+                        method: backend_method,
+                        args: {
+                            exam_id: values.exam_id
+                        },
+                        callback: function(r) {
+                            if(r.message) {
+                                frappe.msgprint(__("Result: " + r.message));
+                            }
+                        }
+                    });
+                    d.hide();
+                }
+            });
+            
+            d.show();
+        });
+
         // listview.page.add_inner_button(__('Delete Data'), function() {
         //     // Show a confirmation dialog
         //     frappe.confirm(
