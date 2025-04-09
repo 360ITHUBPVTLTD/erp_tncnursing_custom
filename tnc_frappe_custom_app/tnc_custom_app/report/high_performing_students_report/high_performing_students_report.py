@@ -469,9 +469,7 @@ Download Your Result from here 👉🏻
             "msg": wa_message,
             "wabaNumber": wa_config.waba_number,
             "output": "json",
-            # "mobile": f"91{mobile}",
-            # "campaignName": "Vatsal Testing 9 April 2025",
-            "mobile": f"919098543046",
+            "mobile": f"91{mobile}",
             "sendMethod": "quick",
             "msgType": "text",
             "templateName": "exem_result_final_3"
@@ -496,7 +494,8 @@ Download Your Result from here 👉🏻
         #     title="WhatsApp Iteration Time",
         #     message=f"Duration for {student_name} ({mobile}): {duration} seconds"
         # )
-        break
+        # break
+
 
     # Update the Bulk WhatsApp doc with the results
     try:
