@@ -28,7 +28,12 @@
   "password",
   "app_password",
   "section_break_pglz",
-  "bulk_wa_test_mobile_no"
+  "bulk_wa_test_mobile_no",
+  "s3_bucket_settings_section",
+  "bucket",
+  "region_name",
+  "access_key",
+  "secret_key"
  ],
  "fields": [
   {
@@ -150,12 +155,37 @@
    "fieldname": "bulk_wa_test_mobile_no",
    "fieldtype": "Small Text",
    "label": "Bulk WA Test Mobile No"
+  },
+  {
+   "fieldname": "s3_bucket_settings_section",
+   "fieldtype": "Section Break",
+   "label": "S3 Bucket Settings"
+  },
+  {
+   "fieldname": "bucket",
+   "fieldtype": "Data",
+   "label": "Bucket"
+  },
+  {
+   "fieldname": "region_name",
+   "fieldtype": "Data",
+   "label": "Region Name"
+  },
+  {
+   "fieldname": "access_key",
+   "fieldtype": "Data",
+   "label": "Access Key"
+  },
+  {
+   "fieldname": "secret_key",
+   "fieldtype": "Data",
+   "label": "Secret Key"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-04-09 14:30:55.954615",
+ "modified": "2025-04-09 21:24:02.472899",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Admin Settings",

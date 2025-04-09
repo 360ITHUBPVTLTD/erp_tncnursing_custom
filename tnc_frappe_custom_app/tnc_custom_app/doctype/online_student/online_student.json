@@ -17,7 +17,8 @@
   "system_imported",
   "amount",
   "payment_link",
-  "encryption_key"
+  "encryption_key",
+  "result_pdf_attachment"
  ],
  "fields": [
   {
@@ -93,11 +94,16 @@
    "label": "Encryption Key",
    "permlevel": 2,
    "unique": 1
+  },
+  {
+   "fieldname": "result_pdf_attachment",
+   "fieldtype": "Small Text",
+   "label": "Result PDF Attachment"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-09 12:05:28.758265",
+ "modified": "2025-04-09 22:07:43.841550",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Online Student",
