@@ -116,7 +116,8 @@ def get_columns():
         {"label": "Green %", "fieldname": "green_percent", "fieldtype": "Float", "width": 100},
         {"label": "Yellow %", "fieldname": "yellow_percent", "fieldtype": "Float", "width": 100},
         {"label": "Red %", "fieldname": "red_percent", "fieldtype": "Float", "width": 100},
-        {"label": "CPS", "fieldname": "cps", "fieldtype": "Float", "width": 100}
+        {"label": "CPS", "fieldname": "cps", "fieldtype": "Float", "width": 100},
+        # {"label": "PDF URL", "fieldname": "pdf_url", "fieldtype": "Small Text", "width": 500},
     ]
 
 # ----------------------------------------------
@@ -148,7 +149,10 @@ def get_data(filters):
     yellow_weight = admin_settings.yellow or 0.3
     red_weight = admin_settings.red or 1.5
 
+    base_url = get_url()
+
     for row in results:
+        print(row)
         total = row.total_exams or 1
         row.green_percent = round((row.green_count / total) * 100, 2)
         row.yellow_percent = round((row.yellow_count / total) * 100, 2)
@@ -161,6 +165,8 @@ def get_data(filters):
             (row.red_percent * red_weight),
             2
         )
+        
+        # row.pdf_url = f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Online%20Student&name={row.student_id}&format=Student%20Results%20Top%20Performer&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en"
 
 
     if filters.get("min_total_exams"):
@@ -400,6 +406,7 @@ def send_whatsapp(filters, bulk_docname):
 
     failed = []
     count = 0
+
     for student in student_data:
         mobile = student.get("student_mobile")
         if not mobile:
@@ -410,6 +417,11 @@ def send_whatsapp(filters, bulk_docname):
 
         student_name = student.get("student_name")
         exam_name = "NORCET 8.0 Prelims"
+        second_variable = "TNC Test Series"
+        third_variable = "TNC"
+        fourth_variable = "TNC Nursing"
+        student_name = "Mohan Raj"
+
         base_url = get_url()  # Get the site's base URL
         # Compose the media WhatsApp message
 #         wa_message = f"""Dear {student_name},
@@ -419,16 +431,42 @@ def send_whatsapp(filters, bulk_docname):
 # Best regards,
 # TNC Administration"""
         
+#         wa_message = f"""Dear {student_name} ji ,
+
+# Before the upcoming {exam_name} Exam, we are sharing the TNC Test Series Performance Report based on daily test results.
+# This report provides an overview of academic progress and is intended to support better preparation for the final exam.
+
+# Thank you for your trust in TNC.
+# Your Success is Our Concern.
+
+# TNC Nursing
+# Official Number: Call / WhatsApp: 7484999051"""
+#         wa_message = f"""नमस्कार !
+# आपले मत आमच्यासाठी खूप महत्वाचे आहे. फक्त 30 सेकंड लागेल.
+# *खालील दिलेल्या लिंक वर क्लिक करून एक फॉर्म उघडेल ज्याच्यात आपले अमूल्य मत मांडावेत.*
+# धन्यवाद"""
+#         wa_message = f"""Dear {student_name}ji ,
+
+# Before the upcoming {exam_name} Exam, we are sharing the {second_variable} Performance Report based on daily test results.
+# This report provides an overview of academic progress and is intended to support better preparation for the final exam.
+
+# Thank you for your trust in {third_variable}.
+# Your Success is Our Concern.
+
+# {fourth_variable}
+# Official Number: Call / WhatsApp: 7484999051"""
+
         wa_message = f"""Dear {student_name} ji ,
 
-Before the upcoming {exam_name} Exam, we are sharing the TNC Test Series Performance Report based on daily test results.
+Before the upcoming {exam_name} Exam, we are sharing the {second_variable} Performance Report based on daily test results.
 This report provides an overview of academic progress and is intended to support better preparation for the final exam.
 
-Thank you for your trust in TNC.
+Thank you for your trust in {third_variable}.
 Your Success is Our Concern.
 
-TNC Nursing
+{fourth_variable}
 Official Number: Call / WhatsApp: 7484999051"""
+
 
         payload = {
             "userid": wa_config.user_id,
@@ -436,25 +474,28 @@ Official Number: Call / WhatsApp: 7484999051"""
             "wabaNumber": wa_config.waba_number,
             "output": "json",
             # "mobile": f"91{mobile}",
-            "mobile": "917795194181",
+            "mobile": "919513777002",
             "sendMethod": "quick",
-            "msgType": "media",
+            # "msgType": "media",
+            "msgType": "text",
             # For production, generate a dynamic mediaUrl if needed.
-            "mediaUrl": f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Online%20Student&name={student.get('student_id')}&format=Student%20Results%20Top%20Performer&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en",
+            # "mediaUrl": f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Online%20Student&name={student.get('student_id')}&format=Student%20Results%20Top%20Performer&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en",
             # "mediaUrl": f"https://tnc.360ithub.com/api/method/frappe.utils.print_format.download_pdf?doctype=Online%20Student&name=TNC-Student-00074203&format=Student%20Results%20Top%20Performer&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en",
             # "media_url" : f"{base_url}/api/method/frappe.utils.print_format.download_pdf?doctype=Student%20Results&name={docname}&format=Dynamic%20Student%20Print%20Format&no_letterhead=0&letterhead=TNC%20Logo&settings=%7B%7D&_lang=en",
-            "mediaType": "document",
-            "documentName": "student_results.pdf",
-            "templateName": "exem_result"
+            # "mediaUrl":"https://tourism.gov.in/sites/default/files/2019-04/dummy-pdf_2.pdf",
+            # "mediaType": "document",
+            # "documentName": f'{student_name.lower().replace(" ", "_")}.pdf',
+            # "templateName": "exam_result"
+            "templateName": "exam"
         }
         
         try:
-            response = requests.post(api_url, json=payload, headers=headers)
-            frappe.log_error(title="WhatsApp Response", message=f"Response: {response.json()}\nPayload:{payload}")
-            count += 1
+            # response = requests.post(api_url, json=payload, headers=headers)
+            # frappe.log_error(title="WhatsApp Response", message=f"Response: {response.json()}\nPayload:{payload}")
+            # count += 1
 
             
-            # frappe.log_error(title="WhatsApp Payload", message=f"Payload: {payload}")
+            frappe.log_error(title="WhatsApp Payload", message=f"Payload: {payload}")
             
         except requests.exceptions.RequestException as e:
             error_msg = f"Failed to send WhatsApp to {student_name} ({mobile}): {str(e)}"
@@ -590,3 +631,4 @@ def get_whatsapp_count(filters):
     count = len(student_data) if student_data else 0
     
     return {"count": count}
+
