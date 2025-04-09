@@ -126,20 +126,36 @@ def get_columns():
 def get_data(filters):
     where_clause, query_filters = get_common_conditions(filters)
 
+    # query = f"""
+    #     SELECT 
+    #         sr.student_id,
+    #         sr.student_name,
+    #         sr.student_mobile,
+    #         COUNT(sr.name) AS total_exams,
+    #         SUM(CASE WHEN sr.rank_color = 'G' THEN 1 ELSE 0 END) AS green_count,
+    #         SUM(CASE WHEN sr.rank_color = 'Y' THEN 1 ELSE 0 END) AS yellow_count,
+    #         SUM(CASE WHEN sr.rank_color = 'R' THEN 1 ELSE 0 END) AS red_count
+    #     FROM `tabStudent Results` sr
+    #     WHERE sr.rank_color IS NOT NULL AND sr.rank_color != ''
+    #     {f'AND {where_clause[6:]}' if where_clause else ''}
+    #     GROUP BY sr.student_id
+    # """
     query = f"""
-        SELECT 
-            sr.student_id,
-            sr.student_name,
-            sr.student_mobile,
-            COUNT(sr.name) AS total_exams,
-            SUM(CASE WHEN sr.rank_color = 'G' THEN 1 ELSE 0 END) AS green_count,
-            SUM(CASE WHEN sr.rank_color = 'Y' THEN 1 ELSE 0 END) AS yellow_count,
-            SUM(CASE WHEN sr.rank_color = 'R' THEN 1 ELSE 0 END) AS red_count
-        FROM `tabStudent Results` sr
-        WHERE sr.rank_color IS NOT NULL AND sr.rank_color != ''
-        {f'AND {where_clause[6:]}' if where_clause else ''}
-        GROUP BY sr.student_id
-    """
+    SELECT
+        sr.student_id,
+        sr.student_name,
+        sr.student_mobile,
+        os.encryption_key,  -- Include the encryption_key from Online Student
+        COUNT(sr.name) AS total_exams,
+        SUM(CASE WHEN sr.rank_color = 'G' THEN 1 ELSE 0 END) AS green_count,
+        SUM(CASE WHEN sr.rank_color = 'Y' THEN 1 ELSE 0 END) AS yellow_count,
+        SUM(CASE WHEN sr.rank_color = 'R' THEN 1 ELSE 0 END) AS red_count
+    FROM `tabStudent Results` sr
+    LEFT JOIN `tabOnline Student` os ON sr.student_id = os.name  -- LEFT JOIN with Online Student table
+    WHERE sr.rank_color IS NOT NULL AND sr.rank_color != ''
+    {f'AND {where_clause[6:]}' if where_clause else ''}
+    GROUP BY sr.student_id
+"""
 
 
     results = frappe.db.sql(query, query_filters, as_dict=True)
@@ -403,10 +419,12 @@ def send_whatsapp(filters, bulk_docname):
         "apikey": wa_config.get_password('api_key'),
         "Content-Type": "application/json"
     }
+    admin_doc = frappe.get_doc("Admin Settings")
+    bulk_wa_test_mobile_no = admin_doc.bulk_wa_test_mobile_no
 
     failed = []
     count = 0
-
+    mobile_no_s = bulk_wa_test_mobile_no.split(",")
     for student in student_data:
         mobile = student.get("student_mobile")
         if not mobile:
@@ -420,11 +438,16 @@ def send_whatsapp(filters, bulk_docname):
         second_variable = "TNC Test Series"
         third_variable = "TNC"
         fourth_variable = "TNC Nursing"
-        student_name = "Mohan Raj"
+        # student_name = "Mohan Raj"
+        file_encryption_key = student.get("encryption_key")
+
+        # file_encryption_key = mobile_no_s[count]
 
         base_url = get_url()  # Get the site's base URL
+        file_url = f"{base_url}/api/method/tnc_frappe_custom_app.result_sharing.download_result_by_key?encryption_key={file_encryption_key}"
         # Compose the media WhatsApp message
 #         wa_message = f"""Dear {student_name},
+
 
 # Please Check your Results Summary
 
@@ -456,16 +479,29 @@ def send_whatsapp(filters, bulk_docname):
 # {fourth_variable}
 # Official Number: Call / WhatsApp: 7484999051"""
 
+#         wa_message = f"""Dear {student_name} ji ,
+
+# Before the upcoming {exam_name} Exam, we are sharing the {second_variable} Performance Report based on daily test results.
+# This report provides an overview of academic progress and is intended to support better preparation for the final exam.
+
+# Thank you for your trust in {third_variable}.
+# Your Success is Our Concern.
+
+# {fourth_variable}
+# Official Number: Call / WhatsApp: 7484999051"""
+        
         wa_message = f"""Dear {student_name} ji ,
 
-Before the upcoming {exam_name} Exam, we are sharing the {second_variable} Performance Report based on daily test results.
+Before the upcoming {exam_name} Exam, we are sharing the TNC Test Series Performance Report based on daily test results.
 This report provides an overview of academic progress and is intended to support better preparation for the final exam.
 
-Thank you for your trust in {third_variable}.
+Thank you for your trust in TNC.
 Your Success is Our Concern.
 
-{fourth_variable}
-Official Number: Call / WhatsApp: 7484999051"""
+TNC Nursing
+Official Number: Call / WhatsApp: 7484999051
+
+Result: {file_url}"""
 
 
         payload = {
@@ -474,7 +510,8 @@ Official Number: Call / WhatsApp: 7484999051"""
             "wabaNumber": wa_config.waba_number,
             "output": "json",
             # "mobile": f"91{mobile}",
-            "mobile": "919513777002",
+            # "mobile": "919098543046",
+            "mobile": f"91{mobile_no_s[count]}",
             "sendMethod": "quick",
             # "msgType": "media",
             "msgType": "text",
@@ -486,16 +523,21 @@ Official Number: Call / WhatsApp: 7484999051"""
             # "mediaType": "document",
             # "documentName": f'{student_name.lower().replace(" ", "_")}.pdf',
             # "templateName": "exam_result"
-            "templateName": "exam"
+            "templateName": "exem_result_final"
         }
         
         try:
-            # response = requests.post(api_url, json=payload, headers=headers)
-            # frappe.log_error(title="WhatsApp Response", message=f"Response: {response.json()}\nPayload:{payload}")
-            # count += 1
+            response = requests.post(api_url, json=payload, headers=headers)
+            frappe.log_error(title="WhatsApp Response", message=f"Response: {response.json()}\nPayload:{payload}")
+
+
+            # frappe.log_error(title="WhatsApp Payload", message=f"Payload: {payload}")
+            count += 1
+            if count == len(bulk_wa_test_mobile_no):
+                break
 
             
-            frappe.log_error(title="WhatsApp Payload", message=f"Payload: {payload}")
+            
             
         except requests.exceptions.RequestException as e:
             error_msg = f"Failed to send WhatsApp to {student_name} ({mobile}): {str(e)}"
@@ -507,7 +549,7 @@ Official Number: Call / WhatsApp: 7484999051"""
             title="WhatsApp Iteration Time",
             message=f"Duration for {student_name} ({mobile}): {duration} seconds"
         )
-        break
+        # break
 
     # Update the Bulk WhatsApp doc with the results
     try:
