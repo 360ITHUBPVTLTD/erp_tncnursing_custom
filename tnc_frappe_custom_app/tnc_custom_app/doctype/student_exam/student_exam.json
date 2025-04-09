@@ -84,7 +84,7 @@
   {
    "fieldname": "actual_candidates",
    "fieldtype": "Data",
-   "label": "Actual Candidates",
+   "label": "AC",
    "read_only": 1
   },
   {
@@ -203,7 +203,7 @@
   {
    "fieldname": "processed_candidates",
    "fieldtype": "Int",
-   "label": "Processed Candidates",
+   "label": "PC",
    "read_only": 1
   },
   {
@@ -218,7 +218,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-05 17:50:35.706043",
+ "modified": "2025-04-09 12:02:53.489930",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Student Exam",

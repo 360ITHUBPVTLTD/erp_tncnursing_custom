@@ -4,6 +4,11 @@
 import frappe
 from frappe.model.document import Document
 
+import random
+import string
+
+
+
 ################### Below code give the Actual count of OnlineStudent Master Data to the OnlineStudent Exam based on their ID #################################################################
 
 class OnlineStudent(Document):
@@ -204,3 +209,37 @@ TNC Administration"""
     except Exception as e:
         frappe.log_error(f"Unexpected error: {str(e)}", "Send WhatsApp Results Error")
         return {"status": "Failed", "message": "An unexpected error occurred. Check logs."}
+    
+
+
+
+
+@frappe.whitelist()
+def bulk_generate_encryption_keys():
+    """Bulk update encryption_key field for all Online Student documents."""
+    # Fetch all documents from Online Student doctype
+    students = frappe.get_all("Online Student", fields=["name"])
+    
+    updated_records = []
+    for student in students:
+        # Generate a new random encryption key
+        new_key = generate_random_string(14)
+        # Update the encryption_key field for this document
+        frappe.db.set_value("Online Student", student.name, "encryption_key", new_key)
+        updated_records.append((student.name, new_key))
+    
+    frappe.db.commit()  # Commit after bulk updating all records
+    
+    # Print feedback for each updated record
+    for record in updated_records:
+        print(f"Updated {record[0]} with encryption_key: {record[1]}")
+    
+    return f"Updated {len(updated_records)} documents."
+
+
+
+def generate_random_string(length=14):
+    """Generates a random string of given length containing upper case,
+    lower case letters and digits."""
+    characters = string.ascii_letters + string.digits  # a-z, A-Z, 0-9
+    return ''.join(random.choices(characters, k=length))
