@@ -52,25 +52,51 @@ import frappe
 #     )
 
 
-from frappe.utils.print_format import download_pdf
+# from frappe.utils.print_format import download_pdf
  
+# @frappe.whitelist(allow_guest=True)
+# def download_result_by_key(encryption_key):
+#     # Step 1: Get student name based on encryption key
+#     student_name = frappe.get_value("Online Student", {"encryption_key": encryption_key}, "name")
+#     if not student_name:
+#         frappe.throw("Invalid or expired key")
+ 
+#     # Step 2: Call the correct print function
+#     return download_pdf(
+#         doctype="Online Student",
+#         name=student_name,
+#         format="Student Results Top Performer",
+#         no_letterhead=0,
+#         letterhead="TNC Logo",
+#         # settings={},
+#         # _lang="en"
+#     )
+from frappe.utils.print_format import download_pdf
+from frappe import _
+
 @frappe.whitelist(allow_guest=True)
 def download_result_by_key(encryption_key):
-    # Step 1: Get student name based on encryption key
-    student_name = frappe.get_value("Online Student", {"encryption_key": encryption_key}, "name")
-    if not student_name:
-        frappe.throw("Invalid or expired key")
- 
-    # Step 2: Call the correct print function
-    return download_pdf(
-        doctype="Online Student",
-        name=student_name,
-        format="Student Results Top Performer",
-        no_letterhead=0,
-        letterhead="TNC Logo",
-        # settings={},
-        # _lang="en"
-    )
+    try:
+        # Step 1: Validate the encryption key
+        student_name = frappe.get_value("Online Student", {"encryption_key": encryption_key}, "name")
+        if not student_name:
+            # Return a generic error without traceback
+            frappe.local.response.http_status_code = 403
+            return {"status": "error", "message": _("Invalid or expired link.")}
+
+        # Step 2: Generate and return the PDF
+        return download_pdf(
+            doctype="Online Student",
+            name=student_name,
+            format="Student Results Top Performer",
+            no_letterhead=0,
+            letterhead="TNC Logo"
+        )
+
+    except Exception:
+        # Catch unexpected issues and respond safely
+        frappe.local.response.http_status_code = 500
+        return {"status": "error", "message": _("Something went wrong while processing your request.")}
 
 
 
