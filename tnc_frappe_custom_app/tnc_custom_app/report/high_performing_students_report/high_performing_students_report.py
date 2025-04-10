@@ -427,7 +427,7 @@ def send_whatsapp(filters, bulk_docname):
     count = 0
     mobile_no_s = bulk_wa_test_mobile_no.split(",")
 
-    unsuccessfull_wa = frappe.get_all("Unsuccessful Whatsapp Log")
+    unsuccessfull_wa = frappe.get_all("Unsuccessful Whatsapp Logs")
     unsuccessfull_wa_list = [i.name for i in unsuccessfull_wa]
         
     for student in student_data:
