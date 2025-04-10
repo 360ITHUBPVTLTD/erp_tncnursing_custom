@@ -153,7 +153,7 @@
   },
   {
    "fieldname": "bulk_wa_test_mobile_no",
-   "fieldtype": "Small Text",
+   "fieldtype": "Text",
    "label": "Bulk WA Test Mobile No"
   },
   {
@@ -185,7 +185,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-04-09 21:24:02.472899",
+ "modified": "2025-04-10 09:27:18.100205",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Admin Settings",
