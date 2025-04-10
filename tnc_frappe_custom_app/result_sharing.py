@@ -757,18 +757,23 @@ def enqueue_pdf_generation_for_students_manual_s3():
         "Online Student",
         filters={
             # "docstatus": 1,
-            "result_pdf_attachment": ["is", "not set"],
+            # "result_pdf_attachment": ["is", "not set"],
             # Add any other relevant filters, e.g., specific academic year, batch etc.
             # "academic_year": "2023-24"
         },
-        fields=["name", "encryption_key"]
+        fields=["name", "encryption_key","student_name"]
     )
+    admin_doc = frappe.get_doc("Admin Settings", "Admin Settings")
+    redundant_name = admin_doc.bulk_wa_test_mobile_no
+    redundant_name_list = redundant_name.split(",")
 
     count = 0
     total = len(students)
     logger.info(f"Found {total} students needing PDF generation.")
 
     for student in students:
+        if student.student_name not in redundant_name_list:
+            continue
         if not student.encryption_key:
             logger.warning(f"Skipping student {student.name} due to missing encryption key.")
             continue
@@ -875,7 +880,7 @@ def generate_and_save_student_pdf_manual_s3(student_name, encryption_key):
 
         # --- Define S3 Key ---
         safe_key_part = ''.join(filter(str.isalnum, encryption_key))
-        s3_key = f"student_results_09_04_2025/{student_doc.student_name.lower().replace(' ', '_')}.pdf"
+        s3_key = f"student_results_09_04_2025/{student_doc.encryption_key}_{student_doc.student_name.lower().replace(' ', '_')}.pdf"
         logger.info(f"Generated S3 key: {s3_key}")
 
         # --- Upload to S3 using BytesIO ---
