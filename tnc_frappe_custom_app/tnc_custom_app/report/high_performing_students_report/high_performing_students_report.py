@@ -385,6 +385,7 @@ def send_whatsapp_from_reports_using_rq(filters, bulk_docname):
     
     return {"status": "Queued", "message": "WhatsApp message sending is scheduled in the background."}
 
+
 @frappe.whitelist()
 def send_whatsapp(filters, bulk_docname):
     if isinstance(filters, str):
@@ -425,12 +426,20 @@ def send_whatsapp(filters, bulk_docname):
     failed = []
     count = 0
     mobile_no_s = bulk_wa_test_mobile_no.split(",")
+
+    unsuccessfull_wa = frappe.get_all("Unsuccessful Whatsapp Log")
+    unsuccessfull_wa_list = [i.name for i in unsuccessfull_wa]
+        
     for student in student_data:
         mobile = student.get("student_mobile")
         if not mobile:
             frappe.log_error(f"Missing mobile number for {student.get('student_name')}", "WhatsApp Skipped")
             failed.append(student.get("student_id"))
             continue
+
+        if mobile not in unsuccessfull_wa_list:
+            continue
+
         # iteration_start = time.time()
 
         student_name = student.get("student_name")
@@ -496,7 +505,6 @@ Download Your Result from here 👉🏻
         # )
         # break
 
-
     # Update the Bulk WhatsApp doc with the results
     try:
         bulk_doc = frappe.get_doc("Bulk whatsapp Sharing Results", bulk_docname)
@@ -515,6 +523,8 @@ Download Your Result from here 👉🏻
         "failed_count": len(failed),
         "failed_ids": failed
     }
+
+
 
 
 @frappe.whitelist()
