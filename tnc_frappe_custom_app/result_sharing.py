@@ -761,7 +761,8 @@ def enqueue_pdf_generation_for_students_manual_s3():
             # Add any other relevant filters, e.g., specific academic year, batch etc.
             # "academic_year": "2023-24"
         },
-        fields=["name", "encryption_key","student_name"]
+        fields=["name", "encryption_key","student_name"],
+        order_by="total_exams desc"
     )
     admin_doc = frappe.get_doc("Admin Settings", "Admin Settings")
     redundant_name = admin_doc.bulk_wa_test_mobile_no
@@ -812,9 +813,9 @@ def generate_and_save_student_pdf_manual_s3(student_name, encryption_key):
         student_doc = frappe.get_doc("Online Student", student_name)
 
         # --- Check if PDF URL already exists ---
-        if student_doc.result_pdf_attachment and student_doc.result_pdf_attachment.startswith('https://'):
-            # ... (skipped logic) ...
-            return {'status': 'skipped', 'message': f"Skipping {student_name}, URL exists."}
+        # if student_doc.result_pdf_attachment and student_doc.result_pdf_attachment.startswith('https://'):
+        #     # ... (skipped logic) ...
+        #     return {'status': 'skipped', 'message': f"Skipping {student_name}, URL exists."}
 
         logger.info(f"Starting PDF generation process for {student_name}...")
 
