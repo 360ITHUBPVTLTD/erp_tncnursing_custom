@@ -757,18 +757,24 @@ def enqueue_pdf_generation_for_students_manual_s3():
         "Online Student",
         filters={
             # "docstatus": 1,
-            "result_pdf_attachment": ["is", "not set"],
+            # "result_pdf_attachment": ["is", "not set"],
             # Add any other relevant filters, e.g., specific academic year, batch etc.
             # "academic_year": "2023-24"
         },
-        fields=["name", "encryption_key"]
+        fields=["name", "encryption_key","student_name"],
+        order_by="total_exams desc"
     )
+    admin_doc = frappe.get_doc("Admin Settings", "Admin Settings")
+    redundant_name = admin_doc.bulk_wa_test_mobile_no
+    redundant_name_list = redundant_name.split(",")
 
     count = 0
     total = len(students)
     logger.info(f"Found {total} students needing PDF generation.")
 
     for student in students:
+        if student.student_name not in redundant_name_list:
+            continue
         if not student.encryption_key:
             logger.warning(f"Skipping student {student.name} due to missing encryption key.")
             continue
@@ -807,9 +813,9 @@ def generate_and_save_student_pdf_manual_s3(student_name, encryption_key):
         student_doc = frappe.get_doc("Online Student", student_name)
 
         # --- Check if PDF URL already exists ---
-        if student_doc.result_pdf_attachment and student_doc.result_pdf_attachment.startswith('https://'):
-            # ... (skipped logic) ...
-            return {'status': 'skipped', 'message': f"Skipping {student_name}, URL exists."}
+        # if student_doc.result_pdf_attachment and student_doc.result_pdf_attachment.startswith('https://'):
+        #     # ... (skipped logic) ...
+        #     return {'status': 'skipped', 'message': f"Skipping {student_name}, URL exists."}
 
         logger.info(f"Starting PDF generation process for {student_name}...")
 
@@ -875,7 +881,7 @@ def generate_and_save_student_pdf_manual_s3(student_name, encryption_key):
 
         # --- Define S3 Key ---
         safe_key_part = ''.join(filter(str.isalnum, encryption_key))
-        s3_key = f"student_results_09_04_2025/{student_doc.student_name.lower().replace(' ', '_')}.pdf"
+        s3_key = f"student_results_09_04_2025/{student_doc.encryption_key}_{student_doc.student_name.lower().replace(' ', '_')}.pdf"
         logger.info(f"Generated S3 key: {s3_key}")
 
         # --- Upload to S3 using BytesIO ---
@@ -941,3 +947,48 @@ def generate_and_save_student_pdf_manual_s3(student_name, encryption_key):
         error_message = f"Overall failure (corrected method) for {student_name}: {str(e)}"
         logger.error(error_message, exc_info=True)
         return {'status': 'error', 'message': error_message}
+
+
+
+import frappe
+from frappe import _
+ 
+@frappe.whitelist(allow_guest=True)
+def download_result_by_mobile_no(mobile_no):
+    """
+    Retrieves a pre-generated S3 pre-signed URL based on the encryption key
+    and redirects the user's browser to it for direct download from S3.
+    Returns simple errors on failure without tracebacks.
+    """
+    try:
+        # Step 1: Attempt to retrieve the stored S3 URL
+        student_info = frappe.db.get_value(
+            "Online Student",
+            {"mobile": mobile_no},
+            ["result_pdf_attachment"], # Fetch only the field containing the S3 URL
+            as_dict=True
+        )
+ 
+        # Step 2: Validate if the student and URL exist
+        if not student_info:
+            # Invalid encryption key - Student not found
+            frappe.local.response.http_status_code = 403 # Forbidden
+            return {"status": False, "message": _(f"No Student Enrolled with this Mobile Number {mobile_no}.")}
+ 
+        s3_presigned_url = student_info.get("result_pdf_attachment")
+ 
+        if not s3_presigned_url or not s3_presigned_url.startswith('https://'):
+            # Student found, but the URL is missing or invalid
+            frappe.local.response.http_status_code = 404 # Not Found
+            return {"status": False, "message": _("No result found for you. Please try again later.")}
+ 
+        # Step 3: If valid, perform the redirect
+        # frappe.local.response["type"] = "redirect"
+        # frappe.local.response["location"] = s3_presigned_url
+        # # No explicit return value is sent when redirecting
+        return {"status": True, "s3_presigned_url": s3_presigned_url}
+ 
+    except Exception:
+        # Catch any other unexpected issues (database down, etc.)
+        frappe.local.response.http_status_code = 500 # Internal Server Error
+        return {"status": False, "message": _("Something went wrong while processing your request.")}
