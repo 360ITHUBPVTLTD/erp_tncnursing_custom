@@ -282,4 +282,4 @@ doc_events = {
 }
 
 
-website_route_rules = [{'from_route': '/norcet/<path:app_path>', 'to_route': 'norcet'},]
+website_route_rules = [{'from_route': '/student-results/<path:app_path>', 'to_route': 'student-results'},]
