@@ -4,7 +4,7 @@ import { userResource } from '@/data/user'
 
 const routes = [
   {
-    path: '/',
+    path: '/norcet',
     name: 'Home',
     component: () => import('@/pages/Home.vue'),
   },
@@ -16,7 +16,7 @@ const routes = [
 ]
 
 let router = createRouter({
-  history: createWebHistory('/norcet'),
+  history: createWebHistory('/student-results'),
   routes,
 })
 

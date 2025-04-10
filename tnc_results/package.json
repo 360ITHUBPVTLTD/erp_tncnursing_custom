@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "vite build --base=/assets/tnc_frappe_custom_app/tnc_results/ && yarn copy-html-entry",
     "preview": "vite preview",
-    "copy-html-entry": "cp ../tnc_frappe_custom_app/public/tnc_results/index.html ../tnc_frappe_custom_app/www/norcet.html"
+    "copy-html-entry": "cp ../tnc_frappe_custom_app/public/tnc_results/index.html ../tnc_frappe_custom_app/www/student-results.html"
   },
   "dependencies": {
     "axios": "^1.8.4",
