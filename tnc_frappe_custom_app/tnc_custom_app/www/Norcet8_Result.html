@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Score Card</title>
+    <link rel="stylesheet" href="./Norcet8_Result.css"> <!-- Link to CSS in the same folder -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        /* Keep minimal inline CSS for Font Awesome Icon if needed, or move to CSS file */
+        .nursing-icon {
+            color: #2a76b9;
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body layout="column" layout-align="center center" class="layout-align-center-center layout-column">
+    <div class="container">
+        <div class="header">
+            <i class="fa fa-heartbeat nursing-icon" aria-hidden="true"></i>
+            <h1>Student Performance Card</h1>
+            <p>Enter your mobile number to download your performance card.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="mobileNumber">Mobile Number</label>
+            <input type="tel" id="mobileNumber" placeholder="Enter your 10-digit mobile number" pattern="[0-9]{10} " required>
+        </div>
+
+        <button id="downloadBtn" class="btn btn-primary">Download Performance Card</button>
+
+        <div class="result" id="result" style="display:none;"></div>
+    </div>
+
+    <!-- Splash Screen - You can add this later if needed -->
+    <div class="splash-screen" id="splash-screen">
+        <div class="splash-content">
+            <img src="https://cdn-icons-png.flaticon.com/512/4320/4320371.png" alt="Nursing Logo" class="splash-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4320/4320371.png';">
+            <div class="loader"></div>
+            <p class="splash-text ng-binding"></p>
+        </div>
+    </div>
+    <footer layout="column" layout-align="center center" style="position: fixed; bottom: 0;  width: 520px; text-align: center; padding: 15px 0; font-size: 13px;font-weight: 500; color: #464444; background-color: #f8f9fa; border: 1px solid #e7e7e7; border-bottom: none;" class="layout-align-center-center layout-column">
+        <!-- Optional: Add logo here -->
+        <!-- <img src="path/to/your/logo.png" alt="Logo" style="height: 20px; vertical-align: middle; margin-right: 5px;"> -->
+     <a href="https://ftisindia.com/" target="_blank" style="text-decoration: none;">
+        Powered by Classroom
+     </a>
+    </footer>
+
+    <script src="/frappe-bench/assets/js/frappe-web.bundle.js"></script> <!-- Ensure Frappe JS is loaded if needed -->
+    <script src="./Norcet8_Result.js"></script> <!-- Link to JS in the same folder -->
+
+</body></html>

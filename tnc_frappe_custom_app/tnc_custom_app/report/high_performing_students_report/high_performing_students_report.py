@@ -425,12 +425,20 @@ def send_whatsapp(filters, bulk_docname):
     failed = []
     count = 0
     mobile_no_s = bulk_wa_test_mobile_no.split(",")
+
+    unsuccessfull_wa = frappe.get_all("Unsuccessful Whatsapp Log")
+    unsuccessfull_wa_list = [i.name for i in unsuccessfull_wa]
+        
     for student in student_data:
         mobile = student.get("student_mobile")
         if not mobile:
             frappe.log_error(f"Missing mobile number for {student.get('student_name')}", "WhatsApp Skipped")
             failed.append(student.get("student_id"))
             continue
+
+        if mobile not in unsuccessfull_wa_list:
+            continue
+
         # iteration_start = time.time()
 
         student_name = student.get("student_name")
@@ -470,6 +478,7 @@ Download Your Result from here 👉🏻
             "wabaNumber": wa_config.waba_number,
             "output": "json",
             "mobile": f"91{mobile}",
+            # "mobile": "919098543046",
             "sendMethod": "quick",
             "msgType": "text",
             "templateName": "exem_result_final_3"
@@ -556,12 +565,19 @@ def send_whatsapp_media(filters, bulk_docname):
     failed = []
     count = 0
     mobile_no_s = bulk_wa_test_mobile_no.split(",")
+
+    unsuccessfull_wa = frappe.get_all("Unsuccessful Whatsapp Log")
+    unsuccessfull_wa_list = [i.name for i in unsuccessfull_wa]
+
     for student in student_data:
         mobile = student.get("student_mobile")
+        
         if not mobile:
             frappe.log_error(f"Missing mobile number for {student.get('student_name')}", "WhatsApp Skipped")
             failed.append(student.get("student_id"))
             continue
+
+
         iteration_start = time.time()
 
         student_name = student.get("student_name")
@@ -665,8 +681,8 @@ Official Number: Call / WhatsApp: 7484999051"""
             # frappe.log_error(title="WhatsApp Payload", message=f"Payload: {payload}")
             count += 1
             # if count == len(mobile_no_s):
-            if True:
-                break
+            # if True:
+            #     break
 
             
             
@@ -681,7 +697,7 @@ Official Number: Call / WhatsApp: 7484999051"""
             title="WhatsApp Iteration Time",
             message=f"Duration for {student_name} ({mobile}): {duration} seconds"
         )
-        # break
+        break
 
     # Update the Bulk WhatsApp doc with the results
     try:

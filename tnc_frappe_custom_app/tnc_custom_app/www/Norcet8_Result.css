@@ -1,0 +1,107 @@
+
+
+
+    /* Basic CSS for styling - you can customize this further */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f0f7fa;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-image: linear-gradient(to bottom right, #e6f7ff, #ffffff);
+    }
+
+    .container {
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        padding: 35px;
+        width: 90%;
+        max-width: 520px;
+        border-top: 5px solid #3e99d7;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    h1 {
+        color: #2a76b9;
+        margin-bottom: 12px;
+        font-weight: 600;
+    }
+
+    .nursing-icon {
+        color: #2a76b9;
+        font-size: 48px;
+        margin-bottom: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #345;
+    }
+
+    input[type="tel"] { /* Changed to tel for mobile number */
+        width: 100%;
+        padding: 14px;
+        font-size: 16px;
+        border: 1px solid #cde;
+        border-radius: 6px;
+        box-sizing: border-box;
+        transition: border-color 0.3s;
+    }
+
+    input[type="tel"]:focus {
+        border-color: #3e99d7;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(62, 153, 215, 0.2);
+    }
+
+    button.btn-primary { /* Basic Frappe-style button */
+        background-color: #2a76b9;
+        color: white;
+        border: none;
+        padding: 14px 20px;
+        font-size: 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    button.btn-primary:hover {
+        background-color: #1c5b94;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .result {
+        margin-top: 25px;
+        padding: 18px;
+        border-radius: 6px;
+        display: none;
+    }
+
+    .error {
+        background-color: #ffebee;
+        color: #d32f2f;
+        border-left: 4px solid #d32f2f;
+    }
+
+    .success {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+        border-left: 4px solid #2e7d32;
+    }
