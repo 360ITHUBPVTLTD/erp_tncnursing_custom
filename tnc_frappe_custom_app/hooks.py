@@ -85,7 +85,7 @@ scheduler_events = {
     #   "lsa.tasks.all"
     # ],
     "daily": [
-      "tnc_frappe_custom_app.custom_employee.allocate_weekly_leaves"
+    #   "tnc_frappe_custom_app.custom_employee.allocate_weekly_leaves"
     ],
     # "hourly": [
     #   "lsa.tasks.hourly"
@@ -173,7 +173,7 @@ scheduler_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
 # 	"all": [
 # 		"tnc_frappe_custom_app.tasks.all"
 # 	],
@@ -189,7 +189,13 @@ scheduler_events = {
 # 	"monthly": [
 # 		"tnc_frappe_custom_app.tasks.monthly"
 # 	],
-# }
+
+    "cron":{
+        "0 8 * * *": [
+            "tnc_frappe_custom_app.custom_employee.enqueue_task_reminders",
+        ]
+    },
+}
 
 # Testing
 # -------
@@ -275,6 +281,10 @@ doc_events = {
     "Report":{
         "on_update": "tnc_frappe_custom_app.custom_report_handler.handle_report_before_save"
         
+    },
+    "Task":{
+        "after_insert": "tnc_frappe_custom_app.custom_task.custom_task_notification_on_insert",
+        "on_update": "tnc_frappe_custom_app.custom_task.custom_task_notification_on_update",
     }
     # "Data Import Log": {
     #     # "after_insert": "tnc_frappe_custom_app.data_import_id.handle_data_import_after_save"

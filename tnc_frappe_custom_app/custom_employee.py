@@ -2,6 +2,8 @@ import frappe, traceback
 from frappe.utils import getdate  # get_first_day, get_last_day are not needed if calculating manually
 from datetime import timedelta, date, datetime
 import logging
+from frappe import enqueue
+from webtoolex_whatsapp.webtoolex_whatsapp.doctype.whatsapp_instance.whatsapp_instance import send_custom_whatsapp_message
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -198,10 +200,7 @@ def allocate_weekly_leaves(custom_date=None):
         # frappe.throw will log the error in scheduler logs properly
         frappe.throw(f"A critical error occurred during weekly leave allocation: {str(e)}, {traceback.format_exc()}")
 
-import frappe, traceback
-from frappe.utils import getdate
-from datetime import timedelta, date, datetime
-import logging
+
 
 # Assume logger is initialized elsewhere or initialize it here if needed
 logger = logging.getLogger(__name__)
@@ -570,5 +569,147 @@ def get_current_allocation_period(input_date, min_days_for_separate_last_week=5)
 #     return week_ranges
 
 
+
+
+@frappe.whitelist()
+def enqueue_task_reminders():
+    # if frappe.local.site != "tnc.360ithub.com":
+    #     frappe.log_error(title="Skipped send_membership_reminder_to_members_regarding_plan", message=f"Not production site skipping...")
+    #     return "Skipped: Not production site"
+    enqueue(
+        "tnc_frappe_custom_app.custom_employee.send_due_and_overdue_task_reminders",
+        queue='long',  # or 'default' depending on the expected execution time
+        job_name="Send Due and Overdue Task Reminders"
+    )
+
+
+@frappe.whitelist()
+def send_due_and_overdue_task_reminders():
+    today = date.today()
+
+    # ✅ Step 1: Skip if Sunday
+    if today.weekday() == 6:
+        frappe.log_error("WA REMINDER SKIPPED", "Skipping WhatsApp task reminder - today is Sunday")
+        return
+
+    # ✅ Step 2: Skip if today is a holiday
+    if frappe.db.exists("Holiday", {"holiday_date": today}):
+        frappe.log_error("WA REMINDER SKIPPED", f"Skipping WhatsApp task reminder - {today} is a holiday")
+        return
+
+    # ✅ Step 3: Fetch active tasks
+    tasks_wo_start_date = frappe.get_all("Task", 
+        filters={
+            "exp_start_date": ["in", ["", None]],
+            "status": ["in", ["Working", "Open", "Pending Review", "Overdue"]],
+            "is_template": 0
+        },
+        fields=["name", "subject", "exp_end_date", "task_owner"]
+    )
+
+    tasks_w_start_date = frappe.get_all("Task", 
+        filters={
+            "exp_start_date": ["<=", today],
+            "status": ["in", ["Working", "Open", "Pending Review", "Overdue"]],
+            "is_template": 0
+        },
+        fields=["name", "subject", "exp_end_date", "task_owner"]
+    )
+
+    tasks = tasks_wo_start_date + tasks_w_start_date
+
+    user_task_map = {}
+
+    for task in tasks:
+        if not task.task_owner or not task.exp_end_date:
+            continue
+
+        task_date = task.exp_end_date
+        if task_date == today:
+            category = "today"
+        elif task_date < today:
+            category = "overdue"
+        elif task_date > today:
+            category = "upcoming"
+        else:
+            continue
+
+        user = task.task_owner
+        user_task_map.setdefault(user, {"today": [], "overdue": [], "upcoming": []})
+        user_task_map[user][category].append({
+            "title": task.subject,
+            "due_date": task_date
+        })
+
+    # ✅ Step 4: Load WhatsApp instance
+    # try:
+    #     whatsapp_instance_doc = frappe.get_doc("WhatsApp Instance", "Operations")
+    # except Exception as e:
+    #     frappe.log_error("WA REMINDER ERROR", f"Failed to load WhatsApp Instance: {str(e)}")
+    #     return
+
+    # ✅ Step 5: Send messages per user
+    users_reminded = 0
+    for user_id, tasks_by_type in user_task_map.items():
+        employee = frappe.get_all("Employee",
+            filters={"user_id": user_id,"status": "Active"},
+            fields=["name", "first_name", "cell_number", "reports_to"]
+        )
+
+        if not employee:
+            continue
+
+        emp = employee[0]
+        team_member_name = emp.first_name or "Team Member"
+        
+        # mobile_number = "9098543046"
+        if emp.cell_number:
+            mobile_number = emp.cell_number
+            manager_name = frappe.get_value("Employee", emp.reports_to, "first_name") if emp.reports_to else ""
+
+            today_tasks = tasks_by_type["today"]
+            overdue_tasks = tasks_by_type["overdue"]
+            upcoming_tasks = tasks_by_type["upcoming"]
+
+            if not today_tasks and not overdue_tasks and not upcoming_tasks:
+                continue
+
+            # ✅ Build message
+            # ✅ Build message with counts
+            message_parts = [f"Reminder: Task Summary\n\nHi {team_member_name},\n\nHere are your tasks:\n"]
+
+            if today_tasks:
+                today_section = "\n".join([f"• {task['title']}" for task in today_tasks])
+                message_parts.append(f"⭐ Today's Tasks ({len(today_tasks)}):\n{today_section}\n")
+
+            if overdue_tasks:
+                overdue_section = "\n".join([f"• {task['title']} - {task['due_date'].strftime('%d-%b-%Y')}" for task in overdue_tasks])
+                message_parts.append(f"⭐ Overdue Tasks ({len(overdue_tasks)}):\n{overdue_section}\n")
+
+            if upcoming_tasks:
+                upcoming_section = "\n".join([f"• {task['title']} - {task['due_date'].strftime('%d-%b-%Y')}" for task in upcoming_tasks])
+                message_parts.append(f"⭐ Upcoming Tasks ({len(upcoming_tasks)}):\n{upcoming_section}\n")
+
+            message_parts.append(f"Please prioritize and complete them. If you need help, contact your manager {manager_name}.\n\nLSA Admin Team")
+
+            full_message = "\n".join(part.strip() for part in message_parts if part.strip())
+
+            # ✅ Send WhatsApp message
+            try:
+                # whatsapp_instance_name = frappe.db.get_single_value("Service Admin Settings", "whats_app_instance") or "Operations"
+                # print(f"Sending WhatsApp to {whatsapp_instance_name} ({mobile_number})\n\n{full_message}")
+                send_custom_whatsapp_message(mobile_number, full_message)
+                users_reminded += 1
+                frappe.log_error(title="WA REMINDER SENT", message=f"WhatsApp sent to {team_member_name} ({mobile_number})\n\n{full_message}")
+            except Exception as e:
+                import traceback
+                frappe.log_error(
+                    title="WA SEND ERROR",
+                    message=f"Failed to send WhatsApp to {team_member_name} ({user_id}): {str(e)}\n\nMessage:\n{full_message}\n\nTraceback:\n{traceback.format_exc()}"
+                )
+        else:
+            frappe.log_error("WA REMINDER SKIPPED", f"Skipping WhatsApp task reminder - {emp.name} has no mobile number")
+    frappe.log_error("WA REMINDER SUMMARY", f"Total users reminded today: {users_reminded}")
+    return f"WhatsApp reminders sent to {users_reminded} users."
 
 
