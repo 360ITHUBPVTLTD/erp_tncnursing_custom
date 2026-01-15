@@ -19,21 +19,12 @@ def custom_task_notification_on_update(doc, method):
 
     if before_doc.task_owner != doc.task_owner:
         if doc.task_owner:
-            frappe.share.add(
-                "Task",
-                doc.name,
-                doc.task_owner,
-                read=1,
-                write=1,
-                share=1,
-                notify=0
-            )
+
             employee = frappe.db.get_value("Employee",{"user_id":doc.task_owner},"name")
             if employee:
                 send_task_notification(doc,employee)
 
-        if before_doc.task_owner:
-            frappe.share.remove("Task", doc.name, before_doc.task_owner)
+
 
 
 
