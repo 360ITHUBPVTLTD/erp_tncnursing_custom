@@ -600,23 +600,15 @@ def send_due_and_overdue_task_reminders():
     # ✅ Step 3: Fetch active tasks
     tasks_wo_start_date = frappe.get_all("Task", 
         filters={
-            "exp_start_date": ["in", ["", None]],
+
             "status": ["in", ["Working", "Open", "Pending Review", "Overdue"]],
             "is_template": 0
         },
         fields=["name", "subject", "exp_end_date", "task_owner"]
     )
 
-    tasks_w_start_date = frappe.get_all("Task", 
-        filters={
-            "exp_start_date": ["<=", today],
-            "status": ["in", ["Working", "Open", "Pending Review", "Overdue"]],
-            "is_template": 0
-        },
-        fields=["name", "subject", "exp_end_date", "task_owner"]
-    )
-
-    tasks = tasks_wo_start_date + tasks_w_start_date
+    
+    tasks = tasks_wo_start_date 
 
     user_task_map = {}
 
@@ -690,7 +682,7 @@ def send_due_and_overdue_task_reminders():
                 upcoming_section = "\n".join([f"• {task['title']} - {task['due_date'].strftime('%d-%b-%Y')}" for task in upcoming_tasks])
                 message_parts.append(f"⭐ Upcoming Tasks ({len(upcoming_tasks)}):\n{upcoming_section}\n")
 
-            message_parts.append(f"Please prioritize and complete them. If you need help, contact your manager {manager_name}.\n\nLSA Admin Team")
+            message_parts.append(f"Please prioritize and complete them. If you need help, contact your manager {manager_name}.\n\TNC Admin Team")
 
             full_message = "\n".join(part.strip() for part in message_parts if part.strip())
 
