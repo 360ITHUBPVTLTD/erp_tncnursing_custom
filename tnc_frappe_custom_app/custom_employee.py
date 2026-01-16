@@ -573,9 +573,9 @@ def get_current_allocation_period(input_date, min_days_for_separate_last_week=5)
 
 @frappe.whitelist()
 def enqueue_task_reminders():
-    # if frappe.local.site != "tnc.360ithub.com":
-    #     frappe.log_error(title="Skipped send_membership_reminder_to_members_regarding_plan", message=f"Not production site skipping...")
-    #     return "Skipped: Not production site"
+    if frappe.local.site != "tnc.360ithub.com":
+        frappe.log_error(title="Skipped send_membership_reminder_to_members_regarding_plan", message=f"Not production site skipping...")
+        return "Skipped: Not production site"
     enqueue(
         "tnc_frappe_custom_app.custom_employee.send_due_and_overdue_task_reminders",
         queue='long',  # or 'default' depending on the expected execution time
