@@ -1638,7 +1638,7 @@
    "_comments": null,
    "_liked_by": null,
    "_user_tags": null,
-   "creation": "2026-01-17 14:45:11.492576",
+   "creation": "2026-01-17 16:29:05.244554",
    "default_value": null,
    "doc_type": "Employee",
    "docstatus": 0,
@@ -1646,7 +1646,7 @@
    "field_name": "date_of_birth",
    "idx": 0,
    "is_system_generated": 0,
-   "modified": "2026-01-17 14:45:11.492576",
+   "modified": "2026-01-17 16:29:05.244554",
    "modified_by": "Administrator",
    "module": null,
    "name": "Employee-date_of_birth-default",
@@ -1654,14 +1654,14 @@
    "property": "default",
    "property_type": "Text",
    "row_name": null,
-   "value": "01-01-2000"
+   "value": ""
   },
   {
    "_assign": null,
    "_comments": null,
    "_liked_by": null,
    "_user_tags": null,
-   "creation": "2026-01-17 14:44:15.972788",
+   "creation": "2026-01-17 16:29:05.389138",
    "default_value": null,
    "doc_type": "Employee",
    "docstatus": 0,
@@ -1669,7 +1669,7 @@
    "field_name": "date_of_joining",
    "idx": 0,
    "is_system_generated": 0,
-   "modified": "2026-01-17 14:44:15.972788",
+   "modified": "2026-01-17 16:29:05.389138",
    "modified_by": "Administrator",
    "module": null,
    "name": "Employee-date_of_joining-default",
@@ -1677,7 +1677,7 @@
    "property": "default",
    "property_type": "Text",
    "row_name": null,
-   "value": "01-01-2020"
+   "value": ""
   },
   {
    "_assign": null,
