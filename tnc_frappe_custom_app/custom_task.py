@@ -3,8 +3,8 @@ from webtoolex_whatsapp.webtoolex_whatsapp.doctype.whatsapp_instance.whatsapp_in
 
 def custom_task_notification_on_insert(doc, method):
     # Only notify if assigned to someone else
-    if doc.owner != doc.task_owner and doc.task_owner:
-        queue_notification(doc)
+
+    queue_notification(doc)
 
 def custom_task_notification_on_update(doc, method):
     before_doc = doc.get_doc_before_save()
