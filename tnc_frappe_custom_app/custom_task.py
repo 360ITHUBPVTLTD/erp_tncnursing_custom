@@ -9,6 +9,15 @@ def custom_task_notification_on_insert(doc, method):
     On Creation: Notify Task Owner + All Other Assignees
     """
     recipients = set()
+    # if doc.other_assignees:
+
+    #     for row in doc.other_assignees:
+    #         user_child_table_row = doc.append("custom_other_assignee_user", {})
+    #         user_child_table_row.user = row.user
+    #     doc.save()
+    #     doc.reload()
+    #     frappe.db.commit()
+            
     
     # 1. Add Main Task Owner
     if doc.task_owner:
@@ -22,6 +31,8 @@ def custom_task_notification_on_insert(doc, method):
     # 3. Send
     if recipients:
         queue_notification_for_users(recipients, doc)
+
+
 
 
 def custom_task_notification_on_update(doc, method):
@@ -46,6 +57,23 @@ def custom_task_notification_on_update(doc, method):
     
     # "New - Old" gives us only the users that were added in this save
     added_users = new_users - old_users
+    # if added_users:
+    #     for user in added_users:
+            
+    #         user_child_table_row = doc.append("custom_other_assignee_user", {})
+    #         user_child_table_row.user = user
+    #     doc.save()
+    #     doc.reload()
+    #     frappe.db.commit()
+
+    removed_users = old_users - new_users
+    # if removed_users:
+    #     for user in doc.custom_other_assignee_user:
+    #         if user.user in removed_users:
+    #             user.delete()
+    #     doc.save()
+    #     doc.reload()
+    #     frappe.db.commit()
     
     recipients.update(added_users)
 
@@ -126,6 +154,23 @@ TNC Admin
         frappe.log_error("WhatsApp Error", "send_custom_whatsapp_message function not found. Check imports.")
     except Exception as e:
         frappe.log_error(title="WhatsApp API Error", message=f"{str(e)} | Task: {task_id}")
+
+
+def custom_task_before_save(doc, method):
+    old_doc = doc.get_doc_before_save()
+    admin_roles = {"Administrator", "System Manager", "TNC Super Admin"}
+
+    is_being_completed = (
+        doc.status == "Completed"
+        and old_doc
+        and old_doc.status != "Completed"
+    )
+
+    is_creator = doc.owner == frappe.session.user
+    is_admin = bool(admin_roles & set(frappe.get_roles()))
+
+    if is_being_completed and not (is_creator or is_admin):
+        frappe.throw("You need to be creator of the task to mark it as completed.")
 
 # import frappe
 # 
