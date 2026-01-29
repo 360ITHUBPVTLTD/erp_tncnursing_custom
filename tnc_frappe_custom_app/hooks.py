@@ -49,6 +49,9 @@ app_logo_url = "/assets/tnc_frappe_custom_app/Images/360ithub_icon.svg"
 
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {
+                "Task" : "public/js/custom_task.js"
+            }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -285,6 +288,7 @@ doc_events = {
     "Task":{
         "after_insert": "tnc_frappe_custom_app.custom_task.custom_task_notification_on_insert",
         "on_update": "tnc_frappe_custom_app.custom_task.custom_task_notification_on_update",
+        "before_save": "tnc_frappe_custom_app.custom_task.custom_task_before_save"
     }
     # "Data Import Log": {
     #     # "after_insert": "tnc_frappe_custom_app.data_import_id.handle_data_import_after_save"
