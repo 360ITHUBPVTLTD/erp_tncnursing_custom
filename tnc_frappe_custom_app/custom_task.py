@@ -1,5 +1,6 @@
 import frappe
-
+from frappe.utils import strip_html, formatdate
+import re
 # -------------------------------------------------------------------------
 # HOOKS
 # -------------------------------------------------------------------------
@@ -104,6 +105,34 @@ def queue_notification_for_users(recipient_emails, doc):
 # BACKGROUND WORKER
 # -------------------------------------------------------------------------
 
+
+def clean_html_for_whatsapp(html_text):
+    if not html_text:
+        return ""
+
+    # 1. Handle List items: Add a bullet point and a newline
+    html_text = html_text.replace("</li>", "\n")
+    html_text = html_text.replace("<li", "\n• <li") 
+
+    # 2. Handle Paragraphs and Divisions: Replace closing tags with newlines
+    html_text = html_text.replace("</p>", "\n")
+    html_text = html_text.replace("</div>", "\n")
+    html_text = html_text.replace("<br>", "\n")
+    html_text = html_text.replace("<br/>", "\n")
+
+    # 3. Now strip all remaining tags (like <span>, <strong>, etc.)
+    clean_text = strip_html(html_text)
+
+    # 4. Clean up: remove leading/trailing whitespace on each line 
+    # and limit consecutive newlines to maximum 2
+    lines = [line.strip() for line in clean_text.split("\n")]
+    clean_text = "\n".join(lines)
+    
+    # Remove excessive empty lines
+    clean_text = re.sub(r'\n\s*\n', '\n\n', clean_text).strip()
+
+    return clean_text
+
 def async_send_whatsapp(target_user_email, task_id, subject):
     """
     This runs in background. 
@@ -124,18 +153,38 @@ def async_send_whatsapp(target_user_email, task_id, subject):
         # print(f"User {target_user_email} is not linked to an Employee")
         return
 
+    
+
     if not employee_details.cell_number:
         frappe.log_error(
             title="WhatsApp Notification Failed", 
             message=f"Employee {employee_details.employee_name} ({employee_details.name}) has no mobile number for Task {task_id}"
         )
         return
+    task_doc = frappe.get_doc("Task", task_id)
+
+    clean_description = clean_html_for_whatsapp(task_doc.description or "No description provided")
+    formatted_date = formatdate(task_doc.exp_end_date) if task_doc.exp_end_date else "Not Set"
+
+    assigned_by = frappe.db.get_value(
+        "Employee", 
+        {"user_id": task_doc.modified_by}, 
+        ["name", "employee_name"], 
+        as_dict=True
+    )
 
     # 2. Construct Message
     message = f"""Dear {employee_details.employee_name},
 
-You have been assigned a new task: ({task_id})
-{subject}
+You have been assigned a new task: 
+📌 *{task_doc.subject}*(📅{formatted_date})
+🔥 *Priority*: {task_doc.priority}
+
+📝*Description*:
+{clean_description}
+
+👤 *Assigned By*: {assigned_by.employee_name if assigned_by else task_doc.modified_by}
+
 
 Regards 
 TNC Admin
@@ -150,8 +199,9 @@ TNC Admin
         # if resp and not resp["status"]:
         #     frappe.log_error(title="WhatsApp API Response", message=f"{resp}")
         return resp
+        # frappe.log_error(title="WhatsApp Error", message=f"{message}")
     except ImportError:
-        frappe.log_error("WhatsApp Error", "send_custom_whatsapp_message function not found. Check imports.")
+        frappe.log_error(title="WhatsApp Error", message="send_custom_whatsapp_message function not found. Check imports.")
     except Exception as e:
         frappe.log_error(title="WhatsApp API Error", message=f"{str(e)} | Task: {task_id}")
 
