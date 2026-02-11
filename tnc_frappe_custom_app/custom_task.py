@@ -177,7 +177,7 @@ def async_send_whatsapp(target_user_email, task_id, subject):
     message = f"""Dear {employee_details.employee_name},
 
 You have been assigned a new task: 
-📌 *{task_doc.subject}*(📅{formatted_date})
+📌 *{task_doc.subject}*({formatted_date})
 🔥 *Priority*: {task_doc.priority}
 
 📝*Description*:
