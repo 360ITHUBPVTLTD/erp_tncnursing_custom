@@ -699,7 +699,7 @@ def send_due_and_overdue_task_reminders():
                 # print(f"Sending WhatsApp to {whatsapp_instance_name} ({mobile_number})\n\n{full_message}")
                 send_custom_whatsapp_message(mobile_number, full_message)
                 users_reminded += 1
-                # frappe.log_error(title="WA REMINDER SENT", message=f"WhatsApp sent to {team_member_name} ({mobile_number})\n\n{full_message}")
+                frappe.log_error(title="WA REMINDER SENT", message=f"WhatsApp sent to {team_member_name} ({mobile_number})\n\n{full_message}")
             except Exception as e:
                 import traceback
                 frappe.log_error(
