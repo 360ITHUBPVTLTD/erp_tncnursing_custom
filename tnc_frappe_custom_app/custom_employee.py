@@ -598,17 +598,24 @@ def send_due_and_overdue_task_reminders():
         return
 
     # ✅ Step 3: Fetch active tasks
-    tasks_wo_start_date = frappe.get_all("Task", 
+    tasks = frappe.get_all("Task", 
         filters={
 
             "status": ["in", ["Working", "Open", "Pending Review", "Overdue"]],
-            "is_template": 0
+            "is_template": 0,
+            # "exp_start_date": ["<=", today],
         },
+        or_filters=[
+                        ["Task", "exp_start_date", "<=", today],
+                        ["Task", "exp_start_date", "is", "not set"]
+                    ],
         fields=["name", "subject", "exp_end_date", "task_owner"]
     )
 
+    # frappe.log_error("WA REMINDER", f"Tasks without start date: {tasks_wo_start_date}")
+
     
-    tasks = tasks_wo_start_date 
+    # tasks = tasks_wo_start_date 
 
     user_task_map = {}
 
@@ -692,7 +699,7 @@ def send_due_and_overdue_task_reminders():
                 # print(f"Sending WhatsApp to {whatsapp_instance_name} ({mobile_number})\n\n{full_message}")
                 send_custom_whatsapp_message(mobile_number, full_message)
                 users_reminded += 1
-                frappe.log_error(title="WA REMINDER SENT", message=f"WhatsApp sent to {team_member_name} ({mobile_number})\n\n{full_message}")
+                # frappe.log_error(title="WA REMINDER SENT", message=f"WhatsApp sent to {team_member_name} ({mobile_number})\n\n{full_message}")
             except Exception as e:
                 import traceback
                 frappe.log_error(
