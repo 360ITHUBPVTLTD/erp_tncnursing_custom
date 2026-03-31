@@ -1,5 +1,5 @@
 import frappe
-from frappe.utils import strip_html, formatdate
+from frappe.utils import strip_html, formatdate, get_fullname
 import re
 # -------------------------------------------------------------------------
 # HOOKS
@@ -18,69 +18,201 @@ def custom_task_notification_on_insert(doc, method):
     #     doc.save()
     #     doc.reload()
     #     frappe.db.commit()
-            
-    
+
+
     # 1. Add Main Task Owner
     if doc.task_owner:
         recipients.add(doc.task_owner)
-        
+
     # 2. Add All Other Assignees
     for row in doc.get("other_assignees") or []:
         if row.user:
             recipients.add(row.user)
-            
-    # 3. Send
+
+    # 3. Send WhatsApp
     if recipients:
         queue_notification_for_users(recipients, doc)
+
+    # 4. Send System Notification (Bell Icon)
+    if recipients:
+        create_system_notification(
+            recipients=recipients,
+            doc=doc,
+            message=f"You have been assigned a new task: {doc.subject}",
+        )
 
 
 
 
 def custom_task_notification_on_update(doc, method):
     """
-    On Update: Notify ONLY if Task Owner Changed OR New Assignee Added
+    On Update: Notify if Task Owner Changed, New Assignee Added, or Status Changed
     """
     before_doc = doc.get_doc_before_save()
     if not before_doc:
         return
 
-    recipients = set()
+    assignment_recipients = set()
 
-    # 1. Check if Main Owner Changed
-    # If changed, notify the NEW owner
+    # 1. Check if Main Owner Changed — notify the NEW owner
     if before_doc.task_owner != doc.task_owner and doc.task_owner:
-        recipients.add(doc.task_owner)
+        assignment_recipients.add(doc.task_owner)
 
     # 2. Check for NEWly added Other Assignees
-    # We use Python Sets to find the difference
     old_users = set(row.user for row in before_doc.get("other_assignees") or [] if row.user)
     new_users = set(row.user for row in doc.get("other_assignees") or [] if row.user)
-    
-    # "New - Old" gives us only the users that were added in this save
+
     added_users = new_users - old_users
-    # if added_users:
-    #     for user in added_users:
-            
-    #         user_child_table_row = doc.append("custom_other_assignee_user", {})
-    #         user_child_table_row.user = user
-    #     doc.save()
-    #     doc.reload()
-    #     frappe.db.commit()
+    assignment_recipients.update(added_users)
 
-    removed_users = old_users - new_users
-    # if removed_users:
-    #     for user in doc.custom_other_assignee_user:
-    #         if user.user in removed_users:
-    #             user.delete()
-    #     doc.save()
-    #     doc.reload()
-    #     frappe.db.commit()
-    
-    recipients.update(added_users)
+    # 3. Send WhatsApp for assignment changes
+    if assignment_recipients:
+        queue_notification_for_users(assignment_recipients, doc)
 
-    # 3. Send
+    # 4. Send System Notification for assignment changes (Bell Icon)
+    if assignment_recipients:
+        create_system_notification(
+            recipients=assignment_recipients,
+            doc=doc,
+            message=f"You have been assigned to task: {doc.subject}",
+        )
+
+    # 5. Check if Task Status Changed — notify task_owner + all other_assignees
+    if before_doc.status != doc.status:
+        status_recipients = set()
+        if doc.task_owner:
+            status_recipients.add(doc.task_owner)
+        for row in doc.get("other_assignees") or []:
+            if row.user:
+                status_recipients.add(row.user)
+
+        # Remove the user who made the change (they already know)
+        status_recipients.discard(frappe.session.user)
+
+        if status_recipients:
+            create_system_notification(
+                recipients=status_recipients,
+                doc=doc,
+                message=f"Task status changed to {doc.status}: {doc.subject}",
+            )
+
+# -------------------------------------------------------------------------
+# SYSTEM NOTIFICATION (BELL ICON) + FCM PUSH
+# -------------------------------------------------------------------------
+
+def create_system_notification(recipients, doc, message):
+    """
+    Create Frappe Notification Log entries that appear in the bell icon
+    for each recipient, and also trigger an FCM push notification.
+    """
+    sender = frappe.session.user
+
+    for user in recipients:
+        # Skip sending notification to the person who triggered the action
+        if user == sender:
+            continue
+
+        try:
+            notification_doc = frappe.get_doc({
+                "doctype": "Notification Log",
+                "for_user": user,
+                "from_user": sender,
+                "subject": message,
+                "type": "Alert",
+                "document_type": "Task",
+                "document_name": doc.name,
+                "email_content": message,
+            })
+            notification_doc.insert(ignore_permissions=True)
+        except Exception as e:
+            frappe.log_error(
+                title="System Notification Error",
+                message=f"Failed to create notification for {user} on Task {doc.name}: {str(e)}"
+            )
+
+        # Also send FCM push notification
+        send_fcm_push_notification(
+            user_email=user,
+            title=f"Task: {doc.subject}",
+            body=message,
+            doc=doc,
+        )
+
+
+def send_fcm_push_notification(user_email, title, body, doc):
+    """
+    Look up the Employee's custom_fcm_token by user_id and send
+    an FCM push notification via the fcm_360ithub app.
+    """
+    try:
+        fcm_token = frappe.db.get_value(
+            "Employee",
+            {"user_id": user_email},
+            "custom_fcm_token"
+        )
+
+        if not fcm_token:
+            # No FCM token for this user — skip silently
+            return
+
+        send_fcm_notification = frappe.get_attr("fcm_360ithub.fcm_functions.send_fcm_notification")
+
+        send_fcm_notification(
+            token=fcm_token,
+            title=title,
+            body=body,
+            doctype="Task",
+            task_id=doc.name,
+            user_doctype="Employee",
+            user=user_email,
+            notification_type="Task Notification",
+        )
+    except Exception as e:
+        frappe.log_error(
+            title="FCM Push Notification Error",
+            message=f"Failed to send FCM for {user_email} on Task {doc.name}: {str(e)}"
+        )
+
+# -------------------------------------------------------------------------
+# COMMENT NOTIFICATION
+# -------------------------------------------------------------------------
+
+def notify_on_task_comment(doc, method):
+    """
+    Triggered after a Comment is inserted.
+    If the comment is on a Task, notify task_owner + other_assignees.
+    """
+    # Only handle comments on Task documents
+    if doc.reference_doctype != "Task" or not doc.reference_name:
+        return
+
+    # Only handle actual user comments (not system-generated logs)
+    if doc.comment_type != "Comment":
+        return
+
+    task_doc = frappe.get_doc("Task", doc.reference_name)
+
+    recipients = set()
+
+    # Add task owner
+    if task_doc.task_owner:
+        recipients.add(task_doc.task_owner)
+
+    # Add all other assignees
+    for row in task_doc.get("other_assignees") or []:
+        if row.user:
+            recipients.add(row.user)
+
+    # Remove the commenter (they already know)
+    recipients.discard(frappe.session.user)
+
     if recipients:
-        queue_notification_for_users(recipients, doc)
+        commenter_name = get_fullname(frappe.session.user)
+        create_system_notification(
+            recipients=recipients,
+            doc=task_doc,
+            message=f"{commenter_name} commented on task: {task_doc.subject}",
+        )
 
 # -------------------------------------------------------------------------
 # QUEUE LOGIC
@@ -112,7 +244,7 @@ def clean_html_for_whatsapp(html_text):
 
     # 1. Handle List items: Add a bullet point and a newline
     html_text = html_text.replace("</li>", "\n")
-    html_text = html_text.replace("<li", "\n• <li") 
+    html_text = html_text.replace("<li", "\n• <li")
 
     # 2. Handle Paragraphs and Divisions: Replace closing tags with newlines
     html_text = html_text.replace("</p>", "\n")
@@ -123,11 +255,11 @@ def clean_html_for_whatsapp(html_text):
     # 3. Now strip all remaining tags (like <span>, <strong>, etc.)
     clean_text = strip_html(html_text)
 
-    # 4. Clean up: remove leading/trailing whitespace on each line 
+    # 4. Clean up: remove leading/trailing whitespace on each line
     # and limit consecutive newlines to maximum 2
     lines = [line.strip() for line in clean_text.split("\n")]
     clean_text = "\n".join(lines)
-    
+
     # Remove excessive empty lines
     clean_text = re.sub(r'\n\s*\n', '\n\n', clean_text).strip()
 
@@ -135,15 +267,15 @@ def clean_html_for_whatsapp(html_text):
 
 def async_send_whatsapp(target_user_email, task_id, subject):
     """
-    This runs in background. 
+    This runs in background.
     Accepts 'target_user_email' instead of 'task_owner' to be generic.
     """
-    
+
     # 1. Fetch Employee from User ID
     employee_details = frappe.db.get_value(
-        "Employee", 
-        {"user_id": target_user_email}, 
-        ["name", "employee_name", "cell_number"], 
+        "Employee",
+        {"user_id": target_user_email},
+        ["name", "employee_name", "cell_number"],
         as_dict=True
     )
 
@@ -153,11 +285,11 @@ def async_send_whatsapp(target_user_email, task_id, subject):
         # print(f"User {target_user_email} is not linked to an Employee")
         return
 
-    
+
 
     if not employee_details.cell_number:
         frappe.log_error(
-            title="WhatsApp Notification Failed", 
+            title="WhatsApp Notification Failed",
             message=f"Employee {employee_details.employee_name} ({employee_details.name}) has no mobile number for Task {task_id}"
         )
         return
@@ -167,16 +299,16 @@ def async_send_whatsapp(target_user_email, task_id, subject):
     formatted_date = formatdate(task_doc.exp_end_date) if task_doc.exp_end_date else "Not Set"
 
     assigned_by = frappe.db.get_value(
-        "Employee", 
-        {"user_id": task_doc.modified_by}, 
-        ["name", "employee_name"], 
+        "Employee",
+        {"user_id": task_doc.modified_by},
+        ["name", "employee_name"],
         as_dict=True
     )
 
     # 2. Construct Message
     message = f"""Dear {employee_details.employee_name},
 
-You have been assigned a new task: 
+You have been assigned a new task:
 📌 *{task_doc.subject}*({formatted_date})
 🔥 *Priority*: {task_doc.priority}
 
@@ -186,7 +318,7 @@ You have been assigned a new task:
 👤 *Assigned By*: {assigned_by.employee_name if assigned_by else task_doc.modified_by}
 
 
-Regards 
+Regards
 TNC Admin
 """
 
@@ -223,7 +355,7 @@ def custom_task_before_save(doc, method):
         frappe.throw("You need to be creator of the task to mark it as completed.")
 
 # import frappe
-# 
+#
 # def custom_task_notification_on_insert(doc, method):
 #     # Only notify if assigned to someone else
 
@@ -255,17 +387,17 @@ def custom_task_before_save(doc, method):
 
 # def async_send_whatsapp(task_owner, task_id, subject, task_name):
 #     """
-#     This runs in background. 
+#     This runs in background.
 #     Because of enqueue_after_commit=True, we know the Task exists and is saved.
 #     """
-    
+
 #     # 1. Fetch Employee from User ID
-#     # Note: Using get_value is faster than get_doc if we just need one field, 
+#     # Note: Using get_value is faster than get_doc if we just need one field,
 #     # but we need name and cell_number, so let's get the doc or value dict.
 #     employee_details = frappe.db.get_value(
-#         "Employee", 
-#         {"user_id": task_owner}, 
-#         ["name", "employee_name", "cell_number"], 
+#         "Employee",
+#         {"user_id": task_owner},
+#         ["name", "employee_name", "cell_number"],
 #         as_dict=True
 #     )
 
@@ -275,7 +407,7 @@ def custom_task_before_save(doc, method):
 
 #     if not employee_details.cell_number:
 #         frappe.log_error(
-#             title="WhatsApp Notification Failed", 
+#             title="WhatsApp Notification Failed",
 #             message=f"Employee {employee_details.employee_name} ({employee_details.name}) has no mobile number for Task {task_name}"
 #         )
 #         return
@@ -286,7 +418,7 @@ def custom_task_before_save(doc, method):
 # You have been assigned a new task: ({task_id})
 # {subject}
 
-# Regards 
+# Regards
 # TNC Admin
 # """
 

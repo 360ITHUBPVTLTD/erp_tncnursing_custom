@@ -83,7 +83,7 @@ doctype_js = {
 
 
 scheduler_events = {
-    
+
     # "all": [
     #   "lsa.tasks.all"
     # ],
@@ -283,12 +283,15 @@ doc_events = {
     },
     "Report":{
         "on_update": "tnc_frappe_custom_app.custom_report_handler.handle_report_before_save"
-        
+
     },
     "Task":{
         "after_insert": "tnc_frappe_custom_app.custom_task.custom_task_notification_on_insert",
         "on_update": "tnc_frappe_custom_app.custom_task.custom_task_notification_on_update",
         "before_save": "tnc_frappe_custom_app.custom_task.custom_task_before_save"
+    },
+    "Comment":{
+        "after_insert": "tnc_frappe_custom_app.custom_task.notify_on_task_comment"
     }
     # "Data Import Log": {
     #     # "after_insert": "tnc_frappe_custom_app.data_import_id.handle_data_import_after_save"
