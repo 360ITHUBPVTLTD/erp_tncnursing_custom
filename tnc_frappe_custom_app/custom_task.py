@@ -145,14 +145,26 @@ def send_fcm_push_notification(user_email, title, body, doc):
     an FCM push notification via the fcm_360ithub app.
     """
     try:
-        fcm_token = frappe.db.get_value(
+        employee_name = frappe.db.get_value(
             "Employee",
             {"user_id": user_email},
-            "custom_fcm_token"
+            "name"
         )
 
+        if not employee_name:
+            frappe.log_error(
+                title="FCM Push - No Employee Found",
+                message=f"No Employee record linked to user_id={user_email}. Cannot send FCM."
+            )
+            return
+
+        fcm_token = frappe.db.get_value("Employee", employee_name, "custom_fcm_token")
+
         if not fcm_token:
-            # No FCM token for this user — skip silently
+            frappe.log_error(
+                title="FCM Push - No FCM Token",
+                message=f"Employee {employee_name} (user: {user_email}) has no custom_fcm_token. Cannot send FCM."
+            )
             return
 
         send_fcm_notification = frappe.get_attr("fcm_360ithub.fcm_functions.send_fcm_notification")
