@@ -27,6 +27,7 @@ def run_tests():
 		test_custom_interval_recurrence()
 		test_pause_resume_stop_transitions()
 		test_allocated_days_expected_dates()
+		test_multiple_task_owners_generation()
 		print("\nAll automated verification checks PASSED successfully!")
 	except AssertionError as e:
 		frappe.db.rollback()
@@ -52,7 +53,7 @@ def test_daily_recurrence_and_idempotency():
 		"doctype": "Recurring Task",
 		"naming_series": "REC-TSK-.#####",
 		"subject": "Daily Self-Check Task",
-		"task_owner": "Administrator",
+		"task_owner": [{"user": "Administrator"}],
 		"frequency": "Daily",
 		"start_date": today,
 		"ends": "Never",
@@ -102,7 +103,7 @@ def test_weekly_next_run_date():
 		"doctype": "Recurring Task",
 		"naming_series": "REC-TSK-.#####",
 		"subject": "Weekly Monday Task",
-		"task_owner": "Administrator",
+		"task_owner": [{"user": "Administrator"}],
 		"frequency": "Weekly",
 		"day_of_week": "Monday",
 		"start_date": start_date,
@@ -117,7 +118,7 @@ def test_weekly_next_run_date():
 		"doctype": "Recurring Task",
 		"naming_series": "REC-TSK-.#####",
 		"subject": "Weekly Thursday Task",
-		"task_owner": "Administrator",
+		"task_owner": [{"user": "Administrator"}],
 		"frequency": "Weekly",
 		"day_of_week": "Thursday",
 		"start_date": start_date,
@@ -137,7 +138,7 @@ def test_monthly_last_day_of_month():
 		"doctype": "Recurring Task",
 		"naming_series": "REC-TSK-.#####",
 		"subject": "Monthly Last Day Task",
-		"task_owner": "Administrator",
+		"task_owner": [{"user": "Administrator"}],
 		"frequency": "Monthly",
 		"repeat_by": "Last Day of Month",
 		"start_date": start_date,
@@ -166,7 +167,7 @@ def test_monthly_fewer_days_wrapping():
 		"doctype": "Recurring Task",
 		"naming_series": "REC-TSK-.#####",
 		"subject": "Monthly 31st Task",
-		"task_owner": "Administrator",
+		"task_owner": [{"user": "Administrator"}],
 		"frequency": "Monthly",
 		"repeat_by": "Day of Month",
 		"day_of_month": "31",
@@ -194,7 +195,7 @@ def test_custom_interval_recurrence():
 		"doctype": "Recurring Task",
 		"naming_series": "REC-TSK-.#####",
 		"subject": "Custom Every 2 Weeks Task",
-		"task_owner": "Administrator",
+		"task_owner": [{"user": "Administrator"}],
 		"frequency": "Custom",
 		"repeat_every": 2,
 		"unit": "Weeks",
@@ -225,7 +226,7 @@ def test_pause_resume_stop_transitions():
 		"doctype": "Recurring Task",
 		"naming_series": "REC-TSK-.#####",
 		"subject": "State Check Task",
-		"task_owner": "Administrator",
+		"task_owner": [{"user": "Administrator"}],
 		"frequency": "Daily",
 		"start_date": today,
 		"ends": "Never",
@@ -259,7 +260,7 @@ def test_allocated_days_expected_dates():
 		"doctype": "Recurring Task",
 		"naming_series": "REC-TSK-.#####",
 		"subject": "Expected Date Check Task",
-		"task_owner": "Administrator",
+		"task_owner": [{"user": "Administrator"}],
 		"frequency": "Daily",
 		"start_date": today,
 		"ends": "Never",
@@ -279,3 +280,48 @@ def test_allocated_days_expected_dates():
 	assert task_doc.exp_start_date == today, f"Expected exp_start_date {today}, got {task_doc.exp_start_date}"
 	expected_end = add_days(today, 5)
 	assert task_doc.exp_end_date == expected_end, f"Expected exp_end_date {expected_end}, got {task_doc.exp_end_date}"
+
+
+def test_multiple_task_owners_generation():
+	print("  - Running test: Multiple task owners generating separate Tasks...")
+	
+	today = getdate()
+	
+	# Find or create a second user for testing
+	users = frappe.get_all("User", filters={"enabled": 1}, limit=2)
+	test_users = [u.name for u in users]
+	if len(test_users) < 2:
+		dummy_email = "dummy_owner@example.com"
+		if not frappe.db.exists("User", dummy_email):
+			dummy_user = frappe.get_doc({
+				"doctype": "User",
+				"email": dummy_email,
+				"first_name": "Dummy Owner",
+				"send_welcome_email": 0
+			})
+			dummy_user.insert(ignore_permissions=True)
+		test_users = ["Administrator", dummy_email]
+		
+	# Create a Daily Recurring Task with 2 owners
+	doc = frappe.get_doc({
+		"doctype": "Recurring Task",
+		"naming_series": "REC-TSK-.#####",
+		"subject": "Multi-Owner Task",
+		"task_owner": [{"user": test_users[0]}, {"user": test_users[1]}],
+		"frequency": "Daily",
+		"start_date": today,
+		"ends": "Never",
+		"enabled": 1
+	})
+	doc.insert(ignore_permissions=True)
+	
+	# Run scheduler
+	process_recurring_task(doc.name, today)
+	
+	# Assert 2 separate Tasks were generated
+	tasks = frappe.get_all("Task", filters={"recurring_task": doc.name})
+	assert len(tasks) == 2, f"Expected 2 separate Tasks, found {len(tasks)}"
+	
+	task_owners = [frappe.db.get_value("Task", t.name, "task_owner") for t in tasks]
+	assert test_users[0] in task_owners
+	assert test_users[1] in task_owners

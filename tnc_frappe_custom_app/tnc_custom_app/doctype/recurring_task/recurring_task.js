@@ -24,7 +24,7 @@ frappe.ui.form.on('Recurring Task', {
 				}).addClass('btn-warning');
 
 				frm.add_custom_button(__('Stop Recurrence'), function() {
-					frm.confirm(__('Are you sure you want to stop this recurrence permanently?'), function() {
+					frappe.confirm(__('Are you sure you want to stop this recurrence permanently?'), function() {
 						frm.call({
 							doc: frm.doc,
 							method: 'stop_recurrence',
