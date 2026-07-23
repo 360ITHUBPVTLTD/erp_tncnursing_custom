@@ -1,0 +1,254 @@
+{
+ "actions": [],
+ "allow_attach": 1,
+ "autoname": "naming_series:",
+ "creation": "2026-07-23 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "task_info_section",
+  "naming_series",
+  "subject",
+  "task_owner",
+  "cb1",
+  "priority",
+  "project",
+  "allocated_days",
+  "description_section",
+  "description",
+  "recurrence_config_section",
+  "enabled",
+  "frequency",
+  "day_of_week",
+  "repeat_by",
+  "day_of_month",
+  "repeat_every",
+  "unit",
+  "cb2",
+  "start_date",
+  "ends",
+  "end_date",
+  "number_of_occurrences",
+  "scheduler_fields_section",
+  "next_run_date",
+  "last_run_date",
+  "cb3",
+  "generated_occurrence_count",
+  "status",
+  "summary_section",
+  "recurrence_summary"
+ ],
+ "fields": [
+  {
+   "fieldtype": "Section Break",
+   "label": "Task Information",
+   "fieldname": "task_info_section"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "REC-TSK-.#####",
+   "reqd": 1
+  },
+  {
+   "fieldname": "subject",
+   "fieldtype": "Data",
+   "label": "Subject",
+   "reqd": 1
+  },
+  {
+   "fieldname": "task_owner",
+   "fieldtype": "Link",
+   "label": "Task Owner",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldtype": "Column Break",
+   "fieldname": "cb1"
+  },
+  {
+   "fieldname": "priority",
+   "fieldtype": "Select",
+   "label": "Priority",
+   "options": "Low\nMedium\nHigh\nUrgent",
+   "default": "Medium",
+   "reqd": 1
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fieldname": "allocated_days",
+   "fieldtype": "Int",
+   "label": "Allocated Days"
+  },
+  {
+   "fieldtype": "Section Break",
+   "fieldname": "description_section"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Description"
+  },
+  {
+   "fieldtype": "Section Break",
+   "label": "Recurrence Configuration",
+   "fieldname": "recurrence_config_section"
+  },
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enable Recurring Task"
+  },
+  {
+   "fieldname": "frequency",
+   "fieldtype": "Select",
+   "label": "Frequency",
+   "options": "Daily\nWeekly\nMonthly\nCustom",
+   "reqd": 1
+  },
+  {
+   "fieldname": "day_of_week",
+   "fieldtype": "Select",
+   "label": "Day of Week",
+   "options": "Monday\nTuesday\nWednesday\nThursday\nFriday\nSaturday\nSunday",
+   "depends_on": "eval:doc.frequency=='Weekly'"
+  },
+  {
+   "fieldname": "repeat_by",
+   "fieldtype": "Select",
+   "label": "Repeat By",
+   "options": "Day of Month\nLast Day of Month",
+   "depends_on": "eval:doc.frequency=='Monthly'"
+  },
+  {
+   "fieldname": "day_of_month",
+   "fieldtype": "Select",
+   "label": "Day of Month",
+   "options": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31",
+   "depends_on": "eval:doc.frequency=='Monthly' && doc.repeat_by=='Day of Month'"
+  },
+  {
+   "fieldname": "repeat_every",
+   "fieldtype": "Int",
+   "label": "Repeat Every",
+   "default": 1,
+   "depends_on": "eval:doc.frequency=='Custom'"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Select",
+   "label": "Unit",
+   "options": "Days\nWeeks\nMonths\nYears",
+   "depends_on": "eval:doc.frequency=='Custom'"
+  },
+  {
+   "fieldtype": "Column Break",
+   "fieldname": "cb2"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ends",
+   "fieldtype": "Select",
+   "label": "Ends",
+   "options": "Never\nOn Date\nAfter Occurrences",
+   "default": "Never",
+   "reqd": 1
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date",
+   "depends_on": "eval:doc.ends=='On Date'"
+  },
+  {
+   "fieldname": "number_of_occurrences",
+   "fieldtype": "Int",
+   "label": "Number of Occurrences",
+   "depends_on": "eval:doc.ends=='After Occurrences'"
+  },
+  {
+   "fieldtype": "Section Break",
+   "label": "Scheduler Fields",
+   "fieldname": "scheduler_fields_section"
+  },
+  {
+   "fieldname": "next_run_date",
+   "fieldtype": "Date",
+   "label": "Next Run Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_run_date",
+   "fieldtype": "Date",
+   "label": "Last Run Date",
+   "read_only": 1
+  },
+  {
+   "fieldtype": "Column Break",
+   "fieldname": "cb3"
+  },
+  {
+   "fieldname": "generated_occurrence_count",
+   "fieldtype": "Int",
+   "label": "Generated Occurrence Count",
+   "default": 0,
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nActive\nPaused\nCompleted\nStopped",
+   "default": "Draft",
+   "read_only": 1
+  },
+  {
+   "fieldtype": "Section Break",
+   "fieldname": "summary_section"
+  },
+  {
+   "fieldname": "recurrence_summary",
+   "fieldtype": "Small Text",
+   "label": "Recurrence Summary",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-23 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "TNC Custom App",
+ "name": "Recurring Task",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
