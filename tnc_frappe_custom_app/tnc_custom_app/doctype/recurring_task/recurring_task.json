@@ -27,14 +27,14 @@
   "end_date",
   "number_of_occurrences",
   "enabled",
+  "section_break_wilh",
+  "recurrence_summary",
   "scheduler_fields_section",
-  "next_run_date",
-  "last_run_date",
-  "cb3",
-  "generated_occurrence_count",
   "status",
-  "summary_section",
-  "recurrence_summary"
+  "generated_occurrence_count",
+  "cb3",
+  "next_run_date",
+  "last_run_date"
  ],
  "fields": [
   {
@@ -43,8 +43,10 @@
    "label": "Task Information"
   },
   {
+   "default": "REC-TSK-.#####",
    "fieldname": "naming_series",
    "fieldtype": "Select",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "Naming Series",
    "options": "REC-TSK-.#####",
@@ -78,13 +80,16 @@
    "reqd": 1
   },
   {
+   "description": "Note: Enter the number of working or calendar days assigned to complete each task. The system uses this value to calculate the due date for every automatically generated task.\n\nExample:\n\nStart Date: 01-Aug-2026\nAllocated Days: 5\nDue Date: 06-Aug-2026",
    "fieldname": "allocated_days",
    "fieldtype": "Int",
    "label": "Allocated Days"
   },
   {
+   "collapsible": 1,
    "fieldname": "description_section",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Task Description"
   },
   {
    "fieldname": "description",
@@ -212,19 +217,19 @@
    "read_only": 1
   },
   {
-   "fieldname": "summary_section",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "recurrence_summary",
    "fieldtype": "Small Text",
    "label": "Recurrence Summary",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_wilh",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-23 12:37:56.178934",
+ "modified": "2026-07-24 14:55:45.668599",
  "modified_by": "Administrator",
  "module": "TNC Custom App",
  "name": "Recurring Task",
@@ -247,5 +252,6 @@
  "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }

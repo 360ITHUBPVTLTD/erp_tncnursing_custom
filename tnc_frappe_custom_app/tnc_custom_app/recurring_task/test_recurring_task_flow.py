@@ -28,6 +28,9 @@ def run_tests():
 		test_pause_resume_stop_transitions()
 		test_allocated_days_expected_dates()
 		test_multiple_task_owners_generation()
+		test_paused_period_skipping()
+		test_validation_rules()
+		test_edit_restrictions_when_active()
 		print("\nAll automated verification checks PASSED successfully!")
 	except AssertionError as e:
 		frappe.db.rollback()
@@ -325,3 +328,151 @@ def test_multiple_task_owners_generation():
 	task_owners = [frappe.db.get_value("Task", t.name, "task_owner") for t in tasks]
 	assert test_users[0] in task_owners
 	assert test_users[1] in task_owners
+
+
+def test_paused_period_skipping():
+	print("  - Running test: Paused period skipping (no tasks generated for pause time)...")
+	
+	# Start date: 6 days ago
+	today = getdate()
+	start_date = add_days(today, -6)
+	
+	doc = frappe.get_doc({
+		"doctype": "Recurring Task",
+		"naming_series": "REC-TSK-.#####",
+		"subject": "Skip Pause Period Test Task",
+		"task_owner": [{"user": "Administrator"}],
+		"frequency": "Daily",
+		"start_date": start_date,
+		"ends": "Never",
+		"enabled": 1
+	})
+	doc.insert(ignore_permissions=True)
+	
+	# Day 0: start_date. Run scheduler for start_date
+	process_recurring_task(doc.name, start_date)
+	doc.reload()
+	assert doc.generated_occurrence_count == 1
+	assert doc.next_run_date == add_days(start_date, 1)
+	
+	# Day 1: start_date + 1. Run scheduler
+	process_recurring_task(doc.name, add_days(start_date, 1))
+	doc.reload()
+	assert doc.generated_occurrence_count == 2
+	assert doc.next_run_date == add_days(start_date, 2)
+	
+	# Day 2: start_date + 2. Run scheduler
+	process_recurring_task(doc.name, add_days(start_date, 2))
+	doc.reload()
+	assert doc.generated_occurrence_count == 3
+	assert doc.next_run_date == add_days(start_date, 3)
+	
+	# Day 3: User pauses it
+	doc.pause_recurrence()
+	doc.reload()
+	assert doc.status == "Paused"
+	assert doc.enabled == 0
+	
+	# Today is Day 6 (today). We resume the task today
+	doc.resume_recurrence()
+	doc.reload()
+	assert doc.status == "Active"
+	assert doc.enabled == 1
+	
+	# Next run date MUST be today (Day 6) and NOT Day 3!
+	assert doc.next_run_date == today, f"Expected Next Run Date to be today ({today}), got {doc.next_run_date}"
+	
+	# Run scheduler for today
+	process_recurring_task(doc.name, today)
+	doc.reload()
+	assert doc.generated_occurrence_count == 4
+	assert doc.next_run_date == add_days(today, 1)
+	
+	# Verify total generated tasks is exactly 4 (Day 0, 1, 2, 6). No tasks for Day 3, 4, 5.
+	tasks = frappe.get_all("Task", filters={"recurring_task": doc.name})
+	assert len(tasks) == 4, f"Expected exactly 4 Tasks, found {len(tasks)}"
+	
+	task_dates = sorted([getdate(frappe.db.get_value("Task", t.name, "exp_start_date")) for t in tasks])
+	expected_dates = [start_date, add_days(start_date, 1), add_days(start_date, 2), today]
+	assert task_dates == expected_dates, f"Expected task dates {expected_dates}, got {task_dates}"
+
+
+def test_validation_rules():
+	print("  - Running test: Validation rules and integrity checks...")
+	
+	today = getdate()
+	
+	# Case 1: end_date < start_date
+	doc = frappe.get_doc({
+		"doctype": "Recurring Task",
+		"naming_series": "REC-TSK-.#####",
+		"subject": "Invalid Dates Task",
+		"task_owner": [{"user": "Administrator"}],
+		"frequency": "Daily",
+		"start_date": today,
+		"ends": "On Date",
+		"end_date": add_days(today, -1),
+		"enabled": 1
+	})
+	try:
+		doc.insert(ignore_permissions=True)
+		assert False, "Should have thrown exception for end_date < start_date"
+	except frappe.ValidationError as e:
+		assert "End Date cannot be before Start Date" in str(e)
+		
+	# Case 2: Custom frequency with repeat_every <= 0
+	doc2 = frappe.get_doc({
+		"doctype": "Recurring Task",
+		"naming_series": "REC-TSK-.#####",
+		"subject": "Invalid Custom Interval Task",
+		"task_owner": [{"user": "Administrator"}],
+		"frequency": "Custom",
+		"repeat_every": 0,
+		"unit": "Days",
+		"start_date": today,
+		"ends": "Never",
+		"enabled": 1
+	})
+	try:
+		doc2.insert(ignore_permissions=True)
+		assert False, "Should have thrown exception for repeat_every <= 0"
+	except frappe.ValidationError as e:
+		assert "Repeat Every must be a positive integer" in str(e)
+
+
+def test_edit_restrictions_when_active():
+	print("  - Running test: Restriction on editing config fields while Active...")
+	
+	today = getdate()
+	doc = frappe.get_doc({
+		"doctype": "Recurring Task",
+		"naming_series": "REC-TSK-.#####",
+		"subject": "Edit Restriction Task",
+		"task_owner": [{"user": "Administrator"}],
+		"frequency": "Daily",
+		"start_date": today,
+		"ends": "Never",
+		"enabled": 1
+	})
+	doc.insert(ignore_permissions=True)
+	assert doc.status == "Active"
+	
+	# Attempt to change frequency while Active
+	doc.frequency = "Weekly"
+	doc.day_of_week = "Monday"
+	try:
+		doc.save()
+		assert False, "Should have thrown validation error when editing active config"
+	except frappe.ValidationError as e:
+		assert "Cannot edit recurrence configuration field" in str(e)
+		
+	# Pause the task, then changing frequency should succeed
+	doc.reload()
+	doc.pause_recurrence()
+	assert doc.status == "Paused"
+	
+	doc.frequency = "Weekly"
+	doc.day_of_week = "Monday"
+	doc.save() # Should not throw error
+	assert doc.frequency == "Weekly"
+
