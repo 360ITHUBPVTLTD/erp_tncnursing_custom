@@ -193,12 +193,13 @@ scheduler_events = {
 # 		"tnc_frappe_custom_app.tasks.monthly"
 # 	],
 
-    "daily": [
-        "tnc_frappe_custom_app.tnc_custom_app.recurring_task.scheduler.run_scheduler"
-    ],
+   
     "cron":{
         "0 8 * * *": [
             "tnc_frappe_custom_app.custom_employee.enqueue_task_reminders",
+        ],
+         "30 7 * * *": [
+            "tnc_frappe_custom_app.tnc_custom_app.recurring_task.scheduler.run_scheduler"
         ]
     },
 }
