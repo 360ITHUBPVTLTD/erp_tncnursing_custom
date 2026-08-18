@@ -283,28 +283,28 @@ def async_send_whatsapp(target_user_email, task_id, subject):
     Accepts 'target_user_email' instead of 'task_owner' to be generic.
     """
 
-    # 1. Fetch Employee from User ID
-    employee_details = frappe.db.get_value(
-        "Employee",
-        {"user_id": target_user_email},
-        ["name", "employee_name", "cell_number"],
+    # 1. Fetch contact number from User (More Information tab)
+    user_details = frappe.db.get_value(
+        "User",
+        target_user_email,
+        ["full_name", "phone", "mobile_no"],
         as_dict=True
     )
 
-    if not employee_details:
-        # User is not an employee or mapped to one
-        # Optional: Print warning to console for debugging
-        # print(f"User {target_user_email} is not linked to an Employee")
+    if not user_details:
         return
 
+    # Prefer 'phone'; fall back to 'mobile_no' if blank
+    contact_number = (user_details.phone or "").strip() or (user_details.mobile_no or "").strip()
 
-
-    if not employee_details.cell_number:
+    if not contact_number:
         frappe.log_error(
             title="WhatsApp Notification Failed",
-            message=f"Employee {employee_details.employee_name} ({employee_details.name}) has no mobile number for Task {task_id}"
+            message=f"User {user_details.full_name} ({target_user_email}) has no phone or mobile_no for Task {task_id}"
         )
         return
+
+    recipient_name = user_details.full_name or target_user_email
     task_doc = frappe.get_doc("Task", task_id)
 
     clean_description = clean_html_for_whatsapp(task_doc.description or "No description provided")
@@ -318,7 +318,7 @@ def async_send_whatsapp(target_user_email, task_id, subject):
     )
 
     # 2. Construct Message
-    message = f"""Dear {employee_details.employee_name},
+    message = f"""Dear {recipient_name},
 
 You have been assigned a new task:
 📌 *{task_doc.subject}*({formatted_date})
@@ -338,7 +338,7 @@ TNC Admin
     try:
         # Ensure this function is imported or available in this scope
         from webtoolex_whatsapp.webtoolex_whatsapp.doctype.whatsapp_instance.whatsapp_instance import send_custom_whatsapp_message
-        resp = send_custom_whatsapp_message(employee_details.cell_number, message)
+        resp = send_custom_whatsapp_message(contact_number, message)
         # print("RRRRRRRRRRRRRRRRRRrrrrrrrrrrrrrrrrrr",resp)
         # if resp and not resp["status"]:
         #     frappe.log_error(title="WhatsApp API Response", message=f"{resp}")
