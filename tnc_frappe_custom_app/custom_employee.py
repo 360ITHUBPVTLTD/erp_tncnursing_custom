@@ -650,21 +650,35 @@ def send_due_and_overdue_task_reminders():
     # ✅ Step 5: Send messages per user
     users_reminded = 0
     for user_id, tasks_by_type in user_task_map.items():
-        employee = frappe.get_all("Employee",
-            filters={"user_id": user_id,"status": "Active"},
-            fields=["name", "first_name", "cell_number", "reports_to"]
+        # Fetch contact number from User (More Information tab), same as task creation
+        user_details = frappe.db.get_value(
+            "User",
+            user_id,
+            ["full_name", "phone", "mobile_no"],
+            as_dict=True
         )
 
-        if not employee:
+        if not user_details:
+            frappe.log_error("WA REMINDER SKIPPED", f"Skipping WhatsApp task reminder - no User record for {user_id}")
             continue
 
-        emp = employee[0]
-        team_member_name = emp.first_name or "Team Member"
-        
+        # Prefer 'phone'; fall back to 'mobile_no' if blank
+        mobile_number = (user_details.phone or "").strip() or (user_details.mobile_no or "").strip()
+
+        team_member_name = user_details.full_name or user_id
+
+        # Employee is used only for the manager's name in the footer
+        manager_name = ""
+        employee = frappe.get_all("Employee",
+            filters={"user_id": user_id, "status": "Active"},
+            fields=["reports_to"],
+            limit=1
+        )
+        if employee and employee[0].reports_to:
+            manager_name = frappe.get_value("Employee", employee[0].reports_to, "first_name") or ""
+
         # mobile_number = "9098543046"
-        if emp.cell_number:
-            mobile_number = emp.cell_number
-            manager_name = frappe.get_value("Employee", emp.reports_to, "first_name") if emp.reports_to else ""
+        if mobile_number:
 
             today_tasks = tasks_by_type["today"]
             overdue_tasks = tasks_by_type["overdue"]
@@ -707,7 +721,7 @@ def send_due_and_overdue_task_reminders():
                     message=f"Failed to send WhatsApp to {team_member_name} ({user_id}): {str(e)}\n\nMessage:\n{full_message}\n\nTraceback:\n{traceback.format_exc()}"
                 )
         else:
-            frappe.log_error("WA REMINDER SKIPPED", f"Skipping WhatsApp task reminder - {emp.name} has no mobile number")
+            frappe.log_error("WA REMINDER SKIPPED", f"User {team_member_name} ({user_id}) has no phone or mobile_no for task reminder")
     frappe.log_error("WA REMINDER SUMMARY", f"Total users reminded today: {users_reminded}")
     return f"WhatsApp reminders sent to {users_reminded} users."
 
