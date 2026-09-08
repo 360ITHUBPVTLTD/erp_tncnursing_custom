@@ -250,6 +250,51 @@ def queue_notification_for_users(recipient_emails, doc):
 # -------------------------------------------------------------------------
 
 
+
+# -------------------------------------------------------------------------
+# CONTACT NUMBER RESOLUTION
+# -------------------------------------------------------------------------
+
+def get_whatsapp_number_for_user(user_id):
+    """
+    Resolve the WhatsApp number for a user from their User record.
+
+    User.phone is preferred, User.mobile_no is the fallback. The User record is the
+    single source of truth for notification numbers by explicit decision -- Employee
+    .cell_number is deliberately NOT consulted, so that turning notifications on or
+    off for someone is a change to their User record and nothing else.
+
+    Consequence to keep in mind: a user with no number on their User record gets no
+    WhatsApp at all, even when their Employee record has a cell_number. When messages
+    stop arriving for someone, User.phone is the field to check first. Failures are
+    logged (see async_send_whatsapp and send_due_and_overdue_task_reminders) rather
+    than passing silently.
+
+    Returns None when no number is on file.
+    """
+    user_details = frappe.db.get_value("User", user_id, ["phone", "mobile_no"], as_dict=True)
+    if not user_details:
+        return None
+
+    return (user_details.phone or "").strip() or (user_details.mobile_no or "").strip() or None
+
+
+def is_enabled_user(user_id):
+    """
+    True when the User account is enabled.
+
+    Disabled accounts must never be messaged: the account has been deactivated, so
+    chasing that person about tasks is wrong. User.enabled is used rather than
+    Employee.status because it is the field that is actually maintained here -- 29 of
+    the 30 users holding open tasks are enabled, while only 2 Employee records carry
+    status 'Active'.
+    """
+    if not user_id:
+        return False
+
+    return bool(frappe.db.get_value("User", user_id, "enabled"))
+
+
 def clean_html_for_whatsapp(html_text):
     if not html_text:
         return ""
@@ -283,24 +328,33 @@ def async_send_whatsapp(target_user_email, task_id, subject):
     Accepts 'target_user_email' instead of 'task_owner' to be generic.
     """
 
-    # 1. Fetch contact number from User (More Information tab)
+    # 1. Fetch contact number from the User record
     user_details = frappe.db.get_value(
         "User",
         target_user_email,
-        ["full_name", "phone", "mobile_no"],
+        ["full_name", "enabled"],
         as_dict=True
     )
 
     if not user_details:
         return
 
-    # Prefer 'phone'; fall back to 'mobile_no' if blank
-    contact_number = (user_details.phone or "").strip() or (user_details.mobile_no or "").strip()
+    # Never message a disabled account.
+    if not user_details.enabled:
+        frappe.log_error(
+            title="WhatsApp Notification Skipped",
+            message=f"User {user_details.full_name} ({target_user_email}) is disabled - "
+                    f"no WhatsApp sent for Task {task_id}"
+        )
+        return
+
+    contact_number = get_whatsapp_number_for_user(target_user_email)
 
     if not contact_number:
         frappe.log_error(
             title="WhatsApp Notification Failed",
-            message=f"User {user_details.full_name} ({target_user_email}) has no phone or mobile_no for Task {task_id}"
+            message=f"User {user_details.full_name} ({target_user_email}) has no number on their "
+                    f"User record for Task {task_id}"
         )
         return
 
@@ -339,11 +393,16 @@ TNC Admin
         # Ensure this function is imported or available in this scope
         from webtoolex_whatsapp.webtoolex_whatsapp.doctype.whatsapp_instance.whatsapp_instance import send_custom_whatsapp_message
         resp = send_custom_whatsapp_message(contact_number, message)
-        # print("RRRRRRRRRRRRRRRRRRrrrrrrrrrrrrrrrrrr",resp)
-        # if resp and not resp["status"]:
-        #     frappe.log_error(title="WhatsApp API Response", message=f"{resp}")
+        # send_custom_whatsapp_message reports failures in its return value instead of
+        # raising. This logging used to be commented out, which is why a task-creation
+        # message that never arrived left no trace at all.
+        if not (resp and resp.get("status")):
+            frappe.log_error(
+                title="WhatsApp Notification Failed",
+                message=f"WhatsApp not sent to {recipient_name} ({target_user_email} / "
+                        f"{contact_number}) for Task {task_id}: {resp}"
+            )
         return resp
-        # frappe.log_error(title="WhatsApp Error", message=f"{message}")
     except ImportError:
         frappe.log_error(title="WhatsApp Error", message="send_custom_whatsapp_message function not found. Check imports.")
     except Exception as e:
