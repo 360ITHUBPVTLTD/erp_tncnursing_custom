@@ -3,7 +3,8 @@ from frappe.utils import getdate  # get_first_day, get_last_day are not needed i
 from datetime import timedelta, date, datetime
 import logging
 from frappe import enqueue
-from webtoolex_whatsapp.webtoolex_whatsapp.doctype.whatsapp_instance.whatsapp_instance import send_custom_whatsapp_message
+from webtoolex_whatsapp.webtoolex_whatsapp.doctype.whatsapp_instance.whatsapp_instance import send_custom_whatsapp_message, validate_whatsapp_instance
+from tnc_frappe_custom_app.custom_task import get_whatsapp_number_for_user
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -597,8 +598,20 @@ def send_due_and_overdue_task_reminders():
         frappe.log_error("WA REMINDER SKIPPED", f"Skipping WhatsApp task reminder - {today} is a holiday")
         return
 
-    # ✅ Step 3: Fetch active tasks
-    tasks = frappe.get_all("Task", 
+    # ✅ Step 3: Confirm the WhatsApp instance is usable before doing any work.
+    # Every send re-validates (and re-syncs) the instance anyway; checking once up
+    # front means a dead / out-of-credit instance is reported as one clear error
+    # instead of silently swallowing every message in the run.
+    instance_check = validate_whatsapp_instance(None)
+    if not instance_check.get("status"):
+        frappe.log_error(
+            "WA REMINDER ABORTED",
+            f"WhatsApp instance not usable, no task reminders sent: {instance_check.get('msg')}"
+        )
+        return f"Aborted: {instance_check.get('msg')}"
+
+    # ✅ Step 4: Fetch active tasks
+    tasks = frappe.get_all("Task",
         filters={
 
             "status": ["in", ["Working", "Open", "Pending Review", "Overdue"]],
@@ -612,15 +625,42 @@ def send_due_and_overdue_task_reminders():
         fields=["name", "subject", "exp_end_date", "task_owner"]
     )
 
-    # frappe.log_error("WA REMINDER", f"Tasks without start date: {tasks_wo_start_date}")
-
-    
-    # tasks = tasks_wo_start_date 
+    # ✅ Step 5: Every assignee of a task needs the reminder, not just task_owner.
+    # Tasks are commonly assigned through the 'other_assignees' table (that is what
+    # custom_task.custom_task_notification_on_insert notifies, and what the Task
+    # permission rules key off). Keying reminders off task_owner alone dropped every
+    # such task, which is why only a handful of the overdue tasks were reminded on.
+    task_names = [task.name for task in tasks]
+    other_assignees_by_task = {}
+    if task_names:
+        for row in frappe.get_all(
+            "User Multiselect Clarity",
+            filters={
+                "parenttype": "Task",
+                "parentfield": "other_assignees",
+                "parent": ["in", task_names],
+            },
+            fields=["parent", "user"]
+        ):
+            if row.user:
+                other_assignees_by_task.setdefault(row.parent, []).append(row.user)
 
     user_task_map = {}
+    skipped_no_assignee = []
+    skipped_no_due_date = []
 
     for task in tasks:
-        if not task.task_owner or not task.exp_end_date:
+        if not task.exp_end_date:
+            skipped_no_due_date.append(task.name)
+            continue
+
+        recipients = set()
+        if task.task_owner:
+            recipients.add(task.task_owner)
+        recipients.update(other_assignees_by_task.get(task.name) or [])
+
+        if not recipients:
+            skipped_no_assignee.append(task.name)
             continue
 
         task_date = task.exp_end_date
@@ -628,42 +668,54 @@ def send_due_and_overdue_task_reminders():
             category = "today"
         elif task_date < today:
             category = "overdue"
-        elif task_date > today:
-            category = "upcoming"
         else:
-            continue
+            category = "upcoming"
 
-        user = task.task_owner
-        user_task_map.setdefault(user, {"today": [], "overdue": [], "upcoming": []})
-        user_task_map[user][category].append({
-            "title": task.subject,
-            "due_date": task_date
-        })
+        for user in recipients:
+            user_task_map.setdefault(user, {"today": [], "overdue": [], "upcoming": []})
+            user_task_map[user][category].append({
+                "title": task.subject,
+                "due_date": task_date
+            })
 
-    # ✅ Step 4: Load WhatsApp instance
-    # try:
-    #     whatsapp_instance_doc = frappe.get_doc("WhatsApp Instance", "Operations")
-    # except Exception as e:
-    #     frappe.log_error("WA REMINDER ERROR", f"Failed to load WhatsApp Instance: {str(e)}")
-    #     return
+    if skipped_no_assignee or skipped_no_due_date:
+        frappe.log_error(
+            "WA REMINDER SKIPPED TASKS",
+            f"No assignee ({len(skipped_no_assignee)}): {skipped_no_assignee}\n"
+            f"No exp_end_date ({len(skipped_no_due_date)}): {skipped_no_due_date}"
+        )
 
-    # ✅ Step 5: Send messages per user
+    # ✅ Step 6: Send messages per user
     users_reminded = 0
+    users_failed = 0
+    users_disabled = 0
     for user_id, tasks_by_type in user_task_map.items():
-        # Fetch contact number from User (More Information tab), same as task creation
+        # full_name and enabled come from one read; the number is resolved from the
+        # same User record by get_whatsapp_number_for_user.
         user_details = frappe.db.get_value(
             "User",
             user_id,
-            ["full_name", "phone", "mobile_no"],
+            ["full_name", "enabled"],
             as_dict=True
         )
 
         if not user_details:
+            users_failed += 1
             frappe.log_error("WA REMINDER SKIPPED", f"Skipping WhatsApp task reminder - no User record for {user_id}")
             continue
 
-        # Prefer 'phone'; fall back to 'mobile_no' if blank
-        mobile_number = (user_details.phone or "").strip() or (user_details.mobile_no or "").strip()
+        # Never message a disabled account. Their tasks still need reassigning, which
+        # this log surfaces.
+        if not user_details.enabled:
+            users_disabled += 1
+            frappe.log_error(
+                "WA REMINDER DISABLED USER",
+                f"Skipping {user_id} - User account is disabled. "
+                f"{sum(len(v) for v in tasks_by_type.values())} task(s) still assigned to them."
+            )
+            continue
+
+        mobile_number = get_whatsapp_number_for_user(user_id)
 
         team_member_name = user_details.full_name or user_id
 
@@ -703,7 +755,7 @@ def send_due_and_overdue_task_reminders():
                 upcoming_section = "\n".join([f"• {task['title']} - {task['due_date'].strftime('%d-%b-%Y')}" for task in upcoming_tasks])
                 message_parts.append(f"⭐ Upcoming Tasks ({len(upcoming_tasks)}):\n{upcoming_section}\n")
 
-            message_parts.append(f"Please prioritize and complete them. If you need help, contact your manager {manager_name}.\n\TNC Admin Team")
+            message_parts.append(f"Please prioritize and complete them. If you need help, contact your manager {manager_name}.\n\nTNC Admin Team")
 
             full_message = "\n".join(part.strip() for part in message_parts if part.strip())
 
@@ -711,18 +763,35 @@ def send_due_and_overdue_task_reminders():
             try:
                 # whatsapp_instance_name = frappe.db.get_single_value("Service Admin Settings", "whats_app_instance") or "Operations"
                 # print(f"Sending WhatsApp to {whatsapp_instance_name} ({mobile_number})\n\n{full_message}")
-                send_custom_whatsapp_message(mobile_number, full_message)
-                users_reminded += 1
-                frappe.log_error(title="WA REMINDER SENT", message=f"WhatsApp sent to {team_member_name} ({mobile_number})\n\n{full_message}")
+                # send_custom_whatsapp_message reports failures in its return value rather
+                # than raising, so it has to be inspected - otherwise a rejected number or
+                # an exhausted instance was counted as a successful reminder.
+                resp = send_custom_whatsapp_message(mobile_number, full_message)
+                if resp and resp.get("status"):
+                    users_reminded += 1
+                    frappe.log_error(title="WA REMINDER SENT", message=f"WhatsApp sent to {team_member_name} ({mobile_number})\n\n{full_message}")
+                else:
+                    users_failed += 1
+                    frappe.log_error(
+                        title="WA SEND FAILED",
+                        message=f"WhatsApp not sent to {team_member_name} ({user_id} / {mobile_number}): {resp}\n\nMessage:\n{full_message}"
+                    )
             except Exception as e:
                 import traceback
+                users_failed += 1
                 frappe.log_error(
                     title="WA SEND ERROR",
                     message=f"Failed to send WhatsApp to {team_member_name} ({user_id}): {str(e)}\n\nMessage:\n{full_message}\n\nTraceback:\n{traceback.format_exc()}"
                 )
         else:
-            frappe.log_error("WA REMINDER SKIPPED", f"User {team_member_name} ({user_id}) has no phone or mobile_no for task reminder")
-    frappe.log_error("WA REMINDER SUMMARY", f"Total users reminded today: {users_reminded}")
-    return f"WhatsApp reminders sent to {users_reminded} users."
+            users_failed += 1
+            frappe.log_error("WA REMINDER SKIPPED", f"User {team_member_name} ({user_id}) has no phone or mobile_no on their User record for task reminder")
+    frappe.log_error(
+        "WA REMINDER SUMMARY",
+        f"Tasks considered: {len(tasks)} | Recipients: {len(user_task_map)} | "
+        f"Reminded: {users_reminded} | Failed/skipped: {users_failed} | "
+        f"Skipped (disabled account): {users_disabled}"
+    )
+    return f"WhatsApp reminders sent to {users_reminded} of {len(user_task_map)} users."
 
 
